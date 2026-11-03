@@ -2,7 +2,7 @@
 
 ## Purpose and scope
 
-This page maps how Butlr turns a thermal sensor and a cloud platform into recurring revenue: how it builds product, sells, deploys, operates, supports, and expands accounts. It closes with the data center program workflow owned by the **Senior Program Manager, Data Operations** role.
+This page maps how Butlr turns a thermal sensor and a cloud platform into recurring revenue: how it builds product, sells, deploys, operates, supports, and expands accounts. The data center program workflow owned by the **Senior Program Manager, Data Operations** role is on its own page: [Butlr Data Center Program Workflow](butlr-data-center-program-workflow.md).
 
 Every statement is tagged by where it comes from:
 
@@ -149,70 +149,6 @@ flowchart TD
 | 10. Expand | More floors, sites, modules (Care, Smart Cleaning, Energy, Data Center) | Expansion order | Customer success, Sales | Inferred |
 
 Butlr states a typical implementation runs **at least 4 weeks**, longer for large or complex sites. Standard on-site installs run on a 4-day work week. *(Sourced.)*
-
-## 4. Data center program workflow (the Senior PM, Data Operations role)
-
-The data center line is newer and higher stakes than workplace occupancy. Butlr positions it as a continuous power-path thermal monitoring layer and thermal digital twin for AI data centers, installed without hall shutdowns. The JD makes this role the single owner from signed deal to expansion.
-
-```mermaid
-flowchart TD
-    A[Deal commitment from Sales] --> B[1. Kickoff<br/>Butlr, partner, customer teams;<br/>roles, timeline, comms cadence]
-    B --> C[2. Integrated project plan<br/>milestones, dependencies, owners]
-    C --> D[3. Hardware logistics]
-    C --> E[3. Site logistics]
-    C --> F[3. Integration design]
-
-    D --> D1[Configure and test POC units]
-    D1 --> D2[QA check]
-    D2 --> D3[Ship; customs and import<br/>with Shenzhen team]
-    E --> E1[Site access, badging, escorts]
-    E1 --> E2[Install schedule in live hall]
-    F --> F1[BMC telemetry, APIs,<br/>alert routing to customer tools]
-
-    D3 --> G[4. Pilot install<br/>no hall shutdown;<br/>racks, busway, RPP, PDU, CDU, pipes]
-    E2 --> G
-    G --> H[5. Validation testing<br/>with engineering]
-    H --> H1{Thermal twin matches<br/>CFD model and<br/>alerts are accurate?}
-    H1 -- No --> H2[Tune placement, thresholds,<br/>or firmware; feed results<br/>to product decisions]
-    H2 --> H
-    H1 -- Yes --> I[6. Integration go-live<br/>data flows verified end to end]
-    F1 --> I
-    I --> J[7. Pre-launch readiness with Product<br/>features, configs, docs, support]
-    J --> K{Ready for go-live?}
-    K -- No --> K1[Close gaps; reset date;<br/>report risk to leaders]
-    K1 --> J
-    K -- Yes --> L[8. Go-live]
-    L --> M[9. Technical customer success<br/>system health, adoption, check-ins]
-    M --> N{POC converted?}
-    N -- Yes --> O[10. Long-term contract;<br/>expansion and upsell to Sales]
-    N -- Not yet --> M
-    O --> P[11. Update playbook<br/>so the next POC runs faster]
-    P -.-> B
-
-    W[Weekly: track plan, raise risks early,<br/>push blockers, status to internal<br/>and external stakeholders] -.-> C
-    W -.-> H
-    W -.-> J
-```
-
-### Data center stage gates
-
-| Stage | PM actions | Exit gate / evidence | Partners |
-|---|---|---|---|
-| 1. Kickoff | Convene Butlr, partner, and customer teams fast; set roles, timeline, and comms | Agreed RACI and cadence | Sales, customer DC ops, partners |
-| 2. Plan | Convert deal commitments into milestones, dependencies, and owners | Baseline plan accepted by both sides | Engineering, Product, Supply Chain |
-| 3a. Hardware logistics | Units configured, tested, QA'd, shipped; customs and import cleared | Units on site, serials logged | Supply Chain, Shenzhen team, customs broker |
-| 3b. Site logistics | Site access, escorts, install windows, customer requirements | Install window confirmed | Customer facilities and security |
-| 3c. Integration design | BMC telemetry, API and alert routing to customer tools | Interface agreement signed off | Butlr and customer engineering |
-| 4. Pilot install | Deploy across the power path and cooling loop without hall shutdown | Devices online and reporting | Field engineering, installers |
-| 5. Validation | Plan and run tests; compare thermal twin to CFD; check alert accuracy | Test report with product and deployment decisions | Engineering, Product |
-| 6. Integration go-live | Confirm data flows end to end on schedule | Data visible in customer systems | Both engineering teams |
-| 7. Pre-launch readiness | Features, configurations, documentation, support staffed | Readiness checklist complete | Product, Support |
-| 8. Go-live | Controlled launch | Customer acceptance | Customer DC ops |
-| 9. Technical customer success | Monitor system health and adoption; regular check-ins; fast issue resolution | Adoption and health targets met | Support, Engineering |
-| 10. Expand | Convert POC to long-term contract; spot upsell; hand to Sales | Expansion opportunity in pipeline | Sales |
-| 11. Playbook | Capture lessons learned; shorten next cycle | Updated playbook and templates | All |
-
-Stages, actions, and partners come from the JD and the Butlr Data Center page. The specific evidence for each gate is inferred.
 
 ## Business levers and likely metrics (inferred)
 
