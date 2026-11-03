@@ -1,7 +1,8 @@
-# Amazon SPAN Delivery Workflow
+# Job Search 2026: Interview Prep Workflows
 
-This repository contains an end-to-end workflow for coordinating delivery of an AWS data center interconnect span, derived from the supplied TIPM job description.
+End-to-end workflows built from job descriptions and public company sources, published as a GitHub Pages site.
 
-- [Read the workflow](amazon-span-end-to-end-workflow.md)
-- [Open the GitHub Pages site](https://yedaobing.github.io/jobsearch2026/)
-
+| Workflow | Markdown | Web page |
+|---|---|---|
+| Amazon data center interconnect SPAN delivery | [Read](amazon-span-end-to-end-workflow.md) | [Open](https://yedaobing.github.io/jobsearch2026/) |
+| How Butlr runs its business (incl. data center program workflow) | [Read](butlr-business-workflow.md) | [Open](https://yedaobing.github.io/jobsearch2026/butlr/) |
