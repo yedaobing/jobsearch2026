@@ -4,70 +4,104 @@
 
 This page maps the data center program workflow owned by Butlr's **Senior Program Manager, Data Operations** role, from signed deal through go-live, technical customer success, and expansion. For how the rest of the company operates, see [How Butlr Runs Its Business](butlr-business-workflow.md).
 
-Stages, actions, and partners come from the job description and the Butlr Data Center page. The specific evidence for each gate is inferred and should be confirmed in interviews.
+Tasks and partners come from the job description and the Butlr Data Center page. The phase grouping and gate evidence are inferred and should be confirmed in interviews.
 
 ## End-to-end workflow
 
 The data center line is newer and higher stakes than workplace occupancy. Butlr positions it as a continuous power-path thermal monitoring layer and thermal digital twin for AI data centers, installed without hall shutdowns. The JD makes this role the single owner from signed deal to expansion.
 
+Five phases run left to right. Each phase lists its main tasks, and a gate (G1 to G5) controls entry to the next phase. A failed gate loops back to its phase.
+
 ```mermaid
-flowchart TD
-    A[Deal commitment from Sales] --> B[1. Kickoff<br/>Butlr, partner, customer teams;<br/>roles, timeline, comms cadence]
-    B --> C[2. Integrated project plan<br/>milestones, dependencies, owners]
-    C --> D[3. Hardware logistics]
-    C --> E[3. Site logistics]
-    C --> F[3. Integration design]
+flowchart LR
+    START([Deal commitment<br/>from Sales]) --> P1
 
-    D --> D1[Configure and test POC units]
-    D1 --> D2[QA check]
-    D2 --> D3[Ship; customs and import<br/>with Shenzhen team]
-    E --> E1[Site access, badging, escorts]
-    E1 --> E2[Install schedule in live hall]
-    F --> F1[BMC telemetry, APIs,<br/>alert routing to customer tools]
+    subgraph P1["Phase 1: Initiate"]
+        direction TB
+        T11[Kick off with Butlr,<br/>partner, customer teams]
+        T12[Set roles, timeline,<br/>comms cadence]
+        T13[Turn deal commitments<br/>into integrated plan]
+        T14[Milestones, dependencies,<br/>owners baselined]
+        T11 --> T12 --> T13 --> T14
+    end
 
-    D3 --> G[4. Pilot install<br/>no hall shutdown;<br/>racks, busway, RPP, PDU, CDU, pipes]
-    E2 --> G
-    G --> H[5. Validation testing<br/>with engineering]
-    H --> H1{Thermal twin matches<br/>CFD model and<br/>alerts are accurate?}
-    H1 -- No --> H2[Tune placement, thresholds,<br/>or firmware; feed results<br/>to product decisions]
-    H2 --> H
-    H1 -- Yes --> I[6. Integration go-live<br/>data flows verified end to end]
-    F1 --> I
-    I --> J[7. Pre-launch readiness with Product<br/>features, configs, docs, support]
-    J --> K{Ready for go-live?}
-    K -- No --> K1[Close gaps; reset date;<br/>report risk to leaders]
-    K1 --> J
-    K -- Yes --> L[8. Go-live]
-    L --> M[9. Technical customer success<br/>system health, adoption, check-ins]
-    M --> N{POC converted?}
-    N -- Yes --> O[10. Long-term contract;<br/>expansion and upsell to Sales]
-    N -- Not yet --> M
-    O --> P[11. Update playbook<br/>so the next POC runs faster]
-    P -.-> B
+    P1 --> G1{"G1<br/>Plan<br/>approved"}
+    G1 -- Yes --> P2
+    G1 -. No .-> P1
 
-    W[Weekly: track plan, raise risks early,<br/>push blockers, status to internal<br/>and external stakeholders] -.-> C
-    W -.-> H
-    W -.-> J
+    subgraph P2["Phase 2: Prepare"]
+        direction TB
+        T21[Configure, test, QA<br/>POC units]
+        T22[Ship; customs and import<br/>with Shenzhen team]
+        T23[Site access, badging,<br/>install windows]
+        T24[Integration design:<br/>BMC telemetry, APIs,<br/>alert routing]
+        T21 --> T22 --> T23 --> T24
+    end
+
+    P2 --> G2{"G2<br/>Site and<br/>hardware<br/>ready"}
+    G2 -- Yes --> P3
+    G2 -. No .-> P2
+
+    subgraph P3["Phase 3: Pilot and validate"]
+        direction TB
+        T31[Install in live hall,<br/>no shutdown]
+        T32[Cover racks, busway,<br/>RPP, PDU, CDU, pipes]
+        T33[Run validation tests<br/>with engineering]
+        T34[Compare thermal twin<br/>to CFD; tune thresholds]
+        T31 --> T32 --> T33 --> T34
+    end
+
+    P3 --> G3{"G3<br/>Validation<br/>passed"}
+    G3 -- Yes --> P4
+    G3 -. No .-> P3
+
+    subgraph P4["Phase 4: Integrate and launch"]
+        direction TB
+        T41[Integration go-live;<br/>data flows verified]
+        T42[Pre-launch readiness<br/>with Product]
+        T43[Features, configs,<br/>docs, support ready]
+        T44[Controlled go-live]
+        T41 --> T42 --> T43 --> T44
+    end
+
+    P4 --> G4{"G4<br/>Customer<br/>acceptance"}
+    G4 -- Yes --> P5
+    G4 -. No .-> P4
+
+    subgraph P5["Phase 5: Operate and expand"]
+        direction TB
+        T51[Technical customer<br/>success lead]
+        T52[Monitor system health<br/>and adoption]
+        T53[Regular check-ins;<br/>resolve issues fast]
+        T54[Spot expansion and<br/>upsell; bring to Sales]
+        T51 --> T52 --> T53 --> T54
+    end
+
+    P5 --> G5{"G5<br/>POC<br/>converted"}
+    G5 -- Yes --> END([Long-term contract;<br/>playbook updated])
+    G5 -. Not yet .-> P5
+
+    classDef gate fill:#1B3D4F,stroke:#1B3D4F,color:#ffffff,font-weight:bold
+    classDef phase fill:#f4f8fa,stroke:#1B3D4F,stroke-width:1.5px
+    classDef ends fill:#e8eef1,stroke:#1B3D4F
+    class G1,G2,G3,G4,G5 gate
+    class P1,P2,P3,P4,P5 phase
+    class START,END ends
 ```
 
-## Stage gates
+**Runs across all phases (weekly governance):** track the plan, raise risks early, push blockers to resolution, and report status to internal leaders and external stakeholders.
 
-| Stage | PM actions | Exit gate / evidence | Partners |
-|---|---|---|---|
-| 1. Kickoff | Convene Butlr, partner, and customer teams fast; set roles, timeline, and comms | Agreed RACI and cadence | Sales, customer DC ops, partners |
-| 2. Plan | Convert deal commitments into milestones, dependencies, and owners | Baseline plan accepted by both sides | Engineering, Product, Supply Chain |
-| 3a. Hardware logistics | Units configured, tested, QA'd, shipped; customs and import cleared | Units on site, serials logged | Supply Chain, Shenzhen team, customs broker |
-| 3b. Site logistics | Site access, escorts, install windows, customer requirements | Install window confirmed | Customer facilities and security |
-| 3c. Integration design | BMC telemetry, API and alert routing to customer tools | Interface agreement signed off | Butlr and customer engineering |
-| 4. Pilot install | Deploy across the power path and cooling loop without hall shutdown | Devices online and reporting | Field engineering, installers |
-| 5. Validation | Plan and run tests; compare thermal twin to CFD; check alert accuracy | Test report with product and deployment decisions | Engineering, Product |
-| 6. Integration go-live | Confirm data flows end to end on schedule | Data visible in customer systems | Both engineering teams |
-| 7. Pre-launch readiness | Features, configurations, documentation, support staffed | Readiness checklist complete | Product, Support |
-| 8. Go-live | Controlled launch | Customer acceptance | Customer DC ops |
-| 9. Technical customer success | Monitor system health and adoption; regular check-ins; fast issue resolution | Adoption and health targets met | Support, Engineering |
-| 10. Expand | Convert POC to long-term contract; spot upsell; hand to Sales | Expansion opportunity in pipeline | Sales |
-| 11. Playbook | Capture lessons learned; shorten next cycle | Updated playbook and templates | All |
+## Phases and gates
 
+| Phase | Main tasks | Gate to exit | Gate evidence | Partners |
+|---|---|---|---|---|
+| 1. Initiate | Kick off Butlr, partner, and customer teams fast; set roles, timeline, and comms; turn deal commitments into a plan with milestones, dependencies, and owners | **G1: Plan approved** | Agreed RACI and cadence; baseline plan accepted by both sides | Sales, customer DC ops, partners, Engineering, Product |
+| 2. Prepare | Configure, test, and QA POC units; ship and clear customs with the Shenzhen team; arrange site access and install windows; design BMC, API, and alert integrations | **G2: Site and hardware ready** | Units on site with serials logged; install window confirmed; interface agreement signed off | Supply Chain, Shenzhen team, customs broker, customer facilities and security |
+| 3. Pilot and validate | Install across the power path and cooling loop without hall shutdown; run validation tests; compare thermal twin to CFD; tune placement, thresholds, or firmware | **G3: Validation passed** | Devices online and reporting; test report with product and deployment decisions; alert accuracy confirmed | Field engineering, installers, Engineering, Product |
+| 4. Integrate and launch | Take integrations live and verify data flows; confirm features, configurations, documentation, and support with Product; run a controlled go-live | **G4: Customer acceptance** | Data visible in customer systems; readiness checklist complete; customer sign-off | Butlr and customer engineering, Product, Support, customer DC ops |
+| 5. Operate and expand | Act as technical customer success lead; monitor system health and adoption; run regular check-ins; resolve issues fast; spot expansion and upsell for Sales | **G5: POC converted** | Adoption and health targets met; long-term contract or expansion in pipeline; playbook updated so the next POC runs faster | Support, Engineering, Sales |
+
+Phase tasks come from the JD and the Butlr Data Center page. Grouping into five phases and the gate evidence are inferred and should be confirmed in interviews.
 
 ## Sources
 
