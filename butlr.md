@@ -6,7 +6,7 @@ permalink: /butlr/
 
 
 {% capture workflow %}{% include_relative butlr-business-workflow.md %}{% endcapture %}
-{{ workflow | markdownify }}
+{{ workflow | replace: '](butlr-data-center-program-workflow.md', '](../butlr-data-center/' | markdownify }}
 
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
