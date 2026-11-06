@@ -10,3 +10,4 @@ End-to-end workflows built from job descriptions and public company sources, pub
 | Microsoft DCIS hardware readiness workflow (TPM II, Hardware Readiness) | n/a | [Open](https://yedaobing.github.io/jobsearch2026/microsoft-hardware-readiness/) |
 | Microsoft hardware readiness TPM: challenges and how I would handle them | n/a | [Open](https://yedaobing.github.io/jobsearch2026/microsoft-hardware-readiness/challenges-index.html) |
 | Sample repair procedure: DIMM replacement on a GPU node | n/a | [Open](https://yedaobing.github.io/jobsearch2026/microsoft-hardware-readiness/sample-repair-procedure.html) |
+| GB200 readiness walkthrough: one platform through all seven stages | n/a | [Open](https://yedaobing.github.io/jobsearch2026/microsoft-hardware-readiness/gb200-readiness-walkthrough.html) |

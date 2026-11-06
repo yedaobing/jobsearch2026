@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A GB200 NVL72 rack followed through all seven hardware readiness stages as a team-by-stage swimlane.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>GB200 Readiness Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one platform's journey as a swimlane. Stages run left to right with milestones above; teams run down the side; the readiness TPM lane is shaded. Supporting panels follow. */
+:root{
+  --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --faint:#9aa8ae; --line:#d3dce0;
+  --accent:#0b6c76; --accent-soft:#dbeef0;
+  --sus:#3e4aa8; --sus-soft:#e4e7f8;
+  --ehs:#9a5b00; --ehs-soft:#fbeed6;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --faint:#5d6d73; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --sus:#a3adf2; --sus-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --faint:#5d6d73; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --sus:#a3adf2; --sus-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px;display:grid;gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800;font-stretch:78%;line-height:1.02}
+h2{font-size:24px;font-weight:750;font-stretch:82%}
+h3{font-size:17px;font-weight:700;font-stretch:85%}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:12px}
+.lede{max-width:72ch;color:var(--muted);font-size:16px}
+.note{font-size:13px;color:var(--muted);max-width:84ch}
+section{display:grid;gap:16px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:76ch}
+.ehs{display:inline-block;font-family:var(--f-mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:0 5px;border-radius:3px;background:var(--ehs-soft);color:var(--ehs);vertical-align:1px}
+
+/* swimlane */
+.lane-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table.lanes{border-collapse:separate;border-spacing:0;min-width:1420px;width:100%;font-size:12.5px;line-height:1.45}
+.lanes th,.lanes td{vertical-align:top;text-align:left;border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:10px 11px}
+.lanes tr>*:last-child{border-right:0}
+.lanes tbody tr:last-child>*{border-bottom:0}
+.lanes thead th{background:var(--surface);font-weight:400}
+.lanes .corner{background:var(--surface)}
+.lanes .lane{position:sticky;left:0;z-index:2;background:var(--bg);width:150px;min-width:150px;font-family:var(--f-display);font-stretch:85%;font-weight:700;font-size:14px;line-height:1.2}
+.lanes .lane small{display:block;font-family:var(--f-body);font-stretch:100%;font-weight:400;font-size:11.5px;color:var(--muted);margin-top:3px}
+.lanes thead .lane{z-index:3;background:var(--surface)}
+.st-id{display:block;font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.04em}
+.st-id.s{color:var(--sus)}
+.st-name{display:block;font-family:var(--f-display);font-stretch:85%;font-weight:700;font-size:14.5px;line-height:1.2;margin-top:2px}
+.st-own{display:block;font-size:11.5px;color:var(--muted);margin-top:4px}
+.ms th,.ms td{background:var(--bg);padding-block:8px}
+.mile{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.mile::before{content:"";width:9px;height:9px;transform:rotate(45deg);background:var(--accent);flex:none}
+.lanes ul{margin:0;padding-left:15px;display:grid;gap:4px}
+.lanes li::marker{color:var(--faint)}
+.lanes td.empty{color:var(--faint)}
+tr.tpm td,tr.tpm th.lane{background:var(--accent-soft)}
+tr.tpm th.lane{color:var(--accent)}
+tr.loops td{background:var(--bg);font-size:12px;color:var(--muted)}
+.back{display:block;font-family:var(--f-mono);font-size:11px;color:var(--accent);font-weight:600;margin-bottom:2px}
+.scroll-hint{font-size:12.5px;color:var(--muted)}
+
+/* panels */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.spec{display:grid;gap:0;border-top:2px solid var(--accent);padding-top:6px}
+.spec b{font-family:var(--f-display);font-stretch:80%;font-weight:800;font-size:26px;line-height:1.05;font-variant-numeric:tabular-nums}
+.spec span{font-size:12.5px;color:var(--muted)}
+.panel ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:14px}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table.t{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+.t th,.t td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+.t th{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+.t tr:last-child td{border-bottom:0}
+.t td.r{font-weight:600;white-space:nowrap}
+.pill{display:inline-block;font-size:11.5px;font-weight:500;padding:1px 8px;border-radius:999px;white-space:nowrap;border:1px solid var(--line);color:var(--muted)}
+.pill.plat{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.pill.mod{background:var(--sus-soft);border-color:transparent;color:var(--sus)}
+.find{display:grid;gap:12px}
+.f{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 16px;border-top:1px solid var(--line);padding-top:10px;font-size:14px}
+.f:first-child{border-top:0;padding-top:0}
+.f b{grid-column:1/-1;font-family:var(--f-display);font-stretch:85%;font-weight:700;font-size:15px}
+.f .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block}
+ol.q{margin:0;padding-left:22px;display:grid;gap:8px;font-size:14.5px}
+@media (max-width:640px){.f{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Hardware readiness · Worked example</div>
+  <h1>GB200 Readiness Walkthrough</h1>
+  <p class="lede">One new platform, an NVIDIA GB200 NVL72 liquid-cooled rack, followed from the first demand signal to production. Each cell shows what that team does for this platform at that stage.</p>
+  <p class="note">Part of the <a href="index.html">hardware readiness workflow</a>, with the <a href="sample-repair-procedure.html">sample repair procedure</a> and <a href="challenges-index.html">challenge plan</a>.</p>
+  <p class="note">Illustrative example for interview discussion. Platform figures follow NVIDIA's NVL72 reference design; Microsoft's actual build, team process and repair split may differ.</p>
+</header>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Swimlane</div>
+    <h2>Who does what, stage by stage</h2>
+  </div>
+  <p class="scroll-hint">Scroll sideways to follow the platform through all seven stages. The readiness TPM lane is shaded.</p>
+  <div class="lane-wrap">
+    <table class="lanes">
+      <thead>
+        <tr>
+          <th class="lane corner" scope="col">Team</th>
+          <th scope="col"><span class="st-id">HR-1</span><span class="st-name">Develop and define</span><span class="st-own">Owner: CHIE · NPI</span></th>
+          <th scope="col"><span class="st-id">HR-2</span><span class="st-name">Lab validation</span><span class="st-own">Owner: CHIE · Readiness TPM</span></th>
+          <th scope="col"><span class="st-id">HR-3</span><span class="st-name">Service manual and gates</span><span class="st-own">Owner: Readiness team · TPM</span></th>
+          <th scope="col"><span class="st-id">HR-4</span><span class="st-name">Training</span><span class="st-own">Owner: Learning &amp; development</span></th>
+          <th scope="col"><span class="st-id">HR-5</span><span class="st-name">Repair procedures</span><span class="st-own">Owner: Readiness TPM</span></th>
+          <th scope="col"><span class="st-id">HR-6</span><span class="st-name">Pilot to growth</span><span class="st-own">Owner: Readiness TPM</span></th>
+          <th scope="col"><span class="st-id s">HR-7</span><span class="st-name">Operate and sustain</span><span class="st-own">Owner: Sustaining teams</span></th>
+        </tr>
+        <tr class="ms">
+          <th class="lane" scope="row">Milestones</th>
+          <td><span class="mile">Eval units ordered</span></td>
+          <td><span class="mile">Rack in Redmond lab</span></td>
+          <td><span class="mile">Manual rev. A</span></td>
+          <td><span class="mile">Training ready</span></td>
+          <td><span class="mile">Baseline + EHS published</span></td>
+          <td><span class="mile">Pilot · Dock · Growth</span></td>
+          <td><span class="mile">Fleet in production</span></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th class="lane" scope="row">CHIE &amp; NPI<small>Hardware engineering, new product integration</small></th>
+          <td><ul><li>Customer demand for Azure GB200 capacity; order evaluation racks</li><li>Define the rack SKU, including the cooling design (rack-level HRU or row-level CDU)</li><li>NPI checks site eligibility: liquid cooling, power density, floor loading, door heights</li></ul></td>
+          <td><ul><li>Install the evaluation rack in the Redmond lab</li><li>Run buildup and teardown sessions</li><li>Triage serviceability bugs</li></ul></td>
+          <td><ul><li>Work with the readiness team to get manual defects fixed by the supplier</li></ul></td>
+          <td><ul><li>Host L&amp;D in the lab sessions</li></ul></td>
+          <td class="empty">—</td>
+          <td><ul><li>Fix design issues found at pilot, or approve a waiver</li></ul></td>
+          <td><ul><li>Fix diagnostics when the red team flags repeat-offender tickets</li></ul></td>
+        </tr>
+        <tr>
+          <th class="lane" scope="row">NVIDIA / ODM<small>Platform design and build</small></th>
+          <td><ul><li>NVL72 reference design; ODM takes Microsoft's requirements through back-and-forth</li></ul></td>
+          <td><ul><li>Support the lab; take design fixes, such as keying a part</li></ul></td>
+          <td><ul><li>Publish the service manual, rev. A</li><li>Issue rev. B with corrections</li></ul></td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td><ul><li>Issue further manual revisions as pilot finds issues</li></ul></td>
+          <td><ul><li>Repair returned trays (RMA)</li><li>Run retrofits for systemic faults</li></ul></td>
+        </tr>
+        <tr class="tpm">
+          <th class="lane" scope="row">Readiness TPM<small>KM readiness pillar owner</small></th>
+          <td><ul><li>Add GB200 to the readiness roadmap; it is NUDD on every count</li><li>Set the plan of record: dates for lab, pilot and growth, owners for each team</li></ul></td>
+          <td><ul><li>Tear down the compute tray, NVLink switch tray, power shelf and HRU</li><li>Review with a tired-technician mindset: unkeyed parts, look-alikes, quick-disconnect seating, lift needs</li><li>Log bugs and follow each to a fix or a procedure control</li></ul></td>
+          <td><ul><li>Review every repair in rev. A against the rack: sequence, missing steps, parts out vs. back in</li><li>Send defects through the readiness team</li></ul></td>
+          <td><ul><li>Check training and procedures describe the same tray removal and lockout/tagout steps</li></ul></td>
+          <td><ul><li>Write the NUDD procedure list (see below)</li><li>Author new sections; reuse shared modules</li><li><span class="ehs">EHS</span> Add lockout/tagout, drain and leak-check steps, lift and torque controls</li><li>Run the compliance checklist</li></ul></td>
+          <td><ul><li>Publish baseline procedures and all EHS content before pilot</li><li>Work with one or two pilot-site technicians</li><li>Revise for each manual revision; define coolant sampling steps</li><li>Hand off to sustaining at growth</li></ul></td>
+          <td><ul><li>Write a business requirements document when the ticket system can't route a repair, such as several leak-detection wire types under one name</li><li>Track GB200 measures</li></ul></td>
+        </tr>
+        <tr>
+          <th class="lane" scope="row">Tech writers &amp; service engineers<small>KM team</small></th>
+          <td class="empty">—</td>
+          <td><ul><li>Service engineer joins a session for the field view</li></ul></td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td><ul><li>Tech writers build the procedures in the modular tool</li><li>GPU service engineer drafts selected procedures</li><li>Multi-stage approval</li></ul></td>
+          <td><ul><li>Writers apply revisions</li><li>Service engineers take pilot escalations</li></ul></td>
+          <td><ul><li>Service engineers handle escalations and write troubleshooting guides</li><li>Patterns turn into procedure changes</li></ul></td>
+        </tr>
+        <tr>
+          <th class="lane" scope="row">DCIS readiness team<small>Gates, waivers, "Nova"</small></th>
+          <td><ul><li>Open the gate checklist for GB200</li></ul></td>
+          <td class="empty">—</td>
+          <td><ul><li>Chase manual fixes with CHIE and the ODM</li><li>Track gates: manual, training, PQT, PAT, tools (server lift, torque drivers, coolant kit)</li></ul></td>
+          <td><ul><li>Confirm the training gate</li></ul></td>
+          <td class="empty">—</td>
+          <td><ul><li>Grant a pilot waiver if needed, with conditions for later clusters</li></ul></td>
+          <td class="empty">—</td>
+        </tr>
+        <tr>
+          <th class="lane" scope="row">Learning &amp; development</th>
+          <td class="empty">—</td>
+          <td><ul><li>Film the teardowns for training</li></ul></td>
+          <td class="empty">—</td>
+          <td><ul><li>Build modules: liquid-cooling safety, tray handling, lockout/tagout</li></ul></td>
+          <td class="empty">—</td>
+          <td><ul><li>Train pilot-site technicians</li></ul></td>
+          <td><ul><li>Update training when procedures change</li></ul></td>
+        </tr>
+        <tr>
+          <th class="lane" scope="row">DC technicians &amp; critical environments</th>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td><ul><li>Pilot-site technicians use the content and give feedback</li><li>Critical environments agree who does HRU lockout/tagout</li></ul></td>
+          <td><ul><li>Repair from routed tickets, such as "replace / GPU tray"</li><li>Submit feedback; escalate what they can't solve</li></ul></td>
+        </tr>
+        <tr>
+          <th class="lane" scope="row">Sustaining &amp; incident teams<small>KM sustaining, DCIS sustaining, blue, red</small></th>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td><ul><li>KM sustaining takes over at growth</li></ul></td>
+          <td><ul><li>KM sustaining: new manual releases, feedback, missed procedures</li><li>DCIS sustaining: tray failure rates, retrofits, fix-on-fail</li><li>Blue and red teams: incident sources, repeat offenders</li><li>Compliance: yearly check</li></ul></td>
+        </tr>
+        <tr class="loops">
+          <th class="lane" scope="row">Feedback loops</th>
+          <td class="empty">—</td>
+          <td><span class="back">↩ to HR-1</span>Lab bugs go back to CHIE and the ODM for design fixes</td>
+          <td><span class="back">↩ to ODM</span>Manual defects return as a new revision</td>
+          <td class="empty">—</td>
+          <td class="empty">—</td>
+          <td><span class="back">↩ to HR-5</span>Pilot feedback and manual revisions reopen procedures</td>
+          <td><span class="back">↩ to HR-1, HR-5</span>Field issues drive procedure changes, retrofits and ticketing requests</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="grid2">
+    <div class="panel">
+      <div class="eyebrow">The platform</div>
+      <h3>What a GB200 NVL72 rack contains</h3>
+      <div class="specs">
+        <div class="spec"><b>72</b><span>Blackwell GPUs</span></div>
+        <div class="spec"><b>36</b><span>Grace CPUs</span></div>
+        <div class="spec"><b>18</b><span>compute trays, 4 GPUs and 2 CPUs each</span></div>
+        <div class="spec"><b>9</b><span>NVLink switch trays</span></div>
+      </div>
+      <ul>
+        <li>NVLink spine of copper cable cartridges at the rear joins all 72 GPUs</li>
+        <li>Power shelves feed a busbar instead of individual cords to PDUs</li>
+        <li>Cold plates and manifolds with quick-disconnect fittings, cooled by an HRU or CDU</li>
+        <li>CPU memory is soldered, so there is no DIMM swap on compute trays</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="eyebrow">Why it's NUDD</div>
+      <h3>New, unique, difficult and different</h3>
+      <ul>
+        <li><b>New:</b> rack-scale design where the whole rack behaves as one system</li>
+        <li><b>Unique:</b> liquid cooling and busbar power, unlike the air-cooled fleet</li>
+        <li><b>Difficult:</b> heavy trays, coolant handling, dense NVLink connections</li>
+        <li><b>Different:</b> lockout/tagout moves IT technicians into work critical environments used to own</li>
+      </ul>
+      <p class="note">So it goes to the top of the priority list, and nearly every repair needs a platform-specific procedure.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">HR-5 output</div>
+    <h2>Example procedure list for GB200</h2>
+    <p>What the TPM might write, and what can reuse existing content. Shared modules are written once and assembled into each procedure.</p>
+  </div>
+  <div class="tbl"><table class="t">
+    <thead><tr><th>Repair or module</th><th>Type</th><th>Main risk the procedure guards against</th></tr></thead>
+    <tbody>
+      <tr><td class="r">Compute tray replacement</td><td><span class="pill plat">Platform-specific</span></td><td>Coolant spill at the quick-disconnects; tray dropped during removal</td></tr>
+      <tr><td class="r">NVLink switch tray replacement</td><td><span class="pill plat">Platform-specific</span></td><td>Damaged high-density connectors; GPUs losing the fabric</td></tr>
+      <tr><td class="r">Power shelf PSU swap</td><td><span class="pill plat">Platform-specific</span></td><td>Pulling a supply when redundancy is already lost</td></tr>
+      <tr><td class="r">Quick-disconnect or manifold hose</td><td><span class="pill plat">Platform-specific</span></td><td><span class="ehs">EHS</span> Leak from a pump restarted mid-repair</td></tr>
+      <tr><td class="r">Leak-detection wire or sensor</td><td><span class="pill plat">Platform-specific</span></td><td>Wrong wire type fitted; ticket can't tell the types apart</td></tr>
+      <tr><td class="r">HRU pump controller</td><td><span class="pill plat">Platform-specific</span></td><td>Unkeyed part inserted backward, breaking the slot</td></tr>
+      <tr><td class="r">NIC or DPU (ConnectX, BlueField)</td><td><span class="pill plat">Platform-specific</span></td><td>Wrong slot or firmware mismatch</td></tr>
+      <tr><td class="r">E1.S drive</td><td><span class="pill">Near-generic</span></td><td>Wrong bay; data-bearing drive handling</td></tr>
+      <tr><td class="r">Optical transceiver</td><td><span class="pill">Generic FRU</span></td><td>Dirty fiber; wrong optic type</td></tr>
+      <tr><td class="r">Lockout/tagout, drain and refill</td><td><span class="pill mod">Shared module</span></td><td><span class="ehs">EHS</span> Pumps restarted by someone else</td></tr>
+      <tr><td class="r">Tray removal and reinstall</td><td><span class="pill mod">Shared module</span></td><td><span class="ehs">EHS</span> Lifting injury; rails releasing</td></tr>
+      <tr><td class="r">Leak check and pressure test</td><td><span class="pill mod">Shared module</span></td><td>Slow leak found only after the rack is back in service</td></tr>
+      <tr><td class="r">Post-repair validation</td><td><span class="pill mod">Shared module</span></td><td>Node returned to production before GPU and fabric health pass</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="grid2">
+    <div class="panel">
+      <div class="eyebrow">HR-2 examples</div>
+      <h3>Possible lab findings and what happens next</h3>
+      <div class="find">
+        <div class="f"><b>Quick-disconnect gives no sign it is fully seated</b><span><span class="k">Risk</span>Slow leak onto a 72-GPU rack</span><span><span class="k">Action</span>Bug to the ODM; add a visual check and leak test to the procedure</span></div>
+        <div class="f"><b>GB200 and GB300 trays look identical</b><span><span class="k">Risk</span>Wrong tray fitted in a mixed site</span><span><span class="k">Action</span>Part-number check step; label request to the ODM</span></div>
+        <div class="f"><b>HRU controller is not keyed</b><span><span class="k">Risk</span>Broken slot forces a full rack swap</span><span><span class="k">Action</span>Keying fix to manufacturing; orientation label and caution in the meantime</span></div>
+        <div class="f"><b>Manual rev. A removes 7 parts but reinstalls 5</b><span><span class="k">Risk</span>Tray returned without a bracket or cable</span><span><span class="k">Action</span>Defect to the readiness team for rev. B; parts-count checkpoint added</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="eyebrow">HR-7 measures</div>
+      <h3>What to track once GB200 is in production</h3>
+      <ul>
+        <li>Procedure coverage at pilot and at growth</li>
+        <li>Tickets by repair type, and the share routed to a platform-specific procedure</li>
+        <li>Repeat-offender tickets on the same tray</li>
+        <li>Time to restore GPU capacity after a fault</li>
+        <li>Coolant leaks and other EHS events</li>
+        <li>Procedure feedback received, accepted and declined</li>
+        <li>Tray failure rate and RMA returns</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">For the interview</div>
+    <h2>Questions to raise with the panel</h2>
+  </div>
+  <div class="panel">
+    <ol class="q">
+      <li>For GB-class racks, which repairs happen on site, and which trays go back to the ODM?</li>
+      <li>Who owns lockout/tagout on HRU work today: site services, critical environments, or both?</li>
+      <li>How is authoring split between the TPM, the tech writers and the GPU service engineer?</li>
+      <li>How much of the GB200 content carried over to GB300, and how was that decided?</li>
+      <li>Which readiness gates most often hold up a GPU pilot?</li>
+    </ol>
+  </div>
+</section>
+</div>
+</body>
+</html>
