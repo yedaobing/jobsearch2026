@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Challenges a Microsoft hardware readiness TPM is likely to face, with a plan and a matching story for each.">
+<title>Readiness TPM Challenge Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: same procedure-sheet system as the workflow page. Index of challenges, then one row per challenge: context left, plan and story right. */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --line:#d3dce0;
+  --accent:#0b6c76; --accent-soft:#dbeef0;
+  --jd:#3e4aa8; --jd-soft:#e4e7f8;
+  --me:#7a4a12; --me-soft:#f6ecdd;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a383e;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --me:#e8b56f; --me-soft:#35270f; color-scheme:dark }}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px;display:grid;gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800;font-stretch:78%;line-height:1.02}
+h2{font-size:22px;font-weight:750;font-stretch:82%;line-height:1.15}
+h3{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}
+.lede{max-width:70ch;color:var(--muted);font-size:16px}
+.note{font-size:13px;color:var(--muted);max-width:82ch}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;padding:1px 6px;border-radius:3px;vertical-align:1px;white-space:nowrap}
+.tag.hm{background:var(--accent-soft);color:var(--accent)}
+.tag.jd{background:var(--jd-soft);color:var(--jd)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13px;color:var(--muted)}
+
+.index{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 24px}
+.index li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px;font-size:14px}
+.index b{font-family:var(--f-mono);font-size:12px;color:var(--accent);padding-top:2px}
+.index a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.index a:hover{border-color:var(--accent)}
+
+.list{display:grid;border-top:2px solid var(--ink)}
+.ch{display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;padding-block:28px;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+.ctx{display:grid;gap:10px;align-content:start}
+.cid{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--accent)}
+.ctx p{font-size:14px;color:var(--muted)}
+.body{display:grid;gap:18px;min-width:0}
+.plan ul{margin:6px 0 0;padding-left:18px;display:grid;gap:6px}
+.story{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:10px}
+.story-head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.story-head strong{font-family:var(--f-display);font-stretch:85%;font-weight:700;font-size:16px}
+.story-head span{font-size:12.5px;color:var(--muted)}
+.sar{display:grid;grid-template-columns:76px minmax(0,1fr);gap:6px 12px;margin:0}
+.sar dt{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--me);padding-top:3px}
+.sar dd{margin:0}
+.line{border-left:3px solid var(--me);background:var(--me-soft);padding:10px 14px;border-radius:0 4px 4px 0;font-size:14.5px}
+.line b{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--me);margin-bottom:2px}
+.gap{font-size:13.5px;color:var(--muted)}
+.gap b{color:var(--ink)}
+@media (max-width:780px){.ch{grid-template-columns:minmax(0,1fr);gap:14px}.sar{grid-template-columns:minmax(0,1fr);gap:2px}.sar dd{margin-bottom:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Microsoft CO+I · DCIS · Hardware Readiness TPM</div>
+  <h1>Readiness TPM Challenge Plan</h1>
+  <p class="lede">Eight challenges a hardware readiness TPM is likely to face in the first year, how I would handle each one, and the story from my own work that shows I have done something like it before.</p>
+  <div class="legend">
+    <span><span class="tag hm">HM</span> Raised by the hiring manager on the informational call</span>
+    <span><span class="tag jd">JD</span> From the TPM II job description</span>
+  </div>
+  <p class="note">Companion to the <a href="../">hardware readiness workflow</a>. Each story is written to run 60 to 90 seconds out loud: situation, what I did, what came of it.</p>
+</header>
+
+<nav aria-label="Challenges">
+  <ol class="index">
+    <li><b>C1</b><a href="#c1">A year of backlog to get to green</a></li>
+    <li><b>C2</b><a href="#c2">Ramping up on a new fleet while it gets busy</a></li>
+    <li><b>C3</b><a href="#c3">GPU, liquid cooling and new safety work</a></li>
+    <li><b>C4</b><a href="#c4">Manual revisions, configuration drift and compliance load</a></li>
+    <li><b>C5</b><a href="#c5">Happy-path procedures and field-only problems</a></li>
+    <li><b>C6</b><a href="#c6">Limited control over suppliers</a></li>
+    <li><b>C7</b><a href="#c7">Getting ticketing changes prioritized</a></li>
+    <li><b>C8</b><a href="#c8">A stretched team, a shared space and a remote manager</a></li>
+  </ol>
+</nav>
+
+<div class="list">
+
+<article class="ch" id="c1">
+  <div class="ctx">
+    <span class="cid">C1</span>
+    <h2>A year of backlog to get to green</h2>
+    <p>The seat has effectively been empty for about a year. GPU work has kept moving, but compute and storage platforms have a backlog. The first goal is to get every platform to green. <span class="tag hm">HM</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>In the first two weeks, list every platform with its procedure status, its pilot and growth dates, and its ticket volume.</li>
+      <li>Rank the list by NUDD first, then by how soon each platform reaches growth, then by repair volume.</li>
+      <li>Agree with my manager on what "green" means per platform, so progress is measured the same way every week.</li>
+      <li>Split the queue between me, the two vendor tech writers and the service engineers, and share a weekly burn-down.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>Delta DR build recovery</strong><span>Delta Air Lines, 2018</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>A contractor-led, 120-rack converged-infrastructure DR build had stalled after about a year.</dd>
+        <dt>Action</dt><dd>I took it over mid-stream and owned the remaining half of the hardware delivery. I restructured the sequencing across supply chain, the hardware and cabling vendors, the facility team and engineering, and reported progress against a recovery baseline.</dd>
+        <dt>Result</dt><dd>Delivered against the executive recovery baseline in August 2018.</dd>
+      </dl>
+    </div>
+    <p class="line"><b>Opening line</b>I have taken over stalled work before. The first thing I do is make the backlog visible and agree on what done looks like, then re-sequence around the highest-risk items.</p>
+  </div>
+</article>
+
+<article class="ch" id="c2">
+  <div class="ctx">
+    <span class="cid">C2</span>
+    <h2>Ramping up on a new fleet while it gets busy</h2>
+    <p>An external hire has a lot to absorb, and new projects are about to start. The role is leveled at TPM II to allow ramp-up time. <span class="tag hm">HM</span> The JD asks for leading virtual teams to a plan of record and influencing without direct control. <span class="tag jd">JD</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>Map who owns what in the first month: CHIE, the readiness team, learning and development, sustaining, the blue and red teams, and the ticketing engineering team.</li>
+      <li>Join lab buildup and teardown sessions from the start, since that is where the content begins.</li>
+      <li>Read through the existing modular procedure library and sit in on escalations to learn how technicians use it.</li>
+      <li>Set 30, 60 and 90 day checkpoints with my manager on what I own by each one.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>ByteDance planning and delivery framework</strong><span>ByteDance, 2025 to present</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>When I joined, the global edge team had been through several reorganizations, and it was unclear which team owned what when issues came up.</dd>
+        <dt>Action</dt><dd>With my manager's support, I brought the functional leads into a cross-functional virtual team. We mapped the process, assigned owners across engineering, supply chain, operations and finance, wrote the SOPs and workflow documents, and defined cross-team SLAs.</dd>
+        <dt>Result</dt><dd>The APAC, EMEA and NA/LATAM teams adopted it, and it is now standard practice.</dd>
+      </dl>
+    </div>
+    <p class="line"><b>Opening line</b>When I start somewhere new, I learn the system by finding out who owns each step, and I put that into a plan everyone agrees on.</p>
+  </div>
+</article>
+
+<article class="ch" id="c3">
+  <div class="ctx">
+    <span class="cid">C3</span>
+    <h2>GPU, liquid cooling and new safety work</h2>
+    <p>GPU platforms are almost always new, unique, difficult or different. Liquid-cooling processes such as coolant sampling and lockout/tagout are still being worked out, and IT technicians are now doing work that critical environments staff used to own. <span class="tag hm">HM</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>Be clear about my depth: GPU knowledge from structured self-study and a home lab, server platform depth from NPI work.</li>
+      <li>Pair with the service engineer who has been writing the GPU content, and with CHIE in the lab.</li>
+      <li>Have the critical environments team review every lockout/tagout and coolant step before it ships.</li>
+      <li>Treat EHS content as required at pilot, never deferred to a later revision. Safety comes first, then outage risk, then component damage.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>Server platform NPI and a home GPU lab</strong><span>ByteDance, 2025 to present; personal</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>ByteDance needed next-generation cache and compute platforms, with six candidate configurations for each server type.</dd>
+        <dt>Action</dt><dd>I ran the evaluation with hardware engineering, supply chain and component vendors, weighing end-user video start latency against cost per CPU core. Separately, I built a home lab server with RTX 4090 GPUs. Seating the CPU correctly and applying thermal paste took several checks, which showed me how easily a repair goes wrong.</dd>
+        <dt>Result</dt><dd>Each server type narrowed to one standard configuration. My CDCP certification also covers electrical distribution and mechanical cooling concepts.</dd>
+      </dl>
+    </div>
+    <p class="gap"><b>Gap to name honestly:</b> I have not written procedures for liquid-cooled GPU racks. My answer is how I learn fast and who I would lean on, not a claim of direct experience.</p>
+    <p class="line"><b>Opening line</b>GPU and liquid cooling are where I would learn most. I would get into the lab early and pair with the people who know it, and I would not let safety content slip past pilot.</p>
+  </div>
+</article>
+
+<article class="ch" id="c4">
+  <div class="ctx">
+    <span class="cid">C4</span>
+    <h2>Manual revisions, configuration drift and compliance load</h2>
+    <p>New service manual revisions can send procedures back for rework between pilot and growth. Supply changes create several configurations of one platform, and every published procedure gets a yearly compliance review. <span class="tag hm">HM</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>Record which manual revision each procedure and section is based on, so a new revision shows exactly what is affected.</li>
+      <li>Use modular sections, so a revision changes one section rather than every procedure that uses it.</li>
+      <li>Decide reuse or rewrite per hardware generation with CHIE, instead of assuming two similar platforms match.</li>
+      <li>Write only the content that is needed, because each extra procedure adds compliance work every year.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>Windows Server and SQL Server migration</strong><span>Paylocity, 2022 to 2025</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>I owned the upgrade and migration of about 6,000 Windows Server VMs and 300 SQL Server instances across dev, QA, pre-prod and production.</dd>
+        <dt>Action</dt><dd>Midway through, I gathered structured feedback from the teams doing the work and changed the workflow where it was causing repeat effort.</dd>
+        <dt>Result</dt><dd>Rework dropped, and we limited the load on team availability and the impact on production.</dd>
+      </dl>
+    </div>
+    <p class="line"><b>Opening line</b>Content that keeps changing needs a clear record of what it is based on, so a change upstream shows you exactly what to update downstream.</p>
+  </div>
+</article>
+
+<article class="ch" id="c5">
+  <div class="ctx">
+    <span class="cid">C5</span>
+    <h2>Happy-path procedures and field-only problems</h2>
+    <p>Procedures that work in the lab can fail on the floor, and reviewers without operations experience often miss it. Some problems only appear in production: exothermic events, customer-induced damage, unstable rails. <span class="tag hm">HM</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>Review every procedure against the failure cases: a part reversed, a step skipped or out of order, the wrong part fitted.</li>
+      <li>Write for the least experienced technician on a long night shift.</li>
+      <li>Line up one or two technicians at each pilot site for direct feedback before growth.</li>
+      <li>Go through procedure feedback and escalations with the blue team each month and turn repeat patterns into procedure controls.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>Diagnostic and post-repair test procedures</strong><span>ByteDance, 2025 to present</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>Each new server platform needed operational content before sites could support it.</dd>
+        <dt>Action</dt><dd>With hardware engineering, DC operations and OEM/ODM partners, I developed the diagnostic procedures, the post-repair test procedures that return repaired servers to production, and the asset records.</dd>
+        <dt>Result</dt><dd>The content rolled out to sites across APAC, EMEA and NA/LATAM and is now standard for new platforms.</dd>
+      </dl>
+    </div>
+    <p class="gap"><b>Second story if asked about incidents:</b> at Paylocity I rebuilt the reliability review around incident trends, post-mortems and RCA accountability, which contributed to about a 40% drop in Sev 1 and Sev 2 incidents within a year. At Delta, the operations knowledge base and four week-long training sessions I ran significantly reduced escalations from Level 2 to Level 3.</p>
+    <p class="line"><b>Opening line</b>I write procedures for what goes wrong, not just for what should happen, and I use field feedback to close the gaps the lab missed.</p>
+  </div>
+</article>
+
+<article class="ch" id="c6">
+  <div class="ctx">
+    <span class="cid">C6</span>
+    <h2>Limited control over suppliers</h2>
+    <p>Microsoft largely buys what OEMs sell, has some input with ODMs, and depends on suppliers to fix service manuals and hardware. Fixes go through the readiness team and CHIE. <span class="tag hm">HM</span> The JD calls for developing procedures with OEM and ODM partners. <span class="tag jd">JD</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>Report each issue with evidence: the step reference, photos from the lab, and the impact on safety, outage risk or component damage.</li>
+      <li>Push for a manufacturing fix first, and add a procedure control only when the hardware can't change.</li>
+      <li>Keep a tracked list of open supplier issues and review it with the readiness team and CHIE until each closes.</li>
+      <li>Use waiver conditions to make sure a pilot-cluster fix carries into follow-up clusters.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>OEM and ODM breakfix and lifecycle</strong><span>ByteDance, 2025 to present</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>Our fleet runs Dell and ODM platforms from Inventec, Quanta and Foxconn, plus Arista switching.</dd>
+        <dt>Action</dt><dd>I manage supply and deployment from BOM definition and forecast-to-PO through staging, burn-in and DOA/RMA handling with VARs. I track hardware failure and RMA trends by server type.</dd>
+        <dt>Result</dt><dd>I use those trends to set decommissioning schedules that protect fleet availability and keep capacity in service.</dd>
+      </dl>
+    </div>
+    <p class="line"><b>Opening line</b>With suppliers I bring data, not complaints. A clear defect with its impact attached gets fixed faster than a general request.</p>
+  </div>
+</article>
+
+<article class="ch" id="c7">
+  <div class="ctx">
+    <span class="cid">C7</span>
+    <h2>Getting ticketing changes prioritized</h2>
+    <p>When the ticketing system can't route the right procedure, the fix needs a business requirements document with data and business justification, then a place on the engineering team's priority list. A real link to GPU capacity restoration raises priority. <span class="tag hm">HM</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>Measure the impact from ticket data: misrouted tickets, extra technician time, and delay in returning capacity.</li>
+      <li>Tie the request to GPU capacity only where the data shows the link.</li>
+      <li>Propose a design, and stay open to a better one from the engineering team.</li>
+      <li>Follow the request through their prioritization until it ships, then confirm routing works on real tickets.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>Server reuse program</strong><span>ByteDance, 2025 to present</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>Decommissioned central datacenter servers could serve edge sites, but reuse had to be justified against buying new.</dd>
+        <dt>Action</dt><dd>I qualified them through cost-benefit analysis and performance testing, and used the results to make the case per server type.</dd>
+        <dt>Result</dt><dd>Cost reduction ranged from 20% to 50% per server type compared with new procurement.</dd>
+      </dl>
+    </div>
+    <p class="gap"><b>Second story if asked about tooling:</b> at Delta I negotiated a Cisco bare-metal provisioning package and built automation on it. Per-server provisioning dropped from 20 hours to 4, and the platform came in 2 months ahead of schedule.</p>
+    <p class="line"><b>Opening line</b>A change request competes with every other request, so I make the business case with numbers the other team can check.</p>
+  </div>
+</article>
+
+<article class="ch" id="c8">
+  <div class="ctx">
+    <span class="cid">C8</span>
+    <h2>A stretched team, a shared space and a remote manager</h2>
+    <p>Service engineers are covering procedures on top of escalations. One of them wants to keep working on GPU content, and the new TPM should keep that person involved. The manager is in Dublin, and the role sits in Redmond. <span class="tag hm">HM</span></p>
+  </div>
+  <div class="body">
+    <div class="plan"><h3>How I would handle it</h3><ul>
+      <li>Take the procedure writing load off the service engineers first, so they can get back to escalations.</li>
+      <li>Agree a defined piece of GPU content with the engineer who wants to stay involved, inside one shared plan that I own.</li>
+      <li>Credit that work visibly in reviews and updates.</li>
+      <li>Send my manager a short written update each week before the end of his day, with a RAID list he can review on his own time.</li>
+    </ul></div>
+    <div class="story">
+      <div class="story-head"><strong>Global delivery cadence across three regions</strong><span>ByteDance, 2025 to present</span></div>
+      <dl class="sar">
+        <dt>Situation</dt><dd>Edge delivery runs across APAC, EMEA and NA/LATAM teams in different time zones.</dd>
+        <dt>Action</dt><dd>I built the delivery dashboards and KPIs the global team uses to track more than 5,000 server deployments a year, and I run RAID across the three regions with documented tradeoffs and decisions.</dd>
+        <dt>Result</dt><dd>I present trends and actions weekly to cross-functional teams and monthly to global edge fleet leadership.</dd>
+      </dl>
+    </div>
+    <p class="line"><b>Opening line</b>Working across time zones depends on written updates people can read on their own time, and on giving teammates clear ownership of their part.</p>
+  </div>
+</article>
+
+</div>
+</div>
+</body>
+</html>
