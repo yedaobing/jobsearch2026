@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="End-to-end Microsoft DCIS hardware readiness workflow, built from the TPM II job description and the hiring manager informational call.">
+<meta name="description" content="End-to-end Microsoft DCIS hardware readiness workflow.">
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>DCIS Hardware Readiness Workflow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -129,14 +129,7 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
 <header>
   <div class="eyebrow">Microsoft CO+I · Datacenter Integration Services · Knowledge Management</div>
   <h1>Hardware Readiness Workflow</h1>
-  <p class="lede">How a new server, storage, network or GPU platform moves from hardware development through lab validation, service manuals, training, repair procedures and rollout into production, and how its use, repairs and field feedback are measured afterward.</p>
-  <div class="legend">
-    <span><span class="tag hm">HM</span> Hiring manager, informational call</span>
-    <span><span class="tag jd">JD</span> TPM II job description</span>
-    <span><span class="tag ehs">EHS</span> Safety content</span>
-  </div>
   <p class="note">See also the <a href="challenges/">challenge plan</a> for how I would handle the main challenges in this role.</p>
-  <p class="note">Built only from the job description and the hiring manager's statements; the candidate's own remarks on the call are excluded. Team names are as heard in an auto-transcript: "Sky" is most likely Cloud Hardware Infrastructure Engineering (CHIE), the name the JD uses, and the "Nova" readiness team name is unverified.</p>
 </header>
 
 <section>
@@ -198,7 +191,7 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
   <div class="tbl"><table>
     <thead><tr><th>Stage</th><th>Accountable owner</th><th>KM team's part</th><th>Other teams involved</th><th>Exit output</th></tr></thead>
     <tbody>
-      <tr><td class="sid">HR-1</td><td>CHIE and the internal customer define the SKU; NPI team approves sites</td><td>TPM partners on procedural strategy and plan of record <span class="tag jd">JD</span></td><td>OEM/ODM/SI, internal customers</td><td>Rack SKU, site eligibility</td></tr>
+      <tr><td class="sid">HR-1</td><td>CHIE and the internal customer define the SKU; NPI team approves sites</td><td>TPM partners on procedural strategy and plan of record</td><td>OEM/ODM/SI, internal customers</td><td>Rack SKU, site eligibility</td></tr>
       <tr><td class="sid">HR-2</td><td>CHIE runs the hardware and lab; readiness TPM owns serviceability findings</td><td>TPM attends every buildup and teardown review</td><td>L&amp;D, OEM/ODM/SI</td><td>Serviceability bugs with owners</td></tr>
       <tr><td class="sid">HR-3</td><td>Supplier writes the manual; DCIS readiness team owns gates, waivers and revisions</td><td>TPM reviews every repair in the manual and reports defects</td><td>CHIE, OEM/ODM/SI</td><td>Corrected manual; gates cleared or waived</td></tr>
       <tr><td class="sid">HR-4</td><td>Learning and development</td><td>TPM keeps procedures and training aligned</td><td>CHIE (lab sessions)</td><td>Technician training content</td></tr>
@@ -209,44 +202,10 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
   </table></div>
 
   <div class="life">
-    <div><span class="k">Pilot</span><p>First cluster lands. Procedures are now expected to exist here, at least in baseline form with all EHS content (shift left). <span class="tag hm">HM</span></p></div>
-    <div><span class="k">Dock date</span><p>Readiness window between pilot and growth. Content is revised as new service manual revisions arrive. <span class="tag hm">HM</span></p></div>
-    <div><span class="k">Growth / deploy</span><p>The old hard cutoff for procedure completeness. Ownership of ongoing content moves to the sustaining pillar. <span class="tag hm">HM</span></p></div>
+    <div><span class="k">Pilot</span><p>First cluster lands. Procedures are now expected to exist here, at least in baseline form with all EHS content (shift left).</p></div>
+    <div><span class="k">Dock date</span><p>Readiness window between pilot and growth. Content is revised as new service manual revisions arrive.</p></div>
+    <div><span class="k">Growth / deploy</span><p>The old hard cutoff for procedure completeness. Ownership of ongoing content moves to the sustaining pillar.</p></div>
   </div>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Roles</div>
-    <h2>Who's who</h2>
-    <p>The hiring manager runs knowledge management (KM) for APAC and EMEA, with a counterpart running the US team. DC technicians are not part of KM: they work in DC operations (site services) and are the main users of KM content.</p>
-  </div>
-  <div class="tbl"><table>
-    <thead><tr><th>Role</th><th>What they do in this workflow</th><th>Source</th></tr></thead>
-    <tbody>
-      <tr class="grp"><td colspan="3">KM team (hiring manager's organization)</td></tr>
-      <tr><td class="cat">KM managers</td><td>Two regional managers (APAC/EMEA and US). Set priorities by stack rank; the readiness TPM reports here.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Readiness TPM</td><td>Owns the readiness pillar end to end: lab serviceability review, service manual review, repair procedures, pilot rollout, ticketing change requests. "Their baby."</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
-      <tr><td class="cat">Vendor tech writers (2)</td><td>Help the TPM create procedures and build them in the modular procedure tool.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Service engineers</td><td>Write troubleshooting guides, take escalations from DC operations, and help write procedure content. Covering GPU procedures while the TPM seat is open; one wants to keep contributing.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">KM sustaining pillar</td><td>Takes over at growth: new manual releases, technician feedback, procedures missed during readiness.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">KM compliance pillar</td><td>Yearly compliance check on every procedure and section, for ISO and other certifications.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr class="grp"><td colspan="3">Other DCIS teams</td></tr>
-      <tr><td class="cat">Blue team</td><td>Incident process efficiency, run by the same manager as KM. Asks why each escalation happened and removes incident sources.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Red team</td><td>Run by the US counterpart. Quarantines bad tickets, runs the repeat-offender program, pushes engineering to fix diagnostics.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Readiness team</td><td>Not KM-focused. Owns the gates (manuals, training, PQT, PAT, tools) and waivers; its "Nova" group chases manual revisions with CHIE.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Sustaining team</td><td>Not KM-focused. Annual failure rates, systemic issues, retrofits, fix-on-fail and project-managed swap-outs.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">NPI team</td><td>Early hardware reviews, new product integration, SKU-to-datacenter approvals.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr class="grp"><td colspan="3">Partner teams</td></tr>
-      <tr><td class="cat">CHIE</td><td>Microsoft's internal hardware development team, with labs in Redmond. Defines SKUs, fixes design issues, works with suppliers.</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
-      <tr><td class="cat">Learning &amp; development</td><td>Builds technician training content and videos from the same lab sessions.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">OEM / ODM / SI</td><td>Build the hardware and write the service manuals. Microsoft's control ranges from little (OEM) to full spec (SI).</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
-      <tr><td class="cat">DC technicians</td><td>Site services staff in DC operations. Perform repairs from the procedures, escalate problems, give feedback; one or two per pilot site give direct feedback.</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
-      <tr><td class="cat">Critical environments</td><td>Maintain mechanical and electrical systems. Their boundary with site services is blurring as GPU work adds lockout/tagout.</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
-      <tr><td class="cat">Engineering &amp; ticketing teams</td><td>Engineering teams run diagnostics and file repair tickets; the ticketing engineering team prioritizes and builds system changes.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Internal customers</td><td>Teams such as Office 365 or Xbox whose workload needs shape the rack SKU.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-    </tbody>
-  </table></div>
 </section>
 
 <section>
@@ -288,20 +247,20 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
   <div class="sec-head">
     <div class="eyebrow">Measurement</div>
     <h2>Quantitative measures</h2>
-    <p>The JD frames KPIs and key results around usage, quality, speed and cost. The signals the hiring manager named fill in what those look like for hardware platforms in production.</p>
+    <p>KPIs and key results cover usage, quality, speed and cost, measured through signals from the fleet in production.</p>
   </div>
   <div class="tbl"><table>
-    <thead><tr><th>Category</th><th>Measure</th><th>What it tells you</th><th>Source</th></tr></thead>
+    <thead><tr><th>Category</th><th>Measure</th><th>What it tells you</th></tr></thead>
     <tbody>
-      <tr><td class="cat">Readiness</td><td>Platform status: green vs. backlog, ranked by NUDD; procedure coverage at pilot and at growth</td><td>Whether technicians have content before the hardware needs repair. First goal for the new TPM is to get every platform to green.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Usage</td><td>Tickets routed to a procedure by repair action, component type and server model; platform-specific vs. generic FRU procedures used</td><td>How much of the repair volume the content actually covers, and where routing attributes cannot tell parts apart (e.g., multiple leak-detection wires).</td><td class="src"><span class="tag jd">JD</span> <span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Quality</td><td>Procedure feedback items (ADO) received and their disposition; revisions per procedure; yearly compliance pass/fail</td><td>Accuracy of content in the field and its standing for ISO and other certifications.</td><td class="src"><span class="tag jd">JD</span> <span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Repair outcome</td><td>Repeat-offender tickets (same repair, same asset, days apart); "vampire" nodes that keep returning; nodes that stay out for repair; annual failure rate (AFR)</td><td>Whether repairs fix the fault or the diagnostic signal is wrong; systemic component problems that may need a retrofit.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Speed</td><td>Time to restore capacity after a fault; GPU nodes not repaired quickly enough</td><td>High availability and efficient recovery of capacity. Blocking GPU capacity restoration raises a fix's priority.</td><td class="src"><span class="tag jd">JD</span> <span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Escalations</td><td>ICM escalations from DC operations, by cause: process gap, bad metadata, bad ticket</td><td>Which incident sources can be eliminated through content, automation or quarantine.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Safety &amp; damage</td><td>EHS events, exothermic events, coolant leaks, customer-induced damage</td><td>Where procedures need added controls. Safety ranks above outage risk, which ranks above component damage.</td><td class="src"><span class="tag ehs">EHS</span> <span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Cost</td><td>Technician hours and parts per repair; cost of a failure (e.g., a flooded 72-GPU rack)</td><td>Business justification for procedure changes and ticketing feature requests; resource implications.</td><td class="src"><span class="tag jd">JD</span> <span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Lab findings</td><td>Serviceability issues found in teardown and service manual defects, and how many are closed before pilot</td><td>How much risk is removed before hardware reaches the floor.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">Readiness</td><td>Platform status: green vs. backlog, ranked by NUDD; procedure coverage at pilot and at growth</td><td>Whether technicians have content before the hardware needs repair. First goal for the new TPM is to get every platform to green.</td></tr>
+      <tr><td class="cat">Usage</td><td>Tickets routed to a procedure by repair action, component type and server model; platform-specific vs. generic FRU procedures used</td><td>How much of the repair volume the content actually covers, and where routing attributes cannot tell parts apart (e.g., multiple leak-detection wires).</td></tr>
+      <tr><td class="cat">Quality</td><td>Procedure feedback items (ADO) received and their disposition; revisions per procedure; yearly compliance pass/fail</td><td>Accuracy of content in the field and its standing for ISO and other certifications.</td></tr>
+      <tr><td class="cat">Repair outcome</td><td>Repeat-offender tickets (same repair, same asset, days apart); "vampire" nodes that keep returning; nodes that stay out for repair; annual failure rate (AFR)</td><td>Whether repairs fix the fault or the diagnostic signal is wrong; systemic component problems that may need a retrofit.</td></tr>
+      <tr><td class="cat">Speed</td><td>Time to restore capacity after a fault; GPU nodes not repaired quickly enough</td><td>High availability and efficient recovery of capacity. Blocking GPU capacity restoration raises a fix's priority.</td></tr>
+      <tr><td class="cat">Escalations</td><td>ICM escalations from DC operations, by cause: process gap, bad metadata, bad ticket</td><td>Which incident sources can be eliminated through content, automation or quarantine.</td></tr>
+      <tr><td class="cat">Safety &amp; damage</td><td>EHS events, exothermic events, coolant leaks, customer-induced damage</td><td>Where procedures need added controls. Safety ranks above outage risk, which ranks above component damage.</td><td class="src"><span class="tag ehs">EHS</span></td></tr>
+      <tr><td class="cat">Cost</td><td>Technician hours and parts per repair; cost of a failure (e.g., a flooded 72-GPU rack)</td><td>Business justification for procedure changes and ticketing feature requests; resource implications.</td></tr>
+      <tr><td class="cat">Lab findings</td><td>Serviceability issues found in teardown and service manual defects, and how many are closed before pilot</td><td>How much risk is removed before hardware reaches the floor.</td></tr>
     </tbody>
   </table></div>
 </section>
@@ -310,22 +269,22 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
   <div class="sec-head">
     <div class="eyebrow">Measurement</div>
     <h2>Qualitative measures and customer feedback</h2>
-    <p>Two kinds of customer appear in the sources: the DC technicians who use the procedures, and the internal teams and Azure customers whose demand brings a platform in.</p>
+    <p>There are two kinds of customer: the DC technicians who use the procedures, and the internal teams and Azure customers whose demand brings a platform in.</p>
   </div>
   <div class="tbl"><table>
-    <thead><tr><th>Channel</th><th>What is collected</th><th>How it is used</th><th>Source</th></tr></thead>
+    <thead><tr><th>Channel</th><th>What is collected</th><th>How it is used</th></tr></thead>
     <tbody>
-      <tr><td class="cat">Procedure feedback link</td><td>Technician comments submitted from the end of each procedure, logged as Azure DevOps items</td><td>Accept and implement, or decline with the reason sent back so the technician sees the context.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Pilot site contacts</td><td>Direct feedback from one or two technicians working new content at pilot sites</td><td>Fix content before growth.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Lab teardown review</td><td>Serviceability observations made from a technician's point of view</td><td>Bugs to hardware engineering and the manufacturer; controls in the procedure where hardware can't change.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Escalation patterns</td><td>Why technicians escalated; recurring field issues seen by service engineers</td><td>New instructions in procedures; incident-source elimination by the blue team.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Training alignment</td><td>Gaps between L&amp;D training content and published procedures</td><td>Keep what new technicians learn consistent with what the ticket gives them.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Internal customer needs</td><td>Workload requirements from teams such as Office 365 or Xbox, and customer demand signals for GPU capacity</td><td>Rack SKU definition and platform onboarding.</td><td class="src"><span class="tag hm">HM</span></td></tr>
-      <tr><td class="cat">Interviews &amp; surveys</td><td>Customer feedback mechanisms, data collection tools, interviews, surveys</td><td>Insight into product and service performance; shared with partner teams; tested through iterative experiments.</td><td class="src"><span class="tag jd">JD</span></td></tr>
-      <tr><td class="cat">Risk &amp; decision log</td><td>Technical and operational risk assessments, tradeoffs, decisions</td><td>Accountability for decisions and deliverables across partner teams.</td><td class="src"><span class="tag jd">JD</span></td></tr>
+      <tr><td class="cat">Procedure feedback link</td><td>Technician comments submitted from the end of each procedure, logged as Azure DevOps items</td><td>Accept and implement, or decline with the reason sent back so the technician sees the context.</td></tr>
+      <tr><td class="cat">Pilot site contacts</td><td>Direct feedback from one or two technicians working new content at pilot sites</td><td>Fix content before growth.</td></tr>
+      <tr><td class="cat">Lab teardown review</td><td>Serviceability observations made from a technician's point of view</td><td>Bugs to hardware engineering and the manufacturer; controls in the procedure where hardware can't change.</td></tr>
+      <tr><td class="cat">Escalation patterns</td><td>Why technicians escalated; recurring field issues seen by service engineers</td><td>New instructions in procedures; incident-source elimination by the blue team.</td></tr>
+      <tr><td class="cat">Training alignment</td><td>Gaps between L&amp;D training content and published procedures</td><td>Keep what new technicians learn consistent with what the ticket gives them.</td></tr>
+      <tr><td class="cat">Internal customer needs</td><td>Workload requirements from teams such as Office 365 or Xbox, and customer demand signals for GPU capacity</td><td>Rack SKU definition and platform onboarding.</td></tr>
+      <tr><td class="cat">Interviews &amp; surveys</td><td>Customer feedback mechanisms, data collection tools, interviews, surveys</td><td>Insight into product and service performance; shared with partner teams; tested through iterative experiments.</td></tr>
+      <tr><td class="cat">Risk &amp; decision log</td><td>Technical and operational risk assessments, tradeoffs, decisions</td><td>Accountability for decisions and deliverables across partner teams.</td></tr>
     </tbody>
   </table></div>
-  <p class="note">Measures feed a recurring cycle the JD describes: monitor trends, communicate them in business meetings, find the insight, act, and fine-tune implementation. <span class="tag jd">JD</span></p>
+  <p class="note">Measures feed a recurring cycle: monitor trends, communicate them in business meetings, find the insight, act, and fine-tune implementation.</p>
 </section>
 
 <section>
@@ -334,12 +293,46 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
     <h2>Rules that apply across stages</h2>
   </div>
   <div class="rules">
-    <div class="rule"><h3>Risk priority</h3><ol class="prio"><li>Staff safety</li><li>Outage risk</li><li>Component damage</li></ol><p class="note">Order used when deciding what a procedure must guard against. <span class="tag hm">HM</span></p></div>
-    <div class="rule"><h3>NUDD prioritization</h3><p>New, unique, difficult or different from what DC operations already handle gets platform-specific content first. GPU platforms almost always qualify, then compute, storage and network. <span class="tag hm">HM</span></p></div>
-    <div class="rule"><h3>Write for the worst case</h3><p>Procedures assume the least experienced technician on a long night shift. Ask what happens if a step is skipped, reversed or done with the wrong part. <span class="tag hm">HM</span></p></div>
-    <div class="rule"><h3>Extreme ownership</h3><p>An issue outside your scope still gets carried to the team that can fix it and followed to resolution. <span class="tag hm">HM</span></p></div>
+    <div class="rule"><h3>Risk priority</h3><ol class="prio"><li>Staff safety</li><li>Outage risk</li><li>Component damage</li></ol><p class="note">Order used when deciding what a procedure must guard against.</p></div>
+    <div class="rule"><h3>NUDD prioritization</h3><p>New, unique, difficult or different from what DC operations already handle gets platform-specific content first. GPU platforms almost always qualify, then compute, storage and network.</p></div>
+    <div class="rule"><h3>Write for the worst case</h3><p>Procedures assume the least experienced technician on a long night shift. Ask what happens if a step is skipped, reversed or done with the wrong part.</p></div>
+    <div class="rule"><h3>Extreme ownership</h3><p>An issue outside your scope still gets carried to the team that can fix it and followed to resolution.</p></div>
   </div>
-  <p class="note">Where the role can grow once the program is green: repair efficacy and signals from engineering teams, per the hiring manager. <span class="tag hm">HM</span></p>
+  <p class="note">Where the role can grow once the program is green: repair efficacy and signals from engineering teams.</p>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Roles</div>
+    <h2>Who's who</h2>
+    <p>The hiring manager runs knowledge management (KM) for APAC and EMEA, with a counterpart running the US team. DC technicians are not part of KM: they work in DC operations (site services) and are the main users of KM content.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Role</th><th>What they do in this workflow</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="2">KM team (hiring manager's organization)</td></tr>
+      <tr><td class="cat">KM managers</td><td>Two regional managers (APAC/EMEA and US). Set priorities by stack rank; the readiness TPM reports here.</td></tr>
+      <tr><td class="cat">Readiness TPM</td><td>Owns the readiness pillar end to end: lab serviceability review, service manual review, repair procedures, pilot rollout, ticketing change requests. "Their baby."</td></tr>
+      <tr><td class="cat">Vendor tech writers (2)</td><td>Help the TPM create procedures and build them in the modular procedure tool.</td></tr>
+      <tr><td class="cat">Service engineers</td><td>Write troubleshooting guides, take escalations from DC operations, and help write procedure content. Covering GPU procedures while the TPM seat is open; one wants to keep contributing.</td></tr>
+      <tr><td class="cat">KM sustaining pillar</td><td>Takes over at growth: new manual releases, technician feedback, procedures missed during readiness.</td></tr>
+      <tr><td class="cat">KM compliance pillar</td><td>Yearly compliance check on every procedure and section, for ISO and other certifications.</td></tr>
+      <tr class="grp"><td colspan="2">Other DCIS teams</td></tr>
+      <tr><td class="cat">Blue team</td><td>Incident process efficiency, run by the same manager as KM. Asks why each escalation happened and removes incident sources.</td></tr>
+      <tr><td class="cat">Red team</td><td>Run by the US counterpart. Quarantines bad tickets, runs the repeat-offender program, pushes engineering to fix diagnostics.</td></tr>
+      <tr><td class="cat">Readiness team</td><td>Not KM-focused. Owns the gates (manuals, training, PQT, PAT, tools) and waivers; its "Nova" group chases manual revisions with CHIE.</td></tr>
+      <tr><td class="cat">Sustaining team</td><td>Not KM-focused. Annual failure rates, systemic issues, retrofits, fix-on-fail and project-managed swap-outs.</td></tr>
+      <tr><td class="cat">NPI team</td><td>Early hardware reviews, new product integration, SKU-to-datacenter approvals.</td></tr>
+      <tr class="grp"><td colspan="2">Partner teams</td></tr>
+      <tr><td class="cat">CHIE</td><td>Microsoft's internal hardware development team, with labs in Redmond. Defines SKUs, fixes design issues, works with suppliers.</td></tr>
+      <tr><td class="cat">Learning &amp; development</td><td>Builds technician training content and videos from the same lab sessions.</td></tr>
+      <tr><td class="cat">OEM / ODM / SI</td><td>Build the hardware and write the service manuals. Microsoft's control ranges from little (OEM) to full spec (SI).</td></tr>
+      <tr><td class="cat">DC technicians</td><td>Site services staff in DC operations. Perform repairs from the procedures, escalate problems, give feedback; one or two per pilot site give direct feedback.</td></tr>
+      <tr><td class="cat">Critical environments</td><td>Maintain mechanical and electrical systems. Their boundary with site services is blurring as GPU work adds lockout/tagout.</td></tr>
+      <tr><td class="cat">Engineering &amp; ticketing teams</td><td>Engineering teams run diagnostics and file repair tickets; the ticketing engineering team prioritizes and builds system changes.</td></tr>
+      <tr><td class="cat">Internal customers</td><td>Teams such as Office 365 or Xbox whose workload needs shape the rack SKU.</td></tr>
+    </tbody>
+  </table></div>
 </section>
 </div>
 
@@ -436,7 +429,7 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
       '<div class="s-who">'+list.map(chip).join("")+'</div></div>'+
       '<div class="s-body"><ul class="acts">'+s.acts.map(function(a){
         var rs=a[2].split(" ");
-        return '<li data-roles="'+a[2]+'"><span>'+a[0]+' <span class="tag '+a[1]+'">'+a[1].toUpperCase()+'</span><span class="roles">'+rs.map(chip).join("")+'</span></span></li>'}).join("")+
+        return '<li data-roles="'+a[2]+'"><span>'+a[0]+'<span class="roles">'+rs.map(chip).join("")+'</span></span></li>'}).join("")+
       '</ul><div class="out"><b>Output</b><span>'+s.out+'</span></div></div></article>';
   });
   host.innerHTML=html;
