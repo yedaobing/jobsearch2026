@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
-/* Layout: a service-manual style procedure sheet — overview track with feedback loops, then numbered stages (HR-1..HR-7), then the measurement framework. */
+/* Layout: a service-manual style procedure sheet — overview track with owners and feedback loops, owner table, roles, then numbered stages (HR-1..HR-7), then the measurement framework. */
 :root{
   --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --line:#d3dce0;
   --accent:#0b6c76; --accent-soft:#dbeef0;
@@ -36,6 +36,7 @@ h1{font-size:clamp(30px,5vw,46px);font-weight:800;font-stretch:78%;line-height:1
 h2{font-size:24px;font-weight:750;font-stretch:82%}
 h3{font-size:19px;font-weight:700;font-stretch:85%}
 p{margin:0}
+a{color:var(--accent)}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 header{display:grid;gap:14px}
 .lede{max-width:68ch;color:var(--muted);font-size:16px}
@@ -53,34 +54,41 @@ section{display:grid;gap:18px}
 .overview{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
 .overview svg{display:block;min-width:880px;width:100%;height:auto}
 .overview text{font-family:var(--f-body)}
-
 .loops{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px 24px;font-size:13.5px}
 .loops li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:6px}
 .loops b{font-family:var(--f-mono);font-size:12px;color:var(--accent);padding-top:1px}
 
+/* role chips */
+.who{display:inline-block;font-size:11.5px;border:1px solid var(--line);border-radius:3px;padding:0 6px;color:var(--muted);white-space:nowrap}
+.who.km{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
+
 /* filter */
-.filter{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.filter span{font-size:13px;color:var(--muted);margin-right:4px}
+.filter{display:grid;gap:10px}
+.fg{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fg>span{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);min-width:110px}
 .filter button{font:500 13px var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
 .filter button:hover{border-color:var(--accent)}
+.filter button.km{border-color:var(--accent)}
 .filter button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* stages */
 .stages{display:grid;gap:0;border-top:2px solid var(--ink)}
-.stage{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;padding-block:24px;border-bottom:1px solid var(--line);transition:opacity .2s}
+.stage{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;padding-block:24px;border-bottom:1px solid var(--line);transition:opacity .2s}
 .stage.dim{opacity:var(--dim)}
 .s-meta{display:grid;gap:8px;align-content:start}
 .s-id{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--accent)}
 .s-when{font-size:12.5px;color:var(--muted)}
+.s-owner{font-size:13px;display:grid;gap:1px}
+.s-owner b{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .s-who{display:flex;flex-wrap:wrap;gap:4px}
-.who{font-size:11.5px;border:1px solid var(--line);border-radius:3px;padding:0 6px;color:var(--muted)}
 .s-body{display:grid;gap:14px;min-width:0}
 .acts{list-style:none;margin:0;padding:0;display:grid;gap:9px}
 .acts li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;transition:opacity .2s}
 .acts li::before{content:"";width:6px;height:6px;margin-top:9px;background:var(--muted);border-radius:1px}
 .acts li.dim{opacity:var(--dim)}
-.acts li .tag{margin-left:6px}
+.acts .roles{display:inline-flex;flex-wrap:wrap;gap:3px;margin-left:4px;vertical-align:1px}
+.acts .roles .who{font-size:10.5px;padding:0 5px}
 .out{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:14px;background:var(--bg);border:1px dashed var(--line);border-radius:4px;padding:10px 12px}
 .out b{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);padding-top:3px}
 
@@ -91,14 +99,16 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .life .k{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:600}
 .life p{font-size:13.5px;color:var(--muted)}
 
-/* measures */
+/* tables */
 .tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
 table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
 th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line)}
 th{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
 tr:last-child td{border-bottom:0}
 td.cat{font-family:var(--f-display);font-weight:700;font-stretch:85%;font-size:15px;white-space:nowrap}
+td.sid{font-family:var(--f-mono);font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
 td.src{white-space:nowrap}
+tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600;padding-block:8px}
 .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 .rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start}
 .rule ol{margin:0;padding-left:20px;display:grid;gap:4px}
@@ -108,6 +118,7 @@ td.src{white-space:nowrap}
   .life{grid-template-columns:minmax(0,1fr)}
   .life div{border-right:0;border-bottom:1px solid var(--line)}
   .life div:last-child{border-bottom:0}
+  .fg>span{min-width:0;width:100%}
 }
 @media (prefers-reduced-motion:reduce){.stage,.acts li{transition:none}}
 </style>
@@ -124,60 +135,55 @@ td.src{white-space:nowrap}
     <span><span class="tag jd">JD</span> TPM II job description</span>
     <span><span class="tag ehs">EHS</span> Safety content</span>
   </div>
-  <p class="note">See also the <a href="challenges/" style="color:var(--accent)">challenge plan</a> for how I would handle the main challenges in this role.</p>
-  <p class="note">Built only from the job description and the hiring manager's statements; the candidate's own remarks on the call are excluded. Team names are as heard in an auto-transcript: "Sky (SCHIE)" is most likely Cloud Hardware Infrastructure Engineering, the name the JD uses, and the "Nova" readiness team name is unverified.</p>
+  <p class="note">See also the <a href="challenges/">challenge plan</a> for how I would handle the main challenges in this role.</p>
+  <p class="note">Built only from the job description and the hiring manager's statements; the candidate's own remarks on the call are excluded. Team names are as heard in an auto-transcript: "Sky" is most likely Cloud Hardware Infrastructure Engineering (CHIE), the name the JD uses, and the "Nova" readiness team name is unverified.</p>
 </header>
 
 <section>
   <div class="sec-head">
     <div class="eyebrow">Overview</div>
-    <h2>Seven stages, five feedback loops</h2>
-    <p>Stages HR-1 to HR-6 belong to the readiness pillar. Once a platform reaches growth, the sustaining pillar takes over HR-7. The loops below the track show where findings flow back upstream.</p>
+    <h2>Seven stages and their owners</h2>
+    <p>Each box shows the accountable owner below the line. The readiness TPM owns the procedure work from lab review through rollout; other teams own the hardware, the gates, the training and the fleet after growth. The loops below the track show where findings flow back upstream.</p>
   </div>
-  <div class="overview" role="img" aria-label="Workflow overview: seven stages from hardware development to production operations, with feedback loops returning to earlier stages.">
-    <svg viewBox="0 0 1000 268" xmlns="http://www.w3.org/2000/svg">
+  <div class="overview" role="img" aria-label="Workflow overview: seven stages with owners. HR-1 hardware development, owned by CHIE and NPI. HR-2 lab validation, CHIE and the readiness TPM. HR-3 service manual and gates, the DCIS readiness team and the TPM. HR-4 training, learning and development. HR-5 repair procedures, readiness TPM. HR-6 procedure rollout, readiness TPM. HR-7 operate and sustain, the sustaining teams. Five feedback loops return to earlier stages.">
+    <svg viewBox="0 0 1000 258" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
         <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
       </defs>
-      <!-- pillar bands -->
       <rect x="8" y="14" width="840" height="24" rx="3" fill="var(--accent-soft)"/>
       <text x="18" y="30.5" font-size="11.5" font-weight="600" fill="var(--accent)" letter-spacing=".06em">READINESS PILLAR · HR-1 TO HR-6</text>
       <rect x="866" y="14" width="126" height="24" rx="3" fill="var(--jd-soft)"/>
       <text x="876" y="30.5" font-size="11.5" font-weight="600" fill="var(--jd)" letter-spacing=".06em">SUSTAINING</text>
-      <!-- milestones -->
       <g font-size="10.5" fill="var(--muted)" text-anchor="middle">
         <line x1="738" y1="44" x2="738" y2="62" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="738" y="56" dx="-22">Pilot</text>
         <line x1="857" y1="44" x2="857" y2="62" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="857" y="56" dx="-24">Growth</text>
       </g>
-      <!-- nodes -->
       <g font-size="12" text-anchor="middle">
-        <g><rect x="8" y="68" width="124" height="58" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="70" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-1</text><text x="70" y="104" fill="var(--ink)" font-weight="600">Hardware</text><text x="70" y="118" fill="var(--ink)" font-weight="600">development</text></g>
-        <g><rect x="151" y="68" width="124" height="58" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="213" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-2</text><text x="213" y="104" fill="var(--ink)" font-weight="600">Lab validation</text><text x="213" y="118" fill="var(--ink)" font-weight="600">&amp; serviceability</text></g>
-        <g><rect x="294" y="68" width="124" height="58" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="356" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-3</text><text x="356" y="104" fill="var(--ink)" font-weight="600">Service manual</text><text x="356" y="118" fill="var(--ink)" font-weight="600">&amp; readiness gates</text></g>
-        <g><rect x="437" y="68" width="124" height="58" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="499" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-4</text><text x="499" y="104" fill="var(--ink)" font-weight="600">Training</text><text x="499" y="118" fill="var(--ink)" font-weight="600">materials</text></g>
-        <g><rect x="580" y="68" width="124" height="58" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="642" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-5</text><text x="642" y="104" fill="var(--ink)" font-weight="600">Repair</text><text x="642" y="118" fill="var(--ink)" font-weight="600">procedures</text></g>
-        <g><rect x="723" y="68" width="124" height="58" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="785" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-6</text><text x="785" y="104" fill="var(--ink)" font-weight="600">Rollout</text><text x="785" y="118" fill="var(--ink)" font-weight="600">pilot → growth</text></g>
-        <g><rect x="866" y="68" width="126" height="58" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="929" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--jd)">HR-7</text><text x="929" y="104" fill="var(--ink)" font-weight="600">Operate, measure</text><text x="929" y="118" fill="var(--ink)" font-weight="600">&amp; sustain</text></g>
+        <g><rect x="8" y="68" width="124" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="70" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-1</text><text x="70" y="102" fill="var(--ink)" font-weight="600">Hardware</text><text x="70" y="116" fill="var(--ink)" font-weight="600">development</text><line x1="16" y1="124" x2="124" y2="124" stroke="var(--line)"/><text x="70" y="138" font-size="10.5" fill="var(--muted)">CHIE · NPI</text></g>
+        <g><rect x="151" y="68" width="124" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="213" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-2</text><text x="213" y="102" fill="var(--ink)" font-weight="600">Lab validation</text><text x="213" y="116" fill="var(--ink)" font-weight="600">&amp; serviceability</text><line x1="159" y1="124" x2="267" y2="124" stroke="var(--line)"/><text x="213" y="138" font-size="10.5" fill="var(--muted)">CHIE · Readiness TPM</text></g>
+        <g><rect x="294" y="68" width="124" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="356" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-3</text><text x="356" y="102" fill="var(--ink)" font-weight="600">Service manual</text><text x="356" y="116" fill="var(--ink)" font-weight="600">&amp; readiness gates</text><line x1="302" y1="124" x2="410" y2="124" stroke="var(--line)"/><text x="356" y="138" font-size="10.5" fill="var(--muted)">Readiness team · TPM</text></g>
+        <g><rect x="437" y="68" width="124" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="499" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-4</text><text x="499" y="102" fill="var(--ink)" font-weight="600">Training</text><text x="499" y="116" fill="var(--ink)" font-weight="600">materials</text><line x1="445" y1="124" x2="553" y2="124" stroke="var(--line)"/><text x="499" y="138" font-size="10.5" fill="var(--muted)">Learning &amp; dev.</text></g>
+        <g><rect x="580" y="68" width="124" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="642" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-5</text><text x="642" y="102" fill="var(--ink)" font-weight="600">Repair</text><text x="642" y="116" fill="var(--ink)" font-weight="600">procedures</text><line x1="588" y1="124" x2="696" y2="124" stroke="var(--line)"/><text x="642" y="138" font-size="10.5" fill="var(--accent)" font-weight="600">Readiness TPM</text></g>
+        <g><rect x="723" y="68" width="124" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="785" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">HR-6</text><text x="785" y="102" fill="var(--ink)" font-weight="600">Procedure rollout</text><text x="785" y="116" fill="var(--ink)" font-weight="600">pilot → growth</text><line x1="731" y1="124" x2="839" y2="124" stroke="var(--line)"/><text x="785" y="138" font-size="10.5" fill="var(--accent)" font-weight="600">Readiness TPM</text></g>
+        <g><rect x="866" y="68" width="126" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="929" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--jd)">HR-7</text><text x="929" y="102" fill="var(--ink)" font-weight="600">Operate, measure</text><text x="929" y="116" fill="var(--ink)" font-weight="600">&amp; sustain</text><line x1="874" y1="124" x2="984" y2="124" stroke="var(--line)"/><text x="929" y="138" font-size="10.5" fill="var(--muted)">Sustaining teams</text></g>
       </g>
-      <!-- forward arrows -->
       <g stroke="var(--muted)" stroke-width="1.3" marker-end="url(#af)">
-        <line x1="133" y1="97" x2="149" y2="97"/><line x1="276" y1="97" x2="292" y2="97"/><line x1="419" y1="97" x2="435" y2="97"/><line x1="562" y1="97" x2="578" y2="97"/><line x1="705" y1="97" x2="721" y2="97"/><line x1="848" y1="97" x2="864" y2="97"/>
+        <line x1="133" y1="106" x2="149" y2="106"/><line x1="276" y1="106" x2="292" y2="106"/><line x1="419" y1="106" x2="435" y2="106"/><line x1="562" y1="106" x2="578" y2="106"/><line x1="705" y1="106" x2="721" y2="106"/><line x1="848" y1="106" x2="864" y2="106"/>
       </g>
-      <!-- feedback loops -->
       <g fill="none" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#ah)">
-        <path d="M213,127 C213,166 105,166 105,129"/>
-        <path d="M356,127 C356,205 75,205 75,129"/>
-        <path d="M785,127 C785,166 667,166 667,129"/>
-        <path d="M919,127 C919,205 632,205 632,129"/>
-        <path d="M949,127 C949,250 45,250 45,129"/>
+        <path d="M213,145 C213,184 105,184 105,147"/>
+        <path d="M356,145 C356,223 75,223 75,147"/>
+        <path d="M785,145 C785,184 667,184 667,147"/>
+        <path d="M919,145 C919,223 632,223 632,147"/>
+        <path d="M949,145 C949,268 45,268 45,147"/>
       </g>
       <g font-size="10.5" font-weight="600" text-anchor="middle" font-family="IBM Plex Mono,monospace">
-        <circle cx="159" cy="156" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="159" y="160" fill="var(--accent)">L1</text>
-        <circle cx="215" cy="185" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="215" y="189" fill="var(--accent)">L2</text>
-        <circle cx="726" cy="156" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="726" y="160" fill="var(--accent)">L3</text>
-        <circle cx="775" cy="185" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="775" y="189" fill="var(--accent)">L4</text>
-        <circle cx="497" cy="219" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="497" y="223" fill="var(--accent)">L5</text>
+        <circle cx="159" cy="174" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="159" y="178" fill="var(--accent)">L1</text>
+        <circle cx="215" cy="203" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="215" y="207" fill="var(--accent)">L2</text>
+        <circle cx="726" cy="174" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="726" y="178" fill="var(--accent)">L3</text>
+        <circle cx="775" cy="203" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="775" y="207" fill="var(--accent)">L4</text>
+        <circle cx="497" cy="237" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="497" y="241" fill="var(--accent)">L5</text>
       </g>
     </svg>
   </div>
@@ -188,6 +194,20 @@ td.src{white-space:nowrap}
     <li><b>L4</b><span>Field feedback, escalations and incident patterns become procedure changes.</span></li>
     <li><b>L5</b><span>Retrofits, fix-on-fail, diagnostic fixes and ticketing feature requests go back to engineering and suppliers.</span></li>
   </ol>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Stage</th><th>Accountable owner</th><th>KM team's part</th><th>Other teams involved</th><th>Exit output</th></tr></thead>
+    <tbody>
+      <tr><td class="sid">HR-1</td><td>CHIE and the internal customer define the SKU; NPI team approves sites</td><td>TPM partners on procedural strategy and plan of record <span class="tag jd">JD</span></td><td>OEM/ODM/SI, internal customers</td><td>Rack SKU, site eligibility</td></tr>
+      <tr><td class="sid">HR-2</td><td>CHIE runs the hardware and lab; readiness TPM owns serviceability findings</td><td>TPM attends every buildup and teardown review</td><td>L&amp;D, OEM/ODM/SI</td><td>Serviceability bugs with owners</td></tr>
+      <tr><td class="sid">HR-3</td><td>Supplier writes the manual; DCIS readiness team owns gates, waivers and revisions</td><td>TPM reviews every repair in the manual and reports defects</td><td>CHIE, OEM/ODM/SI</td><td>Corrected manual; gates cleared or waived</td></tr>
+      <tr><td class="sid">HR-4</td><td>Learning and development</td><td>TPM keeps procedures and training aligned</td><td>CHIE (lab sessions)</td><td>Technician training content</td></tr>
+      <tr><td class="sid">HR-5</td><td>Readiness TPM</td><td>TPM authors; tech writers build in the tool; service engineers contribute; compliance checklist</td><td>Approvers (multi-stage)</td><td>Published, routed procedures</td></tr>
+      <tr><td class="sid">HR-6</td><td>Readiness TPM</td><td>TPM revises from pilot feedback, then hands off to the KM sustaining pillar</td><td>DC operations technicians, critical environments</td><td>Coverage complete at growth</td></tr>
+      <tr><td class="sid">HR-7</td><td>KM sustaining pillar (content); DCIS sustaining team (fleet issues)</td><td>Sustaining pillar, service engineers, compliance pillar; TPM for ticketing change requests</td><td>Blue and red teams, engineering teams, suppliers</td><td>Revised content; upstream fixes</td></tr>
+    </tbody>
+  </table></div>
+
   <div class="life">
     <div><span class="k">Pilot</span><p>First cluster lands. Procedures are now expected to exist here, at least in baseline form with all EHS content (shift left). <span class="tag hm">HM</span></p></div>
     <div><span class="k">Dock date</span><p>Readiness window between pilot and growth. Content is revised as new service manual revisions arrive. <span class="tag hm">HM</span></p></div>
@@ -197,20 +217,69 @@ td.src{white-space:nowrap}
 
 <section>
   <div class="sec-head">
+    <div class="eyebrow">Roles</div>
+    <h2>Who's who</h2>
+    <p>The hiring manager runs knowledge management (KM) for APAC and EMEA, with a counterpart running the US team. DC technicians are not part of KM: they work in DC operations (site services) and are the main users of KM content.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Role</th><th>What they do in this workflow</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="3">KM team (hiring manager's organization)</td></tr>
+      <tr><td class="cat">KM managers</td><td>Two regional managers (APAC/EMEA and US). Set priorities by stack rank; the readiness TPM reports here.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">Readiness TPM</td><td>Owns the readiness pillar end to end: lab serviceability review, service manual review, repair procedures, pilot rollout, ticketing change requests. "Their baby."</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
+      <tr><td class="cat">Vendor tech writers (2)</td><td>Help the TPM create procedures and build them in the modular procedure tool.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">Service engineers</td><td>Write troubleshooting guides, take escalations from DC operations, and help write procedure content. Covering GPU procedures while the TPM seat is open; one wants to keep contributing.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">KM sustaining pillar</td><td>Takes over at growth: new manual releases, technician feedback, procedures missed during readiness.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">KM compliance pillar</td><td>Yearly compliance check on every procedure and section, for ISO and other certifications.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr class="grp"><td colspan="3">Other DCIS teams</td></tr>
+      <tr><td class="cat">Blue team</td><td>Incident process efficiency, run by the same manager as KM. Asks why each escalation happened and removes incident sources.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">Red team</td><td>Run by the US counterpart. Quarantines bad tickets, runs the repeat-offender program, pushes engineering to fix diagnostics.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">Readiness team</td><td>Not KM-focused. Owns the gates (manuals, training, PQT, PAT, tools) and waivers; its "Nova" group chases manual revisions with CHIE.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">Sustaining team</td><td>Not KM-focused. Annual failure rates, systemic issues, retrofits, fix-on-fail and project-managed swap-outs.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">NPI team</td><td>Early hardware reviews, new product integration, SKU-to-datacenter approvals.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr class="grp"><td colspan="3">Partner teams</td></tr>
+      <tr><td class="cat">CHIE</td><td>Microsoft's internal hardware development team, with labs in Redmond. Defines SKUs, fixes design issues, works with suppliers.</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
+      <tr><td class="cat">Learning &amp; development</td><td>Builds technician training content and videos from the same lab sessions.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">OEM / ODM / SI</td><td>Build the hardware and write the service manuals. Microsoft's control ranges from little (OEM) to full spec (SI).</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
+      <tr><td class="cat">DC technicians</td><td>Site services staff in DC operations. Perform repairs from the procedures, escalate problems, give feedback; one or two per pilot site give direct feedback.</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
+      <tr><td class="cat">Critical environments</td><td>Maintain mechanical and electrical systems. Their boundary with site services is blurring as GPU work adds lockout/tagout.</td><td class="src"><span class="tag hm">HM</span> <span class="tag jd">JD</span></td></tr>
+      <tr><td class="cat">Engineering &amp; ticketing teams</td><td>Engineering teams run diagnostics and file repair tickets; the ticketing engineering team prioritizes and builds system changes.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+      <tr><td class="cat">Internal customers</td><td>Teams such as Office 365 or Xbox whose workload needs shape the rack SKU.</td><td class="src"><span class="tag hm">HM</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
     <div class="eyebrow">Stage detail</div>
     <h2>Who does what, stage by stage</h2>
-    <p>Pick a team to see where it shows up. The TPM owns the full hardware readiness procedure pillar across the stack.</p>
+    <p>Pick a role to see where it shows up. KM team roles are shaded.</p>
   </div>
-  <div class="filter" role="group" aria-label="Filter by team">
-    <span>Highlight</span>
-    <button type="button" id="f-all" data-role="all" aria-pressed="true">All teams</button>
-    <button type="button" id="f-tpm" data-role="tpm" aria-pressed="false">Readiness TPM</button>
-    <button type="button" id="f-hw" data-role="hw" aria-pressed="false">Hardware engineering</button>
-    <button type="button" id="f-oem" data-role="oem" aria-pressed="false">OEM / ODM / SI</button>
-    <button type="button" id="f-ld" data-role="ld" aria-pressed="false">Learning &amp; development</button>
-    <button type="button" id="f-ops" data-role="ops" aria-pressed="false">DC operations</button>
-    <button type="button" id="f-km" data-role="km" aria-pressed="false">KM &amp; service engineering</button>
-    <button type="button" id="f-dcis" data-role="dcis" aria-pressed="false">Other DCIS teams</button>
+  <div class="filter" role="group" aria-label="Filter by role">
+    <div class="fg"><span>Show</span><button type="button" id="f-all" data-role="all" aria-pressed="true">All roles</button></div>
+    <div class="fg"><span>KM team</span>
+      <button type="button" class="km" id="f-tpm" data-role="tpm" aria-pressed="false">Readiness TPM</button>
+      <button type="button" class="km" id="f-tw" data-role="tw" aria-pressed="false">Tech writers</button>
+      <button type="button" class="km" id="f-se" data-role="se" aria-pressed="false">Service engineers</button>
+      <button type="button" class="km" id="f-kms" data-role="kms" aria-pressed="false">Sustaining pillar</button>
+      <button type="button" class="km" id="f-kmc" data-role="kmc" aria-pressed="false">Compliance pillar</button>
+    </div>
+    <div class="fg"><span>Other DCIS</span>
+      <button type="button" id="f-rdy" data-role="rdy" aria-pressed="false">Readiness team</button>
+      <button type="button" id="f-sus" data-role="sus" aria-pressed="false">Sustaining team</button>
+      <button type="button" id="f-npi" data-role="npi" aria-pressed="false">NPI team</button>
+      <button type="button" id="f-blue" data-role="blue" aria-pressed="false">Blue team</button>
+      <button type="button" id="f-red" data-role="red" aria-pressed="false">Red team</button>
+    </div>
+    <div class="fg"><span>Partners</span>
+      <button type="button" id="f-hw" data-role="hw" aria-pressed="false">CHIE</button>
+      <button type="button" id="f-ld" data-role="ld" aria-pressed="false">L&amp;D</button>
+      <button type="button" id="f-oem" data-role="oem" aria-pressed="false">OEM / ODM / SI</button>
+      <button type="button" id="f-ops" data-role="ops" aria-pressed="false">DC technicians</button>
+      <button type="button" id="f-ce" data-role="ce" aria-pressed="false">Critical environments</button>
+      <button type="button" id="f-eng" data-role="eng" aria-pressed="false">Engineering &amp; ticketing</button>
+      <button type="button" id="f-cust" data-role="cust" aria-pressed="false">Internal customers</button>
+    </div>
   </div>
   <div class="stages" id="stages"></div>
 </section>
@@ -276,88 +345,98 @@ td.src{white-space:nowrap}
 
 <script>
 (function(){
-  var ROLE_NAMES={tpm:"Readiness TPM",hw:"Hardware engineering",oem:"OEM / ODM / SI",ld:"Learning & development",ops:"DC operations",km:"KM & service eng.",dcis:"Other DCIS teams"};
+  var ROLE_NAMES={tpm:"Readiness TPM",tw:"Tech writers",se:"Service engineers",kms:"KM sustaining",kmc:"KM compliance",
+    rdy:"Readiness team",sus:"Sustaining team",npi:"NPI team",blue:"Blue team",red:"Red team",
+    hw:"CHIE",ld:"L&D",oem:"OEM / ODM / SI",ops:"DC technicians",ce:"Critical environments",eng:"Engineering & ticketing",cust:"Internal customers"};
+  var KM={tpm:1,tw:1,se:1,kms:1,kmc:1};
+  var ORDER=Object.keys(ROLE_NAMES);
   var S=[
-   {id:"HR-1",name:"Hardware development and platform definition",when:"Before the platform reaches the lab",
+   {id:"HR-1",name:"Hardware development and platform definition",when:"Before the platform reaches the lab",owner:"CHIE with the internal customer; NPI team for site approvals",
     acts:[
-     ["Demand comes from a customer signal for capacity or capability, or from forecast. Microsoft requests evaluation units (e.g., from NVIDIA), which can lead to a larger purchase order.","hm","hw dcis"],
-     ["For compute and storage, hardware engineering works with the requesting internal team (e.g., Office 365, Xbox) to define the rack SKU: cores, RAM, storage, then cluster quantities.","hm","hw"],
-     ["The sourcing model sets how much Microsoft shapes the design: OEM products bought off the shelf, service integrators building to Microsoft's spec, or ODMs taking Microsoft requirements through back-and-forth. Microsoft's own hardware team also designs in-house, with labs in Redmond.","hm","hw oem"],
+     ["Demand comes from a customer signal for capacity or capability, or from forecast. Microsoft requests evaluation units (e.g., from NVIDIA), which can lead to a larger purchase order.","hm","hw cust"],
+     ["For compute and storage, hardware engineering works with the requesting internal team (e.g., Office 365, Xbox) to define the rack SKU: cores, RAM, storage, then cluster quantities.","hm","hw cust"],
+     ["The sourcing model sets how much Microsoft shapes the design: OEM products bought off the shelf, service integrators building to Microsoft's spec, or ODMs taking Microsoft requirements through back-and-forth. CHIE also designs in-house, with labs in Redmond.","hm","hw oem"],
      ["Demand growth or supply changes (a DIMM size no longer made, a CPU replaced) alter the rack SKU, its power draw and deployable rack density, and produce several configurations of the same platform.","hm","hw oem"],
-     ["The NPI team runs early hardware reviews and SKU-to-datacenter approvals: sites that can host the SKU are approved automatically, others declined, and exceptions reviewed (e.g., an 8,000-lb GPU rack limited to non-raised floors; a 48U door height).","hm","dcis"],
-     ["Partner with Datacenter Engineering, Electrical and Mechanical Engineering, DC Operations and Cloud Hardware Infrastructure Engineering to set procedural strategy and land virtual teams on a plan of record.","jd","tpm hw ops"]
+     ["The NPI team runs early hardware reviews and SKU-to-datacenter approvals: sites that can host the SKU are approved automatically, others declined, and exceptions reviewed (e.g., an 8,000-lb GPU rack limited to non-raised floors; a 48U door height).","hm","npi"],
+     ["Partner with Datacenter Engineering, Electrical and Mechanical Engineering, DC Operations and Cloud Hardware Infrastructure Engineering to set procedural strategy and land virtual teams on a plan of record.","jd","tpm hw ops ce"]
     ],
     out:"Rack SKU and platform configurations; site eligibility; plan of record."},
-   {id:"HR-2",name:"Lab validation and serviceability review",when:"Platform deployed to the Redmond lab",
+   {id:"HR-2",name:"Lab validation and serviceability review",when:"Platform deployed to the Redmond lab",owner:"CHIE runs the lab; readiness TPM owns serviceability findings",
     acts:[
-     ["The platform is deployed to the lab. Buildup and teardown sessions bring in hardware engineering, learning and development, and the readiness TPM.","hm","tpm hw ld"],
-     ["The TPM attends the reviews to find serviceability issues and confirm the documented repair is the most efficient one at scale, not a one-off lab method.","hm","tpm"],
-     ["Review with a technician's mindset, assuming whatever can go wrong will: a part inserted the wrong way, a step out of order, the wrong part fitted.","hm","tpm"],
+     ["The platform is deployed to the lab. Buildup and teardown sessions bring in CHIE, learning and development, and the readiness TPM.","hm","hw ld tpm"],
+     ["The TPM attends every review to find serviceability issues and confirm the documented repair is the most efficient one at scale, not a one-off lab method.","hm","tpm"],
+     ["Review with a technician's mindset, assuming whatever can go wrong will: a part inserted the wrong way, a step out of order, the wrong part fitted. Reviewers without an operations background often see nothing wrong.","hm","tpm"],
      ["Examples from the call: an unkeyed controller in a heat rejection unit pump that could break its slot and force a full rack replacement; top-of-rack cabling that blocked removal of the lower switch; 12 V and 24 V DC-DC converters that look identical.","hm","tpm hw"],
      ["Log each finding as a bug and follow it through: a manufacturing fix (e.g., keying the part) or, where hardware can't change, a remediation such as orientation labels and procedure controls.","hm","tpm hw oem"],
      ["Conduct and document technical and operational risk assessments; drive tradeoffs and record decisions within and across teams.","jd","tpm"]
     ],
     out:"Serviceability bugs with owners; risk assessment and decisions."},
-   {id:"HR-3",name:"Service manual review and readiness gates",when:"Finalizing the product for site",
+   {id:"HR-3",name:"Service manual review and readiness gates",when:"Finalizing the product for site",owner:"Supplier writes the manual; DCIS readiness team owns gates; TPM reviews",
     acts:[
-     ["Review every repair in the supplier's service manual against the hardware: wrong sequence, missing steps, or parts removed but never reinstalled (seven out, five back in) from copy-paste between repairs.","hm","tpm"],
-     ["Send manual defects through the readiness team (heard as “Nova”) with the internal hardware engineering team back to the service integrator, OEM or ODM for a corrected revision.","hm","dcis hw oem"],
-     ["Readiness gates must clear before equipment ships to site: service manuals, training, PQT and PAT testing, and the required tools for the job.","hm","dcis"],
-     ["Waivers: a pilot cluster may ship with a known issue to hit a target date, on condition that follow-up clusters are corrected; some waivers are permanent, depending on the issue.","hm","dcis"]
+     ["The service manual comes from the supplier: the service integrator, OEM or ODM.","hm","oem"],
+     ["The TPM reviews every repair in the manual against the hardware: wrong sequence, missing steps, or parts removed but never reinstalled (seven out, five back in) from copy-paste between repairs.","hm","tpm"],
+     ["Manual defects go to the readiness team's “Nova” group, which works with CHIE to get a corrected revision from the supplier. They do not go to the tech writers.","hm","tpm rdy hw oem"],
+     ["Readiness gates must clear before equipment ships to site: service manuals, training, PQT and PAT testing, and the required tools for the job.","hm","rdy"],
+     ["Waivers: a pilot cluster may ship with a known issue to hit a target date, on condition that follow-up clusters are corrected; some waivers are permanent, depending on the issue.","hm","rdy"]
     ],
     out:"Approved service manual revision; gate status and any waivers."},
-   {id:"HR-4",name:"Training materials",when:"Runs in parallel with HR-2 and HR-5",
+   {id:"HR-4",name:"Training materials",when:"Runs in parallel with HR-2 and HR-5",owner:"Learning and development",
     acts:[
      ["While the TPM validates repair procedures in teardown, learning and development runs the same hardware to build training content and videos for new technicians.","hm","ld"],
      ["The TPM keeps the procedures and the training aligned so both describe the same repair.","hm","tpm ld"]
     ],
     out:"Technician training content aligned to the procedures."},
-   {id:"HR-5",name:"Repair procedure development",when:"Lab through dock date",
+   {id:"HR-5",name:"Repair procedure development",when:"Lab through dock date",owner:"Readiness TPM",
     acts:[
      ["Prioritize by NUDD (new, unique, difficult, different). GPU platforms first, then compute, storage and network.","hm","tpm"],
      ["Decide FRU-specific vs. platform-specific. A plain DIMM swap that matches most of the fleet gets the generic FRU procedure; a DIMM behind a GPU cage gets a platform-specific one.","hm","tpm"],
-     ["Pull the differentiated repairs out of the approved manual and write a dedicated procedure for each.","hm","tpm"],
-     ["Build modular sections for each distinct action (rack removal, cover, air baffle, riser cage) and assemble them in a procedural container. Reuse sections across repairs and write only what is new.","hm","tpm"],
-     ["Two vendor tech writers enter the content into the tool; it then passes a multi-stage approval.","hm","tpm"],
-     ["<span class=\"tag ehs\">EHS</span> Embed safety and handling controls: a server lift where rails are unstable, lockout/tagout on heat rejection unit pumps, torque settings, specific part handling.","hm","tpm ops"],
-     ["Run the compliance checklist: latest service manual version, images and references match, links still valid. Required for ISO and other certifications.","hm","tpm"],
-     ["Publish to the proprietary ticketing system, which assigns a procedure to each ticket by repair action, component type and server model.","hm","tpm"]
+     ["Prepare the content from the corrected manual and lab findings so the TPM and the tech writers can produce a dedicated procedure for each differentiated repair.","hm","tpm tw"],
+     ["Build modular sections for each distinct action (rack removal, cover, air baffle, riser cage) and assemble them in a procedural container. Reuse sections across repairs and write only what is new.","hm","tpm tw"],
+     ["The two vendor tech writers help create the content and put it into the tool; it then passes a multi-stage approval.","hm","tw tpm"],
+     ["Service engineers have been writing GPU procedures while the seat was open. One wants to keep contributing, and the TPM keeps that person included.","hm","se tpm"],
+     ["<span class=\"tag ehs\">EHS</span> Embed safety and handling controls: a server lift where rails are unstable, lockout/tagout on heat rejection unit pumps, torque settings, specific part handling.","hm","tpm"],
+     ["Whoever creates or updates content runs the compliance checklist: latest service manual version, images and references match, links still valid. Required for ISO and other certifications.","hm","tpm kmc"],
+     ["Publish to the proprietary ticketing system, which assigns a procedure to each ticket by repair action, component type and server model.","hm","tpm tw"]
     ],
     out:"Published, compliant procedures routed by ticket metadata."},
-   {id:"HR-6",name:"Rollout: pilot, dock date, growth",when:"Pilot cluster to standard deployment",
+   {id:"HR-6",name:"Procedure rollout: pilot, dock date, growth",when:"Pilot cluster to standard deployment",owner:"Readiness TPM, handing off to the KM sustaining pillar at growth",
     acts:[
      ["Shift left: have at least a baseline procedure plus all EHS content in place at pilot, instead of the old hard cutoff at growth, so technicians don't improvise on very expensive hardware.","hm","tpm"],
      ["Deploy procedures to pilot sites and work with one or two site technicians for direct feedback.","hm","tpm ops"],
-     ["Expect several revisions between pilot, dock date and growth as new service manual revisions arrive.","hm","tpm oem"],
+     ["Expect several revisions between pilot, dock date and growth as new service manual revisions arrive.","hm","tpm tw oem"],
      ["For new technology such as liquid cooling, work out processes as they occur: for example whether coolant needs sampling, and for what (pH, bacterial growth).","hm","tpm ops"],
-     ["Watch the boundary between site services (IT) and critical environments (mechanical and electrical) as GPU hardware asks technicians to do lockout/tagout work.","hm","ops"],
-     ["At growth, hand the platform's content to the sustaining pillar.","hm","tpm km"]
+     ["Watch the boundary between site services (IT) and critical environments (mechanical and electrical) as GPU hardware asks technicians to do lockout/tagout work.","hm","ops ce"],
+     ["At growth, hand the platform's content to the KM sustaining pillar.","hm","tpm kms"]
     ],
     out:"Procedure coverage complete at growth; handoff to sustaining."},
-   {id:"HR-7",name:"Operate, measure and sustain",when:"Growth onward",
+   {id:"HR-7",name:"Operate, measure and sustain",when:"Growth onward",owner:"KM sustaining pillar for content; DCIS sustaining team for fleet issues",
     acts:[
-     ["An engineering team's diagnostics find a fault and file a ticket (e.g., action “replace,” component “GPU”); the ticketing system attaches the right procedure for that server model.","hm","ops"],
-     ["Technician feedback arrives through the procedure's feedback link as an Azure DevOps item. Each is accepted, or declined with the reason sent back.","hm","km tpm"],
-     ["DC operations escalate problems they can't solve to KM service engineers. Patterns become new procedure instructions: customer-induced damage, torque, exothermic events, unstable rails.","hm","ops km"],
-     ["Blue team (incident process efficiency): asks why each escalation happened (process, bad metadata, bad ticket) and uses automation to quarantine bad tickets.","hm","dcis"],
-     ["Red team: removes noisy tickets from DC operations through quarantine and the repeat-offender program, and pushes engineering to fix diagnostics at the root cause.","hm","dcis hw"],
-     ["Sustaining team: tracks systemic issues and AFR, and runs retrofits, fix-on-fail programs or project-managed swap-outs (e.g., a bad SSD batch across the fleet).","hm","dcis oem"],
-     ["Sustaining KM pillar: absorbs new service manual releases, operations feedback, and procedures not identified during readiness.","hm","km"],
-     ["Yearly compliance review of every published procedure and its sections.","hm","km tpm"],
-     ["When ticket attributes can't route the right procedure (several leak-detection wire types under one name), write a business requirements document and feature request: problem statement, data, business justification, suggested design. Work it through the engineering team's stack rank; a real link to GPU capacity restoration raises its priority.","hm","tpm"],
+     ["An engineering team's diagnostics find a fault and file a ticket (e.g., action “replace,” component “GPU”); the ticketing system attaches the right procedure for that server model, and a DC technician does the repair.","hm","eng ops"],
+     ["Technician feedback arrives through the procedure's feedback link as an Azure DevOps item. Each is accepted, or declined with the reason sent back.","hm","ops kms"],
+     ["DC technicians escalate problems they can't solve to the service engineers. Patterns become new procedure instructions: customer-induced damage, torque, exothermic events, unstable rails.","hm","ops se"],
+     ["Blue team (incident process efficiency): asks why each escalation happened (process, bad metadata, bad ticket) and uses automation to quarantine bad tickets.","hm","blue"],
+     ["Red team: removes noisy tickets from DC operations through quarantine and the repeat-offender program, and pushes engineering to fix diagnostics at the root cause.","hm","red eng"],
+     ["DCIS sustaining team: tracks systemic issues and AFR, and runs retrofits, fix-on-fail programs or project-managed swap-outs (e.g., a bad SSD batch across the fleet).","hm","sus oem"],
+     ["KM sustaining pillar: absorbs new service manual releases, operations feedback, and procedures not identified during readiness.","hm","kms"],
+     ["Yearly compliance check of every published procedure and its sections.","hm","kmc"],
+     ["When ticket attributes can't route the right procedure (several leak-detection wire types under one name), the TPM writes a business requirements document and feature request: problem statement, data, business justification, suggested design. It goes through the engineering team's stack rank; a real link to GPU capacity restoration raises its priority.","hm","tpm eng"],
      ["Continuously improve CO+I processes, requirements and specifications as datacenter and IT hardware evolve; manage risk to available, efficient operations with measurable results.","jd","tpm"]
     ],
     out:"Measured fleet performance; revised content; upstream fixes (loops back to HR-1 and HR-5)."}
   ];
+  function chip(r){return '<span class="who'+(KM[r]?' km':'')+'">'+ROLE_NAMES[r].replace(/&/g,"&amp;")+'</span>'}
   var host=document.getElementById("stages"),html="";
   S.forEach(function(s){
     var roles={};
     s.acts.forEach(function(a){a[2].split(" ").forEach(function(r){roles[r]=1})});
-    html+='<article class="stage" data-roles="'+Object.keys(roles).join(" ")+'">'+
+    var list=ORDER.filter(function(r){return roles[r]});
+    html+='<article class="stage" data-roles="'+list.join(" ")+'">'+
       '<div class="s-meta"><span class="s-id">'+s.id+'</span><h3>'+s.name+'</h3><span class="s-when">'+s.when+'</span>'+
-      '<div class="s-who">'+Object.keys(roles).map(function(r){return '<span class="who">'+ROLE_NAMES[r]+'</span>'}).join("")+'</div></div>'+
+      '<div class="s-owner"><b>Owner</b><span>'+s.owner+'</span></div>'+
+      '<div class="s-who">'+list.map(chip).join("")+'</div></div>'+
       '<div class="s-body"><ul class="acts">'+s.acts.map(function(a){
-        return '<li data-roles="'+a[2]+'"><span>'+a[0]+' <span class="tag '+a[1]+'">'+a[1].toUpperCase()+'</span></span></li>'}).join("")+
+        var rs=a[2].split(" ");
+        return '<li data-roles="'+a[2]+'"><span>'+a[0]+' <span class="tag '+a[1]+'">'+a[1].toUpperCase()+'</span><span class="roles">'+rs.map(chip).join("")+'</span></span></li>'}).join("")+
       '</ul><div class="out"><b>Output</b><span>'+s.out+'</span></div></div></article>';
   });
   host.innerHTML=html;
