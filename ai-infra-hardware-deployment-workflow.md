@@ -1,0 +1,149 @@
+# AI Infrastructure On-Prem Build: Hardware TPM Deployment Workflow
+
+## Purpose and scope
+
+This page maps the hardware deployment workflow for a **Senior TPM, AI infrastructure on-prem builds** (Redmond). The workflow starts when a data hall row is handed over by the facility team and ends when the energized row is handed to customer engineering.
+
+**Assumptions**
+
+1. Before this workflow starts, the TPM coordinates with the facility team, the general contractor (GC) and other TPMs on construction and gray space fit-out. Facilities delivers white space power through the busway and white space cooling through the rack drop.
+2. Hardware is delivered **row by row** up to rack energization. Each energized row is then handed to customer engineering for further testing and platform engineering.
+
+**Demarcation points**
+
+| Domain | Facility scope ends at | Hardware scope starts at |
+|---|---|---|
+| Power | Energized, commissioned overhead busway (A and B per row) | Tap-off install, rack feeds, rack PDUs |
+| Cooling | Commissioned secondary loop (TCS) at each rack drop's isolation valve or quick disconnect, flushed and filled, bypass jumper in place | Rack-to-drop connection, rack fill, air purge, leak check |
+| Network | Cable trays and pathways in place | Rack cabling, optics, management network turn-up |
+
+Confirm these demarcation points in the RACI at the start of the build. The gaps between scopes are where builds stall.
+
+## 1. Deployment sequence
+
+```mermaid
+flowchart TD
+    A["M0. Build plan baselined<br/>RACI, demarcation, row sequence"] --> G0{"G0: Plan<br/>approved?"}
+    G0 -- No --> A1["Close RACI and schedule gaps"]
+    A1 --> G0
+    G0 -- Yes --> R["Start next row"]
+
+    R --> B["M1. Row handover from facilities<br/>busway energized, secondary loop at rack drops"]
+    R --> C["M2. Row materials staged<br/>racks received, inspected, tagged"]
+    B --> G1{"G1: Row accepted<br/>from facilities?"}
+    G1 -- No --> B1["Punch list to facility team and GC"]
+    B1 --> B
+    C --> G2{"G2: Material kit<br/>complete?"}
+    G2 -- No --> C1["Expedite shortages<br/>RMA damaged units"]
+    C1 --> C
+    G1 -- Yes --> D["M3. Racks set in place<br/>rig, level, anchor, bond"]
+    G2 -- Yes --> D
+    D --> G3{"G3: Racks positioned<br/>per layout?"}
+    G3 -- No --> D1["Correct position or anchoring"]
+    D1 --> D
+    G3 -- Yes --> E1["M4a. Power connection<br/>tap-offs, A/B feeds, breakers"]
+    G3 -- Yes --> E2["M4b. Liquid connection<br/>connect, fill, purge, leak check"]
+    G3 -- Yes --> E3["M4c. Network cabling<br/>OOB, front-end, back-end, storage"]
+    E1 --> G4{"G4: Pre-energization<br/>go / no-go"}
+    E2 --> G4
+    E3 --> G4
+    G4 -- No --> F1["Route failure to owning team<br/>fix and re-test"]
+    F1 --> G4
+    G4 -- Yes --> H["M5. Staged rack energization<br/>power on, BMC up, telemetry live"]
+    H --> G5{"G5: Energization<br/>verified?"}
+    G5 -- No --> H1["Hold or de-energize<br/>rework or RMA, re-test"]
+    H1 --> H
+    G5 -- Yes --> I["M6. Row handoff package"]
+    I --> G6{"G6: Customer engineering<br/>accepts row?"}
+    G6 -- No --> I1["Close blocking punch items"]
+    I1 --> I
+    G6 -- Yes --> J["Row handed off to<br/>customer engineering"]
+    J --> K{"More rows?"}
+    K -- Yes --> R
+    K -- No --> L["Build closeout<br/>and lessons learned"]
+```
+
+Rows run as a pipeline. While Row N is energizing, Row N+1 is being connected and Row N+2 is receiving materials. The usual constraints are crew capacity, facility handover dates, and how fast facilities can top up the coolant loop as racks fill.
+
+### Milestones and major tasks
+
+| Milestone | Level | Major tasks |
+|---|---|---|
+| **M0. Build plan baselined** | Program, once | Confirm scope boundaries and demarcation with facilities and customer engineering. Build the integrated schedule: facility handover dates by row, rack deliveries, crew capacity. Set the row sequence. Stand up the tracker, RAID log and meeting cadence. Agree the handoff package and acceptance criteria. |
+| **M1. Row handover from facilities** | Row | Walk the row with the facility team, GC and commissioning agent (CxA). Confirm L5 integrated systems testing is complete for the row's power and cooling. Confirm the busway is energized, labeled and mapped to A/B. Confirm the secondary loop is flushed, filled, at design flow and temperature, with bypass jumpers in place. Confirm hall leak detection, cable trays, overhead clearance, floor loading and access control. |
+| **M2. Row materials staged** | Row, in parallel with M1 | Receive racks. Inspect crates and shock and tilt indicators. Capture serials into the asset system and match them to factory rack test (L11) results. Stage tap-offs, hoses and quick disconnects, optics, cables and spares. Quarantine and RMA damaged items. |
+| **M3. Racks set in place** | Rack | Move racks from staging to position per the floor layout. Level, anchor (seismic where required), ground and bond. Check clearance for doors, hoses and cable entry. Verify each rack ID matches its layout position. |
+| **M4a. Power connection** | Rack | Install tap-offs to each rack's spec. Land A and B feeds. Verify breaker ratings, phase rotation, voltage and labels. Confirm rack PDU monitoring in BMS/DCIM. |
+| **M4b. Liquid connection** | Rack | Remove the bypass jumper. Connect the rack manifold to the drop with dry-break quick disconnects (servers usually arrive pre-plumbed to the rack manifold). Fill, purge air, run a pressure hold and leak check. Verify in-rack leak sensors alarm to BMS. Facilities tops up the loop and rechecks water quality. |
+| **M4c. Network cabling** | Rack and row | Run and dress out-of-band (OOB) management, front-end, back-end GPU fabric (InfiniBand or RoCE) and storage cables to the cutsheet. Install optics. Test continuity and light levels, label both ends and record results. |
+| **M5. Staged rack energization** | Rack | Run the pre-energization checklist. Power on racks in a staggered order. Confirm power shelves and PSUs are healthy with no breaker trips. Confirm CDU flow and temperature hold under load. Confirm BMCs get DHCP leases on the OOB network and report to monitoring. Log all alarms and failed parts. |
+| **M6. Row handoff** | Row | Assemble the handoff package. Walk the row with customer engineering. Agree open items with owners and dates. Record acceptance and feed lessons learned into the next row. |
+
+## 2. Gate checks
+
+| Gate | Pass criteria | Evidence | Sign-off |
+|---|---|---|---|
+| **G0. Plan approved** | RACI and demarcation agreed at the busway, rack drop and network pathways. Integrated schedule baselined. Row sequence and crew plan agreed. Handoff criteria agreed with customer engineering. | Signed RACI, baseline schedule, acceptance checklist | Hardware TPM, facility PM, customer engineering lead, partner EMs and TPMs |
+| **G1. Row accepted from facilities** | L5 complete for the row's power and cooling. Busway energized and labeled. Secondary loop flushed and filled, with chemistry, flow and temperature verified and bypass jumpers in place. Hall leak detection live. Trays and pathways complete. Area clean and access granted. | Commissioning reports (L4/L5), flush and water quality report, busway test report, walk-down punch list with no blocking items | Facility PM or GC, CxA, Hardware TPM |
+| **G2. Material kit complete** | All racks for the row received with no unresolved damage. Serials in the asset system and matched to factory test results. Tap-offs, hoses, quick disconnects, optics, cables and spares on site and reconciled to the BOM. | Receiving log, asset records, BOM reconciliation, RMA list | Receiving lead, Hardware TPM |
+| **G3. Racks positioned** | Every rack in its layout position with a matching ID. Level, anchored, grounded and bonded. Clearance for hoses and cables. | Placement checklist with photos, grounding and bonding record | Rack integrator lead, Hardware TPM |
+| **G4. Pre-energization go / no-go** | **Power:** tap-offs match spec, A/B on separate sources, breakers, phase rotation and voltage verified, monitoring live. **Liquid:** connected, filled, purged, pressure hold passed, no leaks, sensors alarm to BMS, CDU stable. **Network:** OOB cabled and tested, management switches up, DHCP and NTP reachable. **Safety:** area clear, lockout/tagout removed, stagger order published, people on station. | Per-rack checklist signed by the electrical, mechanical and network owners | Hardware TPM chairs. Electrical, mechanical and network owners sign. Facility operations informed. |
+| **G5. Energization verified** | All racks powered with no trips. Power shelves and PSUs healthy. Power draw within the expected range and phases balanced. CDU flow and temperature stable under load, with no leak alarms. BMCs reachable and telemetry in monitoring. Failed parts logged with RMAs open. | Energization log, BMS/DCIM snapshots, BMC inventory, RMA list | Rack OEM lead, facility operations, Hardware TPM |
+| **G6. Row accepted by customer engineering** | Handoff package complete. Every open item has an owner and a date and none blocks testing. | Handoff package (as-builts, serials, test records, energization log, open items), signed acceptance | Customer engineering lead, Hardware TPM |
+
+## 3. What the TPM does
+
+| Milestone | TPM actions |
+|---|---|
+| M0 | Own the RACI and demarcation. Build the integrated schedule with partner EMs and TPMs (supply chain, network, compute). Define gate criteria. Set the cadence and escalation path. |
+| M1 | Schedule and lead the row walk-down. Drive the facility punch list to closure. Do not accept a row with blocking items. |
+| M2 | Track inbound shipments against row dates. Reconcile against the BOM. Drive expedites and RMAs for shortages and damage. Flag at-risk rows early. |
+| M3 | Confirm crew and rigging windows. Sequence racks so aisles are not blocked. Check placement against the layout. |
+| M4 | Run power, liquid and network connections in parallel. Share the coolant fill schedule with facilities so they can top up the loop. Route each failure to its owner with evidence. Keep the per-rack checklist current. |
+| M5 | Chair the go / no-go. Publish the energization order and stagger. Be on site. Log results. Decide hold or de-energize with the technical leads. |
+| M6 | Assemble the handoff package. Run the walk-through with customer engineering. Track open items to closure. Capture lessons for the next row. |
+
+### Operating rhythm
+
+**Daily (on site)**
+
+- Stand-up with crews: rows in each stage, today's targets, safety notes.
+- Every blocker has one owner, one next action and a due date.
+- Share tomorrow's fill and energization plan with facility operations.
+
+**Weekly**
+
+- Report program health to leadership: rows by stage, gate pass rate, slips, top risks and mitigations.
+- Review dependencies with partner EMs and TPMs: supply, network, firmware, staffing.
+- Look ahead at facility handovers and deliveries for the coming weeks.
+- Fold lessons learned into the gate checklists.
+
+### Minimum row record
+
+| Category | Fields |
+|---|---|
+| Identity | Hall, row ID, rack IDs, rack type, planned and actual dates per milestone |
+| Readiness | Facility handover status, commissioning report links, punch list items |
+| Materials | Rack serials, receiving status, BOM reconciliation, RMA list |
+| Connections | Per-rack power, liquid and network checklist status with test record links |
+| Energization | Go / no-go result, energization log, alarms, failed parts |
+| Handoff | Package status, open items, acceptance date |
+| Blockers | Description, owner, next action, due date, escalation level |
+
+## 4. Delivery teams and vendors
+
+| Milestone | Does the work | Supports or signs off |
+|---|---|---|
+| M0. Build plan baselined | Hardware TPM | Facility PM and GC, customer engineering, partner EMs and TPMs, site safety |
+| M1. Row handover | Facility team, GC, commissioning agent | Electrical and mechanical contractors; Hardware TPM accepts |
+| M2. Materials staged | Site receiving, freight and rigging vendor, rack OEM/ODM integrator | Supply chain TPM, asset management, Hardware TPM |
+| M3. Racks set in place | Rigging or white-glove movers, rack integrator field techs | GC (anchoring), Hardware TPM |
+| M4a. Power connection | Electrical contractor | Facility electrical, rack OEM, CxA as needed |
+| M4b. Liquid connection | Mechanical contractor or rack OEM techs (per contract) | CDU vendor, facility mechanical (top-up, water quality), BMS team |
+| M4c. Network cabling | Structured cabling vendor | Network engineering (cutsheets, management switches, DHCP and NTP), optics supplier |
+| M5. Staged energization | Rack OEM field techs, electrical contractor | Facility operations (BMS and CDU watch), network engineering, customer engineering (witness) |
+| M6. Row handoff | Hardware TPM | Customer engineering accepts; rack OEM follows up on RMAs; asset management updates records |
+
+## Source boundary and assumptions
+
+This workflow is built from the *Senior Technical Program Manager* job description (Redmond, AI infrastructure deployments in client data centers), interview notes on role scope, and general industry practice for liquid-cooled GPU builds. It does not use client documents. Exact demarcation points, contract scopes (for example, who installs drop-to-rack hoses), tool names, commissioning templates and acceptance criteria vary by site and should be confirmed with the hiring team.
