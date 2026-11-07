@@ -224,10 +224,42 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
   <p class="note">Confirm these demarcation points in the RACI at the start of the build. The gaps between scopes are where builds stall.</p>
 
   <div class="life">
-    <div><span class="k">Before this workflow</span><p>The TPM coordinates with the facility team, GC and other TPMs on construction and gray space fit-out. Facilities delivers white space power through the busway and cooling through the rack drop.</p></div>
+    <div><span class="k">Before this workflow</span><p>The TPM coordinates with the facility team, GC and other TPMs on construction and gray space fit-out. Facilities delivers white space power through the busway and cooling through the rack drop. Design and procurement run in parallel; the TPM tracks them as upstream inputs.</p></div>
     <div><span class="k">Row by row</span><p>Hardware is delivered one row at a time, from facility handover through rack energization, with a gate check at every milestone.</p></div>
     <div><span class="k">Handoff</span><p>Each energized row goes to customer engineering for further testing and platform engineering.</p></div>
   </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Upstream readiness</div>
+    <h2>Design and procurement inputs</h2>
+    <p>Design and procurement happen before or during construction, and the hardware TPM doesn't own them. Facilities, customer engineering, network engineering and supply chain do. The TPM tracks each input against row need-by dates, so a late item shows up as a risk weeks ahead instead of a failed gate on the floor.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Input</th><th>Owner</th><th>Needed by</th><th>Checked at</th><th>What the TPM tracks</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="5">Design inputs</td></tr>
+      <tr><td class="cat">Rack configuration</td><td>Customer engineering, rack OEM</td><td>Before rack production</td><td class="sid">G0</td><td>The factory build matches the configuration used for the power and cooling design</td></tr>
+      <tr><td class="cat">Floor layout and rack elevations</td><td>Customer engineering</td><td>Before the M0 baseline</td><td class="sid">G0</td><td>Frozen version; rack positions match facility drawings</td></tr>
+      <tr><td class="cat">Power plan</td><td>Customer engineering, facility electrical</td><td>Design freeze, before tap-offs are ordered</td><td class="sid">G0</td><td>Tap-off spec, A/B mapping and rack PDU type match the rack configuration</td></tr>
+      <tr><td class="cat">Cooling interface</td><td>Customer engineering, facility mechanical, rack OEM</td><td>Design freeze</td><td class="sid">G0</td><td>Drop locations, hose and quick-disconnect type and flow per rack match the CDU and secondary loop design</td></tr>
+      <tr><td class="cat">Network design</td><td>Network engineering</td><td>Before M4c of the first row</td><td class="sid">G0</td><td>Topology fixed; cutsheets and trunk and patch plan released per row</td></tr>
+      <tr class="grp"><td colspan="5">Long-lead procurement</td></tr>
+      <tr><td class="cat">Racks</td><td>Supply chain, rack OEM</td><td>Ship date per row</td><td class="sid">G2</td><td>Production slot, factory (L11) test date, ship and delivery dates. Usually the longest lead item.</td></tr>
+      <tr><td class="cat">Optics</td><td>Supply chain, network engineering</td><td>Before M4c per row</td><td class="sid">G2</td><td>Quantity by type per row and delivery date</td></tr>
+      <tr><td class="cat">Trunk and patch cables</td><td>Supply chain, cabling vendor</td><td>Before M4c per row</td><td class="sid">G2</td><td>Lengths from the cutsheets and delivery date</td></tr>
+      <tr><td class="cat">Tap-offs</td><td>Supply chain, electrical contractor</td><td>Before M4a per row</td><td class="sid">G2</td><td>Spec matches the power plan; delivery date</td></tr>
+      <tr><td class="cat">Hoses and quick disconnects</td><td>Supply chain, rack OEM or mechanical contractor</td><td>Before M4b per row</td><td class="sid">G2</td><td>Type matches the cooling interface; delivery date</td></tr>
+      <tr><td class="cat">Spares</td><td>Supply chain, rack OEM</td><td>Before M5 per row</td><td class="sid">G2</td><td>Spares kit per row: PSUs, power shelves, optics, hoses</td></tr>
+    </tbody>
+  </table></div>
+  <div class="rules">
+    <div class="rule"><h3>Track, don't own</h3><p>The TPM doesn't design or buy. The job is visibility: one list of inputs with owners, dates and status, reviewed weekly with partner EMs and TPMs.</p></div>
+    <div class="rule"><h3>Need-by dates</h3><p>Each input gets a need-by date per row, planned back from the milestone that uses it. A projected miss becomes a RAID item with an owner before the row starts.</p></div>
+    <div class="rule"><h3>Design freeze</h3><p>After freeze, every change goes through change control, so its impact on tap-offs, hoses, cutsheets and row dates is visible. Late rack configuration changes are a common cause of a failed G4.</p></div>
+  </div>
+  <p class="note">Worth asking the hiring manager: how early does the role engage, from design freeze or only once racks ship?</p>
 </section>
 
 <section>
@@ -273,9 +305,9 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
   <div class="tbl"><table>
     <thead><tr><th>Gate</th><th>Pass criteria</th><th>Evidence</th><th>Sign-off</th></tr></thead>
     <tbody>
-      <tr><td class="sid">G0</td><td><b>Plan approved.</b> RACI and demarcation agreed at the busway, rack drop and network pathways. Integrated schedule baselined. Row sequence and crew plan agreed. Handoff criteria agreed with customer engineering.</td><td>Signed RACI, baseline schedule, acceptance checklist</td><td>Hardware TPM, facility PM, customer engineering lead, partner EMs and TPMs</td></tr>
+      <tr><td class="sid">G0</td><td><b>Plan approved.</b> RACI and demarcation agreed at the busway, rack drop and network pathways. Integrated schedule baselined. Row sequence and crew plan agreed. Design inputs frozen for the first rows, and every upstream input has an owner and a need-by date per row. Handoff criteria agreed with customer engineering.</td><td>Signed RACI, baseline schedule, upstream readiness tracker, acceptance checklist</td><td>Hardware TPM, facility PM, customer engineering lead, partner EMs and TPMs</td></tr>
       <tr><td class="sid">G1</td><td><b>Row accepted from facilities.</b> L5 complete for the row's power and cooling. Busway energized and labeled. Secondary loop flushed and filled, with chemistry, flow and temperature verified and bypass jumpers in place. Hall leak detection live. Trays and pathways complete. Area clean and access granted.</td><td>Commissioning reports (L4/L5), flush and water quality report, busway test report, punch list with no blocking items</td><td>Facility PM or GC, commissioning agent, Hardware TPM</td></tr>
-      <tr><td class="sid">G2</td><td><b>Material kit complete.</b> All racks for the row received with no unresolved damage. Serials in the asset system and matched to factory test results. Tap-offs, hoses, quick disconnects, optics, cables and spares on site and reconciled to the BOM.</td><td>Receiving log, asset records, BOM reconciliation, RMA list</td><td>Receiving lead, Hardware TPM</td></tr>
+      <tr><td class="sid">G2</td><td><b>Material kit complete.</b> All racks for the row received with no unresolved damage. Serials in the asset system and matched to factory test results. Tap-offs, hoses, quick disconnects, optics, cables and spares on site and reconciled to the BOM. Inbound dates for the next rows' long-lead items confirmed against their need-by dates.</td><td>Receiving log, asset records, BOM reconciliation, RMA list, inbound tracker</td><td>Receiving lead, Hardware TPM</td></tr>
       <tr><td class="sid">G3</td><td><b>Racks positioned.</b> Every rack in its layout position with a matching ID. Level, anchored, grounded and bonded. Clearance for hoses and cables.</td><td>Placement checklist with photos, grounding and bonding record</td><td>Rack integrator lead, Hardware TPM</td></tr>
       <tr><td class="sid">G4</td><td><b>Pre-energization go / no-go.</b> <i>Power:</i> tap-offs match spec, A/B on separate sources, breakers, phase rotation and voltage verified, monitoring live. <i>Liquid:</i> connected, filled, purged, pressure hold passed, no leaks, sensors alarm to BMS, CDU stable. <i>Network:</i> OOB cabled and tested, management switches up, DHCP and NTP reachable. <i>Safety:</i> area clear, lockout/tagout removed, stagger order published, people on station.</td><td>Per-rack checklist signed by the electrical, mechanical and network owners</td><td>Hardware TPM chairs; electrical, mechanical and network owners sign; facility operations informed</td></tr>
       <tr><td class="sid">G5</td><td><b>Energization verified.</b> All racks powered with no trips. Power shelves and PSUs healthy. Power draw in the expected range and phases balanced. CDU flow and temperature stable under load, no leak alarms. BMCs reachable and telemetry in monitoring. Failed parts logged with RMAs open.</td><td>Energization log, BMS/DCIM snapshots, BMC inventory, RMA list</td><td>Rack OEM lead, facility operations, Hardware TPM</td></tr>
@@ -293,7 +325,7 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
   <div class="tbl"><table>
     <thead><tr><th>Milestone</th><th>TPM actions</th></tr></thead>
     <tbody>
-      <tr><td class="sid">M0</td><td>Own the RACI and demarcation. Build the integrated schedule with partner EMs and TPMs (supply chain, network, compute). Define gate criteria. Set the cadence and escalation path.</td></tr>
+      <tr><td class="sid">M0</td><td>Own the RACI and demarcation. Stand up the upstream readiness tracker for design inputs and long-lead items. Build the integrated schedule with partner EMs and TPMs (supply chain, network, compute). Define gate criteria. Set the cadence and escalation path.</td></tr>
       <tr><td class="sid">M1</td><td>Schedule and lead the row walk-down. Drive the facility punch list to closure. Don't accept a row with blocking items.</td></tr>
       <tr><td class="sid">M2</td><td>Track inbound shipments against row dates. Reconcile against the BOM. Drive expedites and RMAs for shortages and damage. Flag at-risk rows early.</td></tr>
       <tr><td class="sid">M3</td><td>Confirm crew and rigging windows. Sequence racks so aisles aren't blocked. Check placement against the layout.</td></tr>
@@ -358,10 +390,11 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
      ["Confirm scope boundaries and demarcation at the busway, rack drop and network pathways, and record them in the RACI.","tpm fac cust ems"],
      ["Build the integrated schedule: facility handover dates by row, rack deliveries, crew capacity and the row sequence.","tpm fac sc ems"],
      ["Agree gate criteria, the handoff package and acceptance criteria with customer engineering.","tpm cust"],
+     ["Build the upstream readiness tracker: design inputs and long-lead items with owners and need-by dates per row.","tpm cust net sc ems"],
      ["Stand up the tracker, RAID log, daily and weekly cadence, and the escalation path.","tpm ems"],
      ["Agree site safety rules for energized work, lockout/tagout and liquid handling.","tpm safe fac"]
     ],
-    out:"G0 · Plan approved: signed RACI, baseline schedule, acceptance checklist."},
+    out:"G0 · Plan approved: signed RACI, baseline schedule, upstream readiness tracker, acceptance checklist."},
    {id:"M1",name:"Row handover from facilities",when:"Per row, in parallel with M2",owner:"Facility team and GC deliver; Hardware TPM accepts",
     acts:[
      ["Walk the row with the facility team, GC and commissioning agent.","tpm fac cxa"],
