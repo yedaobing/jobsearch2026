@@ -1,3 +1,9 @@
+---
+layout: default
+title: "AI Infra On-Prem Build: Hardware TPM Workflow"
+---
+
+{% capture workflow %}
 # AI Infrastructure On-Prem Build: Hardware TPM Deployment Workflow
 
 ## Purpose and scope
@@ -147,3 +153,46 @@ Rows run as a pipeline. While Row N is energizing, Row N+1 is being connected an
 ## Source boundary and assumptions
 
 This workflow is built from the *Senior Technical Program Manager* job description (Redmond, AI infrastructure deployments in client data centers), interview notes on role scope, and general industry practice for liquid-cooled GPU builds. It does not use client documents. Exact demarcation points, contract scopes (for example, who installs drop-to-rack hoses), tool names, commissioning templates and acceptance criteria vary by site and should be confirmed with the hiring team.
+{% endcapture %}
+{{ workflow | markdownify }}
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+  document.querySelectorAll("pre > code.language-mermaid").forEach((code) => {
+    const diagram = document.createElement("div");
+    diagram.className = "mermaid";
+    diagram.textContent = code.textContent;
+    code.parentElement.replaceWith(diagram);
+  });
+
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: "strict",
+    theme: "neutral",
+    flowchart: { useMaxWidth: true }
+  });
+  await mermaid.run({ querySelector: ".mermaid" });
+</script>
+
+<style>
+  .wrapper {
+    max-width: 1180px;
+  }
+
+  table {
+    display: table;
+    width: 100%;
+    font-size: 0.92rem;
+  }
+
+  th {
+    background: #eef5fb;
+  }
+
+  .mermaid {
+    margin: 2rem auto;
+    overflow-x: auto;
+    text-align: center;
+  }
+</style>
+
