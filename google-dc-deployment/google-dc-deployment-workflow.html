@@ -1,198 +1,457 @@
----
-layout: default
-title: "AI Infra On-Prem Build: Hardware TPM Workflow"
----
-
-{% capture workflow %}
-# AI Infrastructure On-Prem Build: Hardware TPM Deployment Workflow
-
-## Purpose and scope
-
-This page maps the hardware deployment workflow for a **Senior TPM, AI infrastructure on-prem builds** (Redmond). The workflow starts when a data hall row is handed over by the facility team and ends when the energized row is handed to customer engineering.
-
-**Assumptions**
-
-1. Before this workflow starts, the TPM coordinates with the facility team, the general contractor (GC) and other TPMs on construction and gray space fit-out. Facilities delivers white space power through the busway and white space cooling through the rack drop.
-2. Hardware is delivered **row by row** up to rack energization. Each energized row is then handed to customer engineering for further testing and platform engineering.
-
-**Demarcation points**
-
-| Domain | Facility scope ends at | Hardware scope starts at |
-|---|---|---|
-| Power | Energized, commissioned overhead busway (A and B per row) | Tap-off install, rack feeds, rack PDUs |
-| Cooling | Commissioned secondary loop (TCS) at each rack drop's isolation valve or quick disconnect, flushed and filled, bypass jumper in place | Rack-to-drop connection, rack fill, air purge, leak check |
-| Network | Cable trays and pathways in place | Rack cabling, optics, management network turn-up |
-
-Confirm these demarcation points in the RACI at the start of the build. The gaps between scopes are where builds stall.
-
-## 1. Deployment sequence
-
-```mermaid
-flowchart TD
-    A["M0. Build plan baselined<br/>RACI, demarcation, row sequence"] --> G0{"G0: Plan<br/>approved?"}
-    G0 -- No --> A1["Close RACI and schedule gaps"]
-    A1 --> G0
-    G0 -- Yes --> R["Start next row"]
-
-    R --> B["M1. Row handover from facilities<br/>busway energized, secondary loop at rack drops"]
-    R --> C["M2. Row materials staged<br/>racks received, inspected, tagged"]
-    B --> G1{"G1: Row accepted<br/>from facilities?"}
-    G1 -- No --> B1["Punch list to facility team and GC"]
-    B1 --> B
-    C --> G2{"G2: Material kit<br/>complete?"}
-    G2 -- No --> C1["Expedite shortages<br/>RMA damaged units"]
-    C1 --> C
-    G1 -- Yes --> D["M3. Racks set in place<br/>rig, level, anchor, bond"]
-    G2 -- Yes --> D
-    D --> G3{"G3: Racks positioned<br/>per layout?"}
-    G3 -- No --> D1["Correct position or anchoring"]
-    D1 --> D
-    G3 -- Yes --> E1["M4a. Power connection<br/>tap-offs, A/B feeds, breakers"]
-    G3 -- Yes --> E2["M4b. Liquid connection<br/>connect, fill, purge, leak check"]
-    G3 -- Yes --> E3["M4c. Network cabling<br/>OOB, front-end, back-end, storage"]
-    E1 --> G4{"G4: Pre-energization<br/>go / no-go"}
-    E2 --> G4
-    E3 --> G4
-    G4 -- No --> F1["Route failure to owning team<br/>fix and re-test"]
-    F1 --> G4
-    G4 -- Yes --> H["M5. Staged rack energization<br/>power on, BMC up, telemetry live"]
-    H --> G5{"G5: Energization<br/>verified?"}
-    G5 -- No --> H1["Hold or de-energize<br/>rework or RMA, re-test"]
-    H1 --> H
-    G5 -- Yes --> I["M6. Row handoff package"]
-    I --> G6{"G6: Customer engineering<br/>accepts row?"}
-    G6 -- No --> I1["Close blocking punch items"]
-    I1 --> I
-    G6 -- Yes --> J["Row handed off to<br/>customer engineering"]
-    J --> K{"More rows?"}
-    K -- Yes --> R
-    K -- No --> L["Build closeout<br/>and lessons learned"]
-```
-
-Rows run as a pipeline. While Row N is energizing, Row N+1 is being connected and Row N+2 is receiving materials. The usual constraints are crew capacity, facility handover dates, and how fast facilities can top up the coolant loop as racks fill.
-
-### Milestones and major tasks
-
-| Milestone | Level | Major tasks |
-|---|---|---|
-| **M0. Build plan baselined** | Program, once | Confirm scope boundaries and demarcation with facilities and customer engineering. Build the integrated schedule: facility handover dates by row, rack deliveries, crew capacity. Set the row sequence. Stand up the tracker, RAID log and meeting cadence. Agree the handoff package and acceptance criteria. |
-| **M1. Row handover from facilities** | Row | Walk the row with the facility team, GC and commissioning agent (CxA). Confirm L5 integrated systems testing is complete for the row's power and cooling. Confirm the busway is energized, labeled and mapped to A/B. Confirm the secondary loop is flushed, filled, at design flow and temperature, with bypass jumpers in place. Confirm hall leak detection, cable trays, overhead clearance, floor loading and access control. |
-| **M2. Row materials staged** | Row, in parallel with M1 | Receive racks. Inspect crates and shock and tilt indicators. Capture serials into the asset system and match them to factory rack test (L11) results. Stage tap-offs, hoses and quick disconnects, optics, cables and spares. Quarantine and RMA damaged items. |
-| **M3. Racks set in place** | Rack | Move racks from staging to position per the floor layout. Level, anchor (seismic where required), ground and bond. Check clearance for doors, hoses and cable entry. Verify each rack ID matches its layout position. |
-| **M4a. Power connection** | Rack | Install tap-offs to each rack's spec. Land A and B feeds. Verify breaker ratings, phase rotation, voltage and labels. Confirm rack PDU monitoring in BMS/DCIM. |
-| **M4b. Liquid connection** | Rack | Remove the bypass jumper. Connect the rack manifold to the drop with dry-break quick disconnects (servers usually arrive pre-plumbed to the rack manifold). Fill, purge air, run a pressure hold and leak check. Verify in-rack leak sensors alarm to BMS. Facilities tops up the loop and rechecks water quality. |
-| **M4c. Network cabling** | Rack and row | Run and dress out-of-band (OOB) management, front-end, back-end GPU fabric (InfiniBand or RoCE) and storage cables to the cutsheet. Install optics. Test continuity and light levels, label both ends and record results. |
-| **M5. Staged rack energization** | Rack | Run the pre-energization checklist. Power on racks in a staggered order. Confirm power shelves and PSUs are healthy with no breaker trips. Confirm CDU flow and temperature hold under load. Confirm BMCs get DHCP leases on the OOB network and report to monitoring. Log all alarms and failed parts. |
-| **M6. Row handoff** | Row | Assemble the handoff package. Walk the row with customer engineering. Agree open items with owners and dates. Record acceptance and feed lessons learned into the next row. |
-
-## 2. Gate checks
-
-| Gate | Pass criteria | Evidence | Sign-off |
-|---|---|---|---|
-| **G0. Plan approved** | RACI and demarcation agreed at the busway, rack drop and network pathways. Integrated schedule baselined. Row sequence and crew plan agreed. Handoff criteria agreed with customer engineering. | Signed RACI, baseline schedule, acceptance checklist | Hardware TPM, facility PM, customer engineering lead, partner EMs and TPMs |
-| **G1. Row accepted from facilities** | L5 complete for the row's power and cooling. Busway energized and labeled. Secondary loop flushed and filled, with chemistry, flow and temperature verified and bypass jumpers in place. Hall leak detection live. Trays and pathways complete. Area clean and access granted. | Commissioning reports (L4/L5), flush and water quality report, busway test report, walk-down punch list with no blocking items | Facility PM or GC, CxA, Hardware TPM |
-| **G2. Material kit complete** | All racks for the row received with no unresolved damage. Serials in the asset system and matched to factory test results. Tap-offs, hoses, quick disconnects, optics, cables and spares on site and reconciled to the BOM. | Receiving log, asset records, BOM reconciliation, RMA list | Receiving lead, Hardware TPM |
-| **G3. Racks positioned** | Every rack in its layout position with a matching ID. Level, anchored, grounded and bonded. Clearance for hoses and cables. | Placement checklist with photos, grounding and bonding record | Rack integrator lead, Hardware TPM |
-| **G4. Pre-energization go / no-go** | **Power:** tap-offs match spec, A/B on separate sources, breakers, phase rotation and voltage verified, monitoring live. **Liquid:** connected, filled, purged, pressure hold passed, no leaks, sensors alarm to BMS, CDU stable. **Network:** OOB cabled and tested, management switches up, DHCP and NTP reachable. **Safety:** area clear, lockout/tagout removed, stagger order published, people on station. | Per-rack checklist signed by the electrical, mechanical and network owners | Hardware TPM chairs. Electrical, mechanical and network owners sign. Facility operations informed. |
-| **G5. Energization verified** | All racks powered with no trips. Power shelves and PSUs healthy. Power draw within the expected range and phases balanced. CDU flow and temperature stable under load, with no leak alarms. BMCs reachable and telemetry in monitoring. Failed parts logged with RMAs open. | Energization log, BMS/DCIM snapshots, BMC inventory, RMA list | Rack OEM lead, facility operations, Hardware TPM |
-| **G6. Row accepted by customer engineering** | Handoff package complete. Every open item has an owner and a date and none blocks testing. | Handoff package (as-builts, serials, test records, energization log, open items), signed acceptance | Customer engineering lead, Hardware TPM |
-
-## 3. What the TPM does
-
-| Milestone | TPM actions |
-|---|---|
-| M0 | Own the RACI and demarcation. Build the integrated schedule with partner EMs and TPMs (supply chain, network, compute). Define gate criteria. Set the cadence and escalation path. |
-| M1 | Schedule and lead the row walk-down. Drive the facility punch list to closure. Do not accept a row with blocking items. |
-| M2 | Track inbound shipments against row dates. Reconcile against the BOM. Drive expedites and RMAs for shortages and damage. Flag at-risk rows early. |
-| M3 | Confirm crew and rigging windows. Sequence racks so aisles are not blocked. Check placement against the layout. |
-| M4 | Run power, liquid and network connections in parallel. Share the coolant fill schedule with facilities so they can top up the loop. Route each failure to its owner with evidence. Keep the per-rack checklist current. |
-| M5 | Chair the go / no-go. Publish the energization order and stagger. Be on site. Log results. Decide hold or de-energize with the technical leads. |
-| M6 | Assemble the handoff package. Run the walk-through with customer engineering. Track open items to closure. Capture lessons for the next row. |
-
-### Operating rhythm
-
-**Daily (on site)**
-
-- Stand-up with crews: rows in each stage, today's targets, safety notes.
-- Every blocker has one owner, one next action and a due date.
-- Share tomorrow's fill and energization plan with facility operations.
-
-**Weekly**
-
-- Report program health to leadership: rows by stage, gate pass rate, slips, top risks and mitigations.
-- Review dependencies with partner EMs and TPMs: supply, network, firmware, staffing.
-- Look ahead at facility handovers and deliveries for the coming weeks.
-- Fold lessons learned into the gate checklists.
-
-### Minimum row record
-
-| Category | Fields |
-|---|---|
-| Identity | Hall, row ID, rack IDs, rack type, planned and actual dates per milestone |
-| Readiness | Facility handover status, commissioning report links, punch list items |
-| Materials | Rack serials, receiving status, BOM reconciliation, RMA list |
-| Connections | Per-rack power, liquid and network checklist status with test record links |
-| Energization | Go / no-go result, energization log, alarms, failed parts |
-| Handoff | Package status, open items, acceptance date |
-| Blockers | Description, owner, next action, due date, escalation level |
-
-## 4. Delivery teams and vendors
-
-| Milestone | Does the work | Supports or signs off |
-|---|---|---|
-| M0. Build plan baselined | Hardware TPM | Facility PM and GC, customer engineering, partner EMs and TPMs, site safety |
-| M1. Row handover | Facility team, GC, commissioning agent | Electrical and mechanical contractors; Hardware TPM accepts |
-| M2. Materials staged | Site receiving, freight and rigging vendor, rack OEM/ODM integrator | Supply chain TPM, asset management, Hardware TPM |
-| M3. Racks set in place | Rigging or white-glove movers, rack integrator field techs | GC (anchoring), Hardware TPM |
-| M4a. Power connection | Electrical contractor | Facility electrical, rack OEM, CxA as needed |
-| M4b. Liquid connection | Mechanical contractor or rack OEM techs (per contract) | CDU vendor, facility mechanical (top-up, water quality), BMS team |
-| M4c. Network cabling | Structured cabling vendor | Network engineering (cutsheets, management switches, DHCP and NTP), optics supplier |
-| M5. Staged energization | Rack OEM field techs, electrical contractor | Facility operations (BMS and CDU watch), network engineering, customer engineering (witness) |
-| M6. Row handoff | Hardware TPM | Customer engineering accepts; rack OEM follows up on RMAs; asset management updates records |
-
-## Source boundary and assumptions
-
-This workflow is built from the *Senior Technical Program Manager* job description (Redmond, AI infrastructure deployments in client data centers), interview notes on role scope, and general industry practice for liquid-cooled GPU builds. It does not use client documents. Exact demarcation points, contract scopes (for example, who installs drop-to-rack hoses), tool names, commissioning templates and acceptance criteria vary by site and should be confirmed with the hiring team.
-{% endcapture %}
-{{ workflow | markdownify }}
-<script type="module">
-  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-
-  document.querySelectorAll("pre > code.language-mermaid").forEach((code) => {
-    const diagram = document.createElement("div");
-    diagram.className = "mermaid";
-    diagram.textContent = code.textContent;
-    code.parentElement.replaceWith(diagram);
-  });
-
-  mermaid.initialize({
-    startOnLoad: false,
-    securityLevel: "strict",
-    theme: "neutral",
-    flowchart: { useMaxWidth: true }
-  });
-  await mermaid.run({ querySelector: ".mermaid" });
-</script>
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Hardware TPM deployment workflow for AI infrastructure on-prem builds: milestones, gates, TPM actions and delivery teams.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Hardware Deployment Workflow · AI Infra On-Prem Builds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
-  .wrapper {
-    max-width: 1180px;
-  }
+/* Layout: same procedure-sheet style as the hardware readiness page — overview track with owners and gates, demarcation table, filterable milestones (M0..M6), gate checks, TPM role, teams. */
+:root{
+  --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --line:#d3dce0;
+  --accent:#0b6c76; --accent-soft:#dbeef0;
+  --jd:#3e4aa8; --jd-soft:#e4e7f8;
+  --ehs:#9a5b00; --ehs-soft:#fbeed6;
+  --dim:.28;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px;display:grid;gap:48px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800;font-stretch:78%;line-height:1.02}
+h2{font-size:24px;font-weight:750;font-stretch:82%}
+h3{font-size:19px;font-weight:700;font-stretch:85%}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}
+.lede{max-width:68ch;color:var(--muted);font-size:16px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;padding:1px 6px;border-radius:3px;vertical-align:1px;white-space:nowrap}
+.tag.hm{background:var(--accent-soft);color:var(--accent)}
+.tag.jd{background:var(--jd-soft);color:var(--jd)}
+.tag.ehs{background:var(--ehs-soft);color:var(--ehs)}
+.note{font-size:13px;color:var(--muted);max-width:80ch}
+section{display:grid;gap:18px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:72ch}
 
-  table {
-    display: table;
-    width: 100%;
-    font-size: 0.92rem;
-  }
+/* overview */
+.overview{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+.overview svg{display:block;min-width:940px;width:100%;height:auto}
+.overview text{font-family:var(--f-body)}
+.loops{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px 24px;font-size:13.5px}
+.loops li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:6px}
+.loops b{font-family:var(--f-mono);font-size:12px;color:var(--accent);padding-top:1px}
 
-  th {
-    background: #eef5fb;
-  }
+/* role chips */
+.who{display:inline-block;font-size:11.5px;border:1px solid var(--line);border-radius:3px;padding:0 6px;color:var(--muted);white-space:nowrap}
+.who.own{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
 
-  .mermaid {
-    margin: 2rem auto;
-    overflow-x: auto;
-    text-align: center;
-  }
+/* filter */
+.filter{display:grid;gap:10px}
+.fg{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fg>span{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);min-width:110px}
+.filter button{font:500 13px var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.filter button:hover{border-color:var(--accent)}
+.filter button.own{border-color:var(--accent)}
+.filter button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* stages */
+.stages{display:grid;gap:0;border-top:2px solid var(--ink)}
+.stage{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;padding-block:24px;border-bottom:1px solid var(--line);transition:opacity .2s}
+.stage.dim{opacity:var(--dim)}
+.s-meta{display:grid;gap:8px;align-content:start}
+.s-id{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--accent)}
+.s-when{font-size:12.5px;color:var(--muted)}
+.s-owner{font-size:13px;display:grid;gap:1px}
+.s-owner b{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.s-who{display:flex;flex-wrap:wrap;gap:4px}
+.s-body{display:grid;gap:14px;min-width:0}
+.acts{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.acts li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;transition:opacity .2s}
+.acts li::before{content:"";width:6px;height:6px;margin-top:9px;background:var(--muted);border-radius:1px}
+.acts li.dim{opacity:var(--dim)}
+.acts .roles{display:inline-flex;flex-wrap:wrap;gap:3px;margin-left:4px;vertical-align:1px}
+.acts .roles .who{font-size:10.5px;padding:0 5px}
+.out{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:14px;background:var(--bg);border:1px dashed var(--line);border-radius:4px;padding:10px 12px}
+.out b{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+
+/* lifecycle strip */
+.life{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden}
+.life div{padding:14px 16px;display:grid;gap:4px;align-content:start;border-right:1px solid var(--line)}
+.life div:last-child{border-right:0}
+.life .k{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:600}
+.life p{font-size:13.5px;color:var(--muted)}
+
+/* tables */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.cat{font-family:var(--f-display);font-weight:700;font-stretch:85%;font-size:15px;white-space:nowrap}
+td.sid{font-family:var(--f-mono);font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+td.src{white-space:nowrap}
+tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600;padding-block:8px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start}
+.rule ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.prio{font-family:var(--f-display);font-stretch:80%;font-weight:700;font-size:17px}
+@media (max-width:760px){
+  .stage{grid-template-columns:minmax(0,1fr);gap:12px}
+  .life{grid-template-columns:minmax(0,1fr)}
+  .life div{border-right:0;border-bottom:1px solid var(--line)}
+  .life div:last-child{border-bottom:0}
+  .fg>span{min-width:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){.stage,.acts li{transition:none}}
 </style>
 
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">AI infrastructure on-prem builds · Senior TPM · Hardware deployment</div>
+  <h1>Hardware Deployment Workflow</h1>
+  <p class="lede">The hardware TPM's scope starts when facilities hands over a data hall row and ends when that row is energized and handed to customer engineering. Delivery runs row by row, with seven gates between plan and handoff.</p>
+</header>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Overview</div>
+    <h2>Seven milestones and their owners</h2>
+    <p>Each box shows who does the work below the line. M0 runs once for the build; M1 to M6 repeat for every row. Gates G0 to G6 sit between milestones, and a row moves on only when its gate passes.</p>
+  </div>
+  <div class="overview" role="img" aria-label="Workflow overview. M0 build plan baselined, owned by the hardware TPM, then gate G0. Per row: M1 row handover from facilities and M2 materials staged run in parallel, with gates G1 and G2. M3 racks set in place, gate G3. M4a power, M4b liquid and M4c network connections run in parallel, then gate G4 go or no-go. M5 staged energization, gate G5. M6 row handoff to customer engineering, gate G6. A loop returns from M6 to M1 for the next row.">
+    <svg viewBox="0 0 1060 290" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+        <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+      </defs>
+      <rect x="8" y="14" width="120" height="24" rx="3" fill="var(--jd-soft)"/>
+      <text x="18" y="30.5" font-size="11.5" font-weight="600" fill="var(--jd)" letter-spacing=".06em">PROGRAM · ONCE</text>
+      <rect x="184" y="14" width="868" height="24" rx="3" fill="var(--accent-soft)"/>
+      <text x="194" y="30.5" font-size="11.5" font-weight="600" fill="var(--accent)" letter-spacing=".06em">PER ROW · REPEATS UNTIL THE LAST ROW IS HANDED OFF</text>
+      <g font-size="10.5" fill="var(--muted)">
+        <line x1="184" y1="44" x2="184" y2="62" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="190" y="57">Facilities hands over the row</text>
+        <line x1="1052" y1="44" x2="1052" y2="62" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="1046" y="57" text-anchor="end">Customer engineering takes over</text>
+      </g>
+      <g font-size="12" text-anchor="middle">
+        <!-- M0 -->
+        <g><rect x="8" y="114" width="120" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="68" y="132" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--jd)">M0</text><text x="68" y="148" fill="var(--ink)" font-weight="600">Build plan</text><text x="68" y="162" fill="var(--ink)" font-weight="600">baselined</text><line x1="16" y1="170" x2="120" y2="170" stroke="var(--line)"/><text x="68" y="184" font-size="10.5" fill="var(--accent)" font-weight="600">Hardware TPM</text></g>
+        <!-- M1 / M2 -->
+        <g><rect x="184" y="84" width="130" height="62" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="249" y="99" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">M1</text><text x="249" y="115" fill="var(--ink)" font-weight="600">Row handover</text><line x1="192" y1="124" x2="306" y2="124" stroke="var(--line)"/><text x="249" y="138" font-size="10.5" fill="var(--muted)">Facility · GC · CxA</text></g>
+        <g><rect x="184" y="158" width="130" height="62" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="249" y="173" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">M2</text><text x="249" y="189" fill="var(--ink)" font-weight="600">Materials staged</text><line x1="192" y1="198" x2="306" y2="198" stroke="var(--line)"/><text x="249" y="212" font-size="10.5" fill="var(--muted)">Receiving · Rack OEM</text></g>
+        <!-- M3 -->
+        <g><rect x="368" y="114" width="120" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="428" y="132" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">M3</text><text x="428" y="148" fill="var(--ink)" font-weight="600">Racks set</text><text x="428" y="162" fill="var(--ink)" font-weight="600">in place</text><line x1="376" y1="170" x2="480" y2="170" stroke="var(--line)"/><text x="428" y="184" font-size="10.5" fill="var(--muted)">Riggers · OEM techs</text></g>
+        <!-- M4a/b/c -->
+        <g><rect x="544" y="72" width="130" height="48" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="609" y="91" fill="var(--ink)" font-weight="600"><tspan font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="400" fill="var(--accent)">M4a </tspan>Power</text><text x="609" y="110" font-size="10.5" fill="var(--muted)">Electrical contractor</text></g>
+        <g><rect x="544" y="128" width="130" height="48" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="609" y="147" fill="var(--ink)" font-weight="600"><tspan font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="400" fill="var(--accent)">M4b </tspan>Liquid</text><text x="609" y="166" font-size="10.5" fill="var(--muted)">Mech. contractor · OEM</text></g>
+        <g><rect x="544" y="184" width="130" height="48" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="609" y="203" fill="var(--ink)" font-weight="600"><tspan font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="400" fill="var(--accent)">M4c </tspan>Network</text><text x="609" y="222" font-size="10.5" fill="var(--muted)">Cabling · Network eng.</text></g>
+        <!-- M5 -->
+        <g><rect x="736" y="114" width="124" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="798" y="132" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">M5</text><text x="798" y="148" fill="var(--ink)" font-weight="600">Staged</text><text x="798" y="162" fill="var(--ink)" font-weight="600">energization</text><line x1="744" y1="170" x2="852" y2="170" stroke="var(--line)"/><text x="798" y="184" font-size="10.5" fill="var(--muted)">OEM techs · Fac. ops</text></g>
+        <!-- M6 -->
+        <g><rect x="906" y="114" width="112" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="962" y="132" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">M6</text><text x="962" y="148" fill="var(--ink)" font-weight="600">Row handoff</text><text x="962" y="162" fill="var(--ink)" font-weight="600">to customer eng.</text><line x1="914" y1="170" x2="1010" y2="170" stroke="var(--line)"/><text x="962" y="184" font-size="10.5" fill="var(--accent)" font-weight="600">Hardware TPM</text></g>
+      </g>
+      <!-- connectors -->
+      <g fill="none" stroke="var(--muted)" stroke-width="1.3">
+        <line x1="128" y1="152" x2="136" y2="152"/>
+        <path d="M164,152 L172,152 L172,115"/><path d="M172,152 L172,189"/>
+        <line x1="314" y1="115" x2="322" y2="115"/><line x1="314" y1="189" x2="322" y2="189"/>
+        <path d="M350,115 L356,115 L356,189 L350,189"/>
+        <line x1="488" y1="152" x2="496" y2="152"/>
+        <path d="M524,152 L530,152"/><path d="M530,96 L530,208"/>
+        <path d="M674,96 L684,96 L684,208 L674,208"/>
+        <line x1="860" y1="152" x2="868" y2="152"/>
+        <line x1="1018" y1="152" x2="1022" y2="152"/>
+      </g>
+      <g stroke="var(--muted)" stroke-width="1.3" marker-end="url(#af)">
+        <line x1="172" y1="115" x2="182" y2="115"/><line x1="172" y1="189" x2="182" y2="189"/>
+        <line x1="356" y1="152" x2="366" y2="152"/>
+        <line x1="530" y1="96" x2="542" y2="96"/><line x1="530" y1="152" x2="542" y2="152"/><line x1="530" y1="208" x2="542" y2="208"/>
+        <line x1="674" y1="152" x2="692" y2="152"/>
+        <line x1="722" y1="152" x2="734" y2="152"/>
+        <line x1="896" y1="152" x2="904" y2="152"/>
+      </g>
+      <!-- gates -->
+      <g font-size="10.5" font-weight="600" text-anchor="middle" font-family="IBM Plex Mono,monospace">
+        <rect x="136" y="143" width="28" height="18" rx="9" fill="var(--surface)" stroke="var(--jd)"/><text x="150" y="155.5" fill="var(--jd)">G0</text>
+        <rect x="322" y="106" width="28" height="18" rx="9" fill="var(--surface)" stroke="var(--accent)"/><text x="336" y="118.5" fill="var(--accent)">G1</text>
+        <rect x="322" y="180" width="28" height="18" rx="9" fill="var(--surface)" stroke="var(--accent)"/><text x="336" y="192.5" fill="var(--accent)">G2</text>
+        <rect x="496" y="143" width="28" height="18" rx="9" fill="var(--surface)" stroke="var(--accent)"/><text x="510" y="155.5" fill="var(--accent)">G3</text>
+        <rect x="694" y="143" width="28" height="18" rx="9" fill="var(--accent)" stroke="var(--accent)"/><text x="708" y="155.5" fill="var(--surface)">G4</text>
+        <rect x="868" y="143" width="28" height="18" rx="9" fill="var(--surface)" stroke="var(--accent)"/><text x="882" y="155.5" fill="var(--accent)">G5</text>
+        <rect x="1022" y="143" width="28" height="18" rx="9" fill="var(--surface)" stroke="var(--accent)"/><text x="1036" y="155.5" fill="var(--accent)">G6</text>
+      </g>
+      <text x="711" y="137" font-size="9.5" fill="var(--muted)" text-anchor="middle">go/no-go</text>
+      <!-- next-row loop -->
+      <path d="M962,191 C962,272 249,272 249,222" fill="none" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#ah)"/>
+      <rect x="566" y="243" width="78" height="20" rx="10" fill="var(--surface)" stroke="var(--accent)"/>
+      <text x="605" y="257" font-size="10.5" font-weight="600" text-anchor="middle" font-family="IBM Plex Mono,monospace" fill="var(--accent)">NEXT ROW</text>
+    </svg>
+  </div>
+  <ol class="loops">
+    <li><b>NR</b><span>After G6, the next row starts at M1 and M2. Rows overlap: while one row energizes, the next is being connected and the one after is receiving materials.</span></li>
+    <li><b>FX</b><span>A failed gate goes back to that milestone's owner to fix and re-test. A G1 failure goes back to the facility team and GC as a punch list.</span></li>
+    <li><b>PL</b><span>M1 and M2 run in parallel, and so do the three M4 connection streams. All three streams must pass before the G4 go / no-go.</span></li>
+  </ol>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Domain</th><th>Facility scope ends at</th><th>Hardware scope starts at</th></tr></thead>
+    <tbody>
+      <tr><td class="cat">Power</td><td>Energized, commissioned overhead busway (A and B per row)</td><td>Tap-off install, rack feeds, rack PDUs</td></tr>
+      <tr><td class="cat">Cooling</td><td>Commissioned secondary loop at each rack drop's isolation valve or quick disconnect, flushed and filled, bypass jumper in place</td><td>Rack-to-drop connection, rack fill, air purge, leak check</td></tr>
+      <tr><td class="cat">Network</td><td>Cable trays and pathways in place</td><td>Rack cabling, optics, management network turn-up</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Confirm these demarcation points in the RACI at the start of the build. The gaps between scopes are where builds stall.</p>
+
+  <div class="life">
+    <div><span class="k">Before this workflow</span><p>The TPM coordinates with the facility team, GC and other TPMs on construction and gray space fit-out. Facilities delivers white space power through the busway and cooling through the rack drop.</p></div>
+    <div><span class="k">Row by row</span><p>Hardware is delivered one row at a time, from facility handover through rack energization, with a gate check at every milestone.</p></div>
+    <div><span class="k">Handoff</span><p>Each energized row goes to customer engineering for further testing and platform engineering.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Milestone detail</div>
+    <h2>Deployment sequence and major tasks</h2>
+    <p>Pick a team to see where it shows up. The hardware TPM is shaded.</p>
+  </div>
+  <div class="filter" role="group" aria-label="Filter by team">
+    <div class="fg"><span>Show</span><button type="button" data-role="all" aria-pressed="true">All teams</button><button type="button" class="own" data-role="tpm" aria-pressed="false">Hardware TPM</button></div>
+    <div class="fg"><span>Facility side</span>
+      <button type="button" data-role="fac" aria-pressed="false">Facility team / GC</button>
+      <button type="button" data-role="cxa" aria-pressed="false">Commissioning agent</button>
+      <button type="button" data-role="elec" aria-pressed="false">Electrical contractor</button>
+      <button type="button" data-role="mech" aria-pressed="false">Mechanical contractor</button>
+      <button type="button" data-role="cdu" aria-pressed="false">CDU vendor</button>
+      <button type="button" data-role="fops" aria-pressed="false">Facility operations</button>
+      <button type="button" data-role="safe" aria-pressed="false">Site safety</button>
+    </div>
+    <div class="fg"><span>Hardware &amp; network</span>
+      <button type="button" data-role="log" aria-pressed="false">Receiving &amp; logistics</button>
+      <button type="button" data-role="rig" aria-pressed="false">Riggers</button>
+      <button type="button" data-role="oem" aria-pressed="false">Rack OEM / integrator</button>
+      <button type="button" data-role="cab" aria-pressed="false">Cabling vendor</button>
+      <button type="button" data-role="net" aria-pressed="false">Network engineering</button>
+    </div>
+    <div class="fg"><span>Customer &amp; partners</span>
+      <button type="button" data-role="cust" aria-pressed="false">Customer engineering</button>
+      <button type="button" data-role="ems" aria-pressed="false">Partner EMs &amp; TPMs</button>
+      <button type="button" data-role="sc" aria-pressed="false">Supply chain TPM</button>
+      <button type="button" data-role="asset" aria-pressed="false">Asset management</button>
+    </div>
+  </div>
+  <div class="stages" id="stages"></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Gates</div>
+    <h2>Gate checks</h2>
+    <p>Each gate has pass criteria, the evidence that proves them, and the people who sign off. G4 is the one the TPM chairs before any rack gets power.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Gate</th><th>Pass criteria</th><th>Evidence</th><th>Sign-off</th></tr></thead>
+    <tbody>
+      <tr><td class="sid">G0</td><td><b>Plan approved.</b> RACI and demarcation agreed at the busway, rack drop and network pathways. Integrated schedule baselined. Row sequence and crew plan agreed. Handoff criteria agreed with customer engineering.</td><td>Signed RACI, baseline schedule, acceptance checklist</td><td>Hardware TPM, facility PM, customer engineering lead, partner EMs and TPMs</td></tr>
+      <tr><td class="sid">G1</td><td><b>Row accepted from facilities.</b> L5 complete for the row's power and cooling. Busway energized and labeled. Secondary loop flushed and filled, with chemistry, flow and temperature verified and bypass jumpers in place. Hall leak detection live. Trays and pathways complete. Area clean and access granted.</td><td>Commissioning reports (L4/L5), flush and water quality report, busway test report, punch list with no blocking items</td><td>Facility PM or GC, commissioning agent, Hardware TPM</td></tr>
+      <tr><td class="sid">G2</td><td><b>Material kit complete.</b> All racks for the row received with no unresolved damage. Serials in the asset system and matched to factory test results. Tap-offs, hoses, quick disconnects, optics, cables and spares on site and reconciled to the BOM.</td><td>Receiving log, asset records, BOM reconciliation, RMA list</td><td>Receiving lead, Hardware TPM</td></tr>
+      <tr><td class="sid">G3</td><td><b>Racks positioned.</b> Every rack in its layout position with a matching ID. Level, anchored, grounded and bonded. Clearance for hoses and cables.</td><td>Placement checklist with photos, grounding and bonding record</td><td>Rack integrator lead, Hardware TPM</td></tr>
+      <tr><td class="sid">G4</td><td><b>Pre-energization go / no-go.</b> <i>Power:</i> tap-offs match spec, A/B on separate sources, breakers, phase rotation and voltage verified, monitoring live. <i>Liquid:</i> connected, filled, purged, pressure hold passed, no leaks, sensors alarm to BMS, CDU stable. <i>Network:</i> OOB cabled and tested, management switches up, DHCP and NTP reachable. <i>Safety:</i> area clear, lockout/tagout removed, stagger order published, people on station.</td><td>Per-rack checklist signed by the electrical, mechanical and network owners</td><td>Hardware TPM chairs; electrical, mechanical and network owners sign; facility operations informed</td></tr>
+      <tr><td class="sid">G5</td><td><b>Energization verified.</b> All racks powered with no trips. Power shelves and PSUs healthy. Power draw in the expected range and phases balanced. CDU flow and temperature stable under load, no leak alarms. BMCs reachable and telemetry in monitoring. Failed parts logged with RMAs open.</td><td>Energization log, BMS/DCIM snapshots, BMC inventory, RMA list</td><td>Rack OEM lead, facility operations, Hardware TPM</td></tr>
+      <tr><td class="sid">G6</td><td><b>Row accepted by customer engineering.</b> Handoff package complete. Every open item has an owner and a date, and none blocks testing.</td><td>Handoff package (as-builts, serials, test records, energization log, open items), signed acceptance</td><td>Customer engineering lead, Hardware TPM</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">TPM role</div>
+    <h2>What the hardware TPM does</h2>
+    <p>The TPM doesn't do the hands-on work. The job is to own the sequence, the gate checklists and the go / no-go, and to make sure every blocker has an owner.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Milestone</th><th>TPM actions</th></tr></thead>
+    <tbody>
+      <tr><td class="sid">M0</td><td>Own the RACI and demarcation. Build the integrated schedule with partner EMs and TPMs (supply chain, network, compute). Define gate criteria. Set the cadence and escalation path.</td></tr>
+      <tr><td class="sid">M1</td><td>Schedule and lead the row walk-down. Drive the facility punch list to closure. Don't accept a row with blocking items.</td></tr>
+      <tr><td class="sid">M2</td><td>Track inbound shipments against row dates. Reconcile against the BOM. Drive expedites and RMAs for shortages and damage. Flag at-risk rows early.</td></tr>
+      <tr><td class="sid">M3</td><td>Confirm crew and rigging windows. Sequence racks so aisles aren't blocked. Check placement against the layout.</td></tr>
+      <tr><td class="sid">M4</td><td>Run power, liquid and network connections in parallel. Share the coolant fill schedule with facilities so they can top up the loop. Route each failure to its owner with evidence. Keep the per-rack checklist current.</td></tr>
+      <tr><td class="sid">M5</td><td>Chair the go / no-go. Publish the energization order and stagger. Be on site. Log results. Decide hold or de-energize with the technical leads.</td></tr>
+      <tr><td class="sid">M6</td><td>Assemble the handoff package. Run the walk-through with customer engineering. Track open items to closure. Capture lessons for the next row.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="rules">
+    <div class="rule"><h3>Daily, on site</h3><ol><li>Stand-up with crews: rows in each stage, today's targets, safety notes.</li><li>Every blocker has one owner, one next action and a due date.</li><li>Share tomorrow's fill and energization plan with facility operations.</li></ol></div>
+    <div class="rule"><h3>Weekly</h3><ol><li>Program health to leadership: rows by stage, gate pass rate, slips, top risks and mitigations.</li><li>Dependency review with partner EMs and TPMs: supply, network, firmware, staffing.</li><li>Look ahead at facility handovers and deliveries.</li><li>Fold lessons learned into the gate checklists.</li></ol></div>
+    <div class="rule"><h3>Hold the gate</h3><p>No row is accepted and no rack is energized past an open gate. A one-day slip costs less than rework, or a leak, on an energized rack.</p></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Row record</th><th>Fields tracked</th></tr></thead>
+    <tbody>
+      <tr><td class="cat">Identity</td><td>Hall, row ID, rack IDs, rack type, planned and actual dates per milestone</td></tr>
+      <tr><td class="cat">Readiness</td><td>Facility handover status, commissioning report links, punch list items</td></tr>
+      <tr><td class="cat">Materials</td><td>Rack serials, receiving status, BOM reconciliation, RMA list</td></tr>
+      <tr><td class="cat">Connections</td><td>Per-rack power, liquid and network checklist status with test record links</td></tr>
+      <tr><td class="cat">Energization</td><td>Go / no-go result, energization log, alarms, failed parts</td></tr>
+      <tr><td class="cat">Handoff</td><td>Package status, open items, acceptance date</td></tr>
+      <tr><td class="cat">Blockers</td><td>Description, owner, next action, due date, escalation level</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Teams</div>
+    <h2>Delivery teams and vendors by milestone</h2>
+    <p>Who does the work at each milestone, and who supports or signs off. Contract scopes vary by site, so confirm them during M0.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Milestone</th><th>Does the work</th><th>Supports or signs off</th></tr></thead>
+    <tbody>
+      <tr><td class="sid">M0</td><td>Hardware TPM</td><td>Facility PM and GC, customer engineering, partner EMs and TPMs, site safety</td></tr>
+      <tr><td class="sid">M1</td><td>Facility team, GC, commissioning agent</td><td>Electrical and mechanical contractors; Hardware TPM accepts</td></tr>
+      <tr><td class="sid">M2</td><td>Site receiving, freight and rigging vendor, rack OEM/ODM integrator</td><td>Supply chain TPM, asset management, Hardware TPM</td></tr>
+      <tr><td class="sid">M3</td><td>Riggers or white-glove movers, rack integrator field techs</td><td>GC (anchoring), Hardware TPM</td></tr>
+      <tr><td class="sid">M4a</td><td>Electrical contractor</td><td>Facility electrical, rack OEM, commissioning agent as needed</td></tr>
+      <tr><td class="sid">M4b</td><td>Mechanical contractor or rack OEM techs (per contract)</td><td>CDU vendor, facility mechanical (top-up, water quality), BMS team</td></tr>
+      <tr><td class="sid">M4c</td><td>Structured cabling vendor</td><td>Network engineering (cutsheets, management switches, DHCP and NTP), optics supplier</td></tr>
+      <tr><td class="sid">M5</td><td>Rack OEM field techs, electrical contractor</td><td>Facility operations (BMS and CDU watch), network engineering, customer engineering (witness)</td></tr>
+      <tr><td class="sid">M6</td><td>Hardware TPM</td><td>Customer engineering accepts; rack OEM follows up on RMAs; asset management updates records</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Built from the Senior TPM job description (Redmond, AI infrastructure deployments in client data centers), interview notes on role scope, and general industry practice for liquid-cooled GPU builds. No client documents were used. Demarcation points, contract scopes, tool names, commissioning templates and acceptance criteria vary by site and should be confirmed with the hiring team.</p>
+</section>
+</div>
+
+<script>
+(function(){
+  var ROLE_NAMES={tpm:"Hardware TPM",fac:"Facility / GC",cxa:"Commissioning agent",elec:"Electrical contractor",mech:"Mechanical contractor",cdu:"CDU vendor",fops:"Facility ops",safe:"Site safety",
+    log:"Receiving",rig:"Riggers",oem:"Rack OEM",cab:"Cabling vendor",net:"Network eng.",
+    cust:"Customer eng.",ems:"Partner EMs & TPMs",sc:"Supply chain TPM",asset:"Asset mgmt"};
+  var OWN={tpm:1};
+  var ORDER=Object.keys(ROLE_NAMES);
+  var S=[
+   {id:"M0",name:"Build plan baselined",when:"Program level, once, before the first row",owner:"Hardware TPM",
+    acts:[
+     ["Confirm scope boundaries and demarcation at the busway, rack drop and network pathways, and record them in the RACI.","tpm fac cust ems"],
+     ["Build the integrated schedule: facility handover dates by row, rack deliveries, crew capacity and the row sequence.","tpm fac sc ems"],
+     ["Agree gate criteria, the handoff package and acceptance criteria with customer engineering.","tpm cust"],
+     ["Stand up the tracker, RAID log, daily and weekly cadence, and the escalation path.","tpm ems"],
+     ["Agree site safety rules for energized work, lockout/tagout and liquid handling.","tpm safe fac"]
+    ],
+    out:"G0 · Plan approved: signed RACI, baseline schedule, acceptance checklist."},
+   {id:"M1",name:"Row handover from facilities",when:"Per row, in parallel with M2",owner:"Facility team and GC deliver; Hardware TPM accepts",
+    acts:[
+     ["Walk the row with the facility team, GC and commissioning agent.","tpm fac cxa"],
+     ["Confirm L5 integrated systems testing is complete for the row's power and cooling.","cxa fac"],
+     ["Confirm the busway is energized, labeled and mapped to A/B.","elec fac"],
+     ["Confirm the secondary loop is flushed, filled, at design flow and temperature, with bypass jumpers at each drop.","mech cdu fac"],
+     ["Confirm hall leak detection, cable trays, overhead clearance, floor loading and access control.","fac fops"],
+     ["Drive the punch list to closure. Don't accept a row with blocking items.","tpm fac"]
+    ],
+    out:"G1 · Row accepted from facilities: L4/L5 reports, flush and water quality report, busway test report, no blocking punch items."},
+   {id:"M2",name:"Row materials staged",when:"Per row, in parallel with M1",owner:"Receiving and the rack OEM deliver; Hardware TPM tracks",
+    acts:[
+     ["Track inbound shipments against row dates and flag at-risk rows early.","tpm sc"],
+     ["Receive racks; inspect crates and shock and tilt indicators.","log rig"],
+     ["Capture serials in the asset system and match them to factory rack test (L11) results.","log asset oem"],
+     ["Stage tap-offs, hoses and quick disconnects, optics, cables and spares, and reconcile against the BOM.","log tpm"],
+     ["Quarantine damaged items and drive RMAs and expedites.","oem sc tpm"]
+    ],
+    out:"G2 · Material kit complete: receiving log, asset records, BOM reconciliation, RMA list."},
+   {id:"M3",name:"Racks set in place",when:"Per rack",owner:"Riggers and rack OEM field techs",
+    acts:[
+     ["Confirm crew and rigging windows; sequence racks so aisles aren't blocked.","tpm rig"],
+     ["Move racks from staging to position per the floor layout and verify each rack ID matches its position.","rig oem"],
+     ["Level, anchor (seismic where required), ground and bond.","oem fac"],
+     ["Check clearance for doors, hoses and cable entry.","oem tpm"]
+    ],
+    out:"G3 · Racks positioned: placement checklist with photos, grounding and bonding record."},
+   {id:"M4",name:"Connect power, liquid and network",when:"Per rack; three streams in parallel",owner:"Electrical, mechanical and cabling contractors; Hardware TPM runs the checklist",
+    acts:[
+     ["Power: install tap-offs to each rack's spec, land A and B feeds, and verify breaker ratings, phase rotation, voltage and labels.","elec"],
+     ["Power: confirm rack PDU monitoring is live in BMS/DCIM.","elec fops"],
+     ["Liquid: remove the bypass jumper and connect the rack manifold to the drop with dry-break quick disconnects. Servers usually arrive pre-plumbed to the rack manifold.","mech oem"],
+     ["Liquid: fill, purge air, run a pressure hold and leak check, and verify in-rack leak sensors alarm to BMS.","mech oem fops"],
+     ["Liquid: share the fill schedule so facilities can top up the loop and recheck water quality.","tpm fops cdu"],
+     ["Network: run OOB management, front-end, back-end GPU fabric and storage cables to the cutsheet, and install optics.","cab net"],
+     ["Network: test continuity and light levels, label both ends, and bring up management switches with DHCP and NTP.","cab net"],
+     ["Route each failure to its owner with evidence and keep the per-rack checklist current.","tpm"]
+    ],
+    out:"Per-rack checklist signed by the electrical, mechanical and network owners; feeds G4."},
+   {id:"M5",name:"Staged rack energization",when:"Per rack, in a published order",owner:"Rack OEM field techs and electrical contractor; Hardware TPM chairs the go / no-go",
+    acts:[
+     ["Chair the G4 go / no-go: power, liquid, network and safety checks all closed.","tpm elec mech net safe"],
+     ["Publish the energization order and stagger, and confirm people are on station.","tpm fops"],
+     ["Power on racks; confirm power shelves and PSUs are healthy with no breaker trips.","oem elec"],
+     ["Confirm CDU flow and temperature hold under load, with no leak alarms.","fops cdu"],
+     ["Confirm BMCs get DHCP leases on the OOB network and report to monitoring.","net oem"],
+     ["Log alarms and failed parts, open RMAs, and decide hold or de-energize with the leads.","tpm oem"],
+     ["Customer engineering witnesses energization as agreed.","cust"]
+    ],
+    out:"G4 · Go / no-go passed, then G5 · Energization verified: energization log, BMS/DCIM snapshots, BMC inventory, RMA list."},
+   {id:"M6",name:"Row handoff to customer engineering",when:"Per row, after the last rack is verified",owner:"Hardware TPM; customer engineering accepts",
+    acts:[
+     ["Assemble the handoff package: as-builts, serials, test records, energization log, open items.","tpm asset"],
+     ["Walk the row with customer engineering.","tpm cust"],
+     ["Agree open items with owners and dates; none may block testing.","tpm cust oem"],
+     ["Record acceptance and update asset records.","cust asset"],
+     ["Feed lessons learned into the next row's checklists.","tpm ems"]
+    ],
+    out:"G6 · Row accepted by customer engineering: signed acceptance. The next row starts at M1."}
+  ];
+  function esc(t){return t.replace(/&/g,"&amp;")}
+  function chip(r){return '<span class="who'+(OWN[r]?' own':'')+'">'+esc(ROLE_NAMES[r])+'</span>'}
+  var host=document.getElementById("stages"),html="";
+  S.forEach(function(s){
+    var roles={};
+    s.acts.forEach(function(a){a[1].split(" ").forEach(function(r){roles[r]=1})});
+    var list=ORDER.filter(function(r){return roles[r]});
+    html+='<article class="stage" data-roles="'+list.join(" ")+'">'+
+      '<div class="s-meta"><span class="s-id">'+s.id+'</span><h3>'+s.name+'</h3><span class="s-when">'+s.when+'</span>'+
+      '<div class="s-owner"><b>Owner</b><span>'+s.owner+'</span></div>'+
+      '<div class="s-who">'+list.map(chip).join("")+'</div></div>'+
+      '<div class="s-body"><ul class="acts">'+s.acts.map(function(a){
+        var rs=a[1].split(" ");
+        return '<li data-roles="'+a[1]+'"><span>'+esc(a[0])+'<span class="roles">'+rs.map(chip).join("")+'</span></span></li>'}).join("")+
+      '</ul><div class="out"><b>Exit gate</b><span>'+s.out+'</span></div></div></article>';
+  });
+  host.innerHTML=html;
+  var btns=[].slice.call(document.querySelectorAll(".filter button"));
+  function apply(role){
+    btns.forEach(function(b){b.setAttribute("aria-pressed",b.dataset.role===role?"true":"false")});
+    [].slice.call(host.querySelectorAll(".stage")).forEach(function(st){
+      var hit=role==="all"||st.dataset.roles.split(" ").indexOf(role)>-1;
+      st.classList.toggle("dim",!hit);
+      [].slice.call(st.querySelectorAll("li")).forEach(function(li){
+        li.classList.toggle("dim",hit&&role!=="all"&&li.dataset.roles.split(" ").indexOf(role)<0);
+      });
+    });
+  }
+  btns.forEach(function(b){b.addEventListener("click",function(){apply(b.dataset.role)})});
+})();
+</script>
+</body>
+</html>
