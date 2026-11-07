@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "AI Infra On-Prem Build: Hardware TPM Workflow"
-permalink: /ai-infra-hardware-deployment/
+permalink: /google-dc-deployment/ai-infra-hardware-deployment/
 ---
 
 
