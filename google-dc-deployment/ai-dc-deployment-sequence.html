@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="High-level deployment sequence for an AI data center, from design to production, with the hardware TPM scope and scoping questions.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>AI Data Center Deployment Sequence · Scope and Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: same procedure-sheet style as the hardware readiness page — overview track with owners and gates, demarcation table, filterable milestones (M0..M6), gate checks, TPM role, teams. */
+:root{
+  --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --line:#d3dce0;
+  --accent:#0b6c76; --accent-soft:#dbeef0;
+  --jd:#3e4aa8; --jd-soft:#e4e7f8;
+  --ehs:#9a5b00; --ehs-soft:#fbeed6;
+  --dim:.28;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px;display:grid;gap:48px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800;font-stretch:78%;line-height:1.02}
+h2{font-size:24px;font-weight:750;font-stretch:82%}
+h3{font-size:19px;font-weight:700;font-stretch:85%}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}
+.lede{max-width:68ch;color:var(--muted);font-size:16px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;padding:1px 6px;border-radius:3px;vertical-align:1px;white-space:nowrap}
+.tag.hm{background:var(--accent-soft);color:var(--accent)}
+.tag.jd{background:var(--jd-soft);color:var(--jd)}
+.tag.ehs{background:var(--ehs-soft);color:var(--ehs)}
+.note{font-size:13px;color:var(--muted);max-width:80ch}
+section{display:grid;gap:18px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:72ch}
+
+/* overview */
+.overview{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+.overview svg{display:block;min-width:940px;width:100%;height:auto}
+.overview text{font-family:var(--f-body)}
+.loops{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px 24px;font-size:13.5px}
+.loops li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:6px}
+.loops b{font-family:var(--f-mono);font-size:12px;color:var(--accent);padding-top:1px}
+
+/* role chips */
+.who{display:inline-block;font-size:11.5px;border:1px solid var(--line);border-radius:3px;padding:0 6px;color:var(--muted);white-space:nowrap}
+.who.own{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
+
+/* filter */
+.filter{display:grid;gap:10px}
+.fg{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fg>span{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);min-width:110px}
+.filter button{font:500 13px var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.filter button:hover{border-color:var(--accent)}
+.filter button.own{border-color:var(--accent)}
+.filter button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* stages */
+.stages{display:grid;gap:0;border-top:2px solid var(--ink)}
+.stage{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;padding-block:24px;border-bottom:1px solid var(--line);transition:opacity .2s}
+.stage.dim{opacity:var(--dim)}
+.s-meta{display:grid;gap:8px;align-content:start}
+.s-id{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--accent)}
+.s-when{font-size:12.5px;color:var(--muted)}
+.s-owner{font-size:13px;display:grid;gap:1px}
+.s-owner b{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.s-who{display:flex;flex-wrap:wrap;gap:4px}
+.s-body{display:grid;gap:14px;min-width:0}
+.acts{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.acts li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;transition:opacity .2s}
+.acts li::before{content:"";width:6px;height:6px;margin-top:9px;background:var(--muted);border-radius:1px}
+.acts li.dim{opacity:var(--dim)}
+.acts .roles{display:inline-flex;flex-wrap:wrap;gap:3px;margin-left:4px;vertical-align:1px}
+.acts .roles .who{font-size:10.5px;padding:0 5px}
+.out{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:14px;background:var(--bg);border:1px dashed var(--line);border-radius:4px;padding:10px 12px}
+.out b{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+
+/* lifecycle strip */
+.life{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden}
+.life div{padding:14px 16px;display:grid;gap:4px;align-content:start;border-right:1px solid var(--line)}
+.life div:last-child{border-right:0}
+.life .k{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:600}
+.life p{font-size:13.5px;color:var(--muted)}
+
+/* tables */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.cat{font-family:var(--f-display);font-weight:700;font-stretch:85%;font-size:15px;white-space:nowrap}
+td.sid{font-family:var(--f-mono);font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+td.src{white-space:nowrap}
+tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600;padding-block:8px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start}
+.rule ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.prio{font-family:var(--f-display);font-stretch:80%;font-weight:700;font-size:17px}
+/* at-a-glance cards */
+.glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;grid-template-rows:auto auto auto 1fr auto;gap:8px}
+.card .c-id{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--accent)}
+.card h3{font-size:17px}
+.card .c-who{font-size:12.5px;color:var(--muted)}
+.card ul{margin:0;padding-left:16px;display:grid;gap:3px;font-size:13.5px;align-content:start}
+.card .c-gate{font-size:12.5px;border-top:1px dashed var(--line);padding-top:8px}
+.card .c-gate b{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--accent)}
+/* scope bands */
+.tag.trk{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.tag.crd{background:var(--ehs-soft);color:var(--ehs)}
+.tag.own{background:var(--accent-soft);color:var(--accent)}
+.tag.cus{background:var(--jd-soft);color:var(--jd)}
+td.q{font-size:13.5px}
+@media (max-width:760px){
+  .stage{grid-template-columns:minmax(0,1fr);gap:12px}
+  .life{grid-template-columns:minmax(0,1fr)}
+  .life div{border-right:0;border-bottom:1px solid var(--line)}
+  .life div:last-child{border-bottom:0}
+  .fg>span{min-width:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){.stage,.acts li{transition:none}}
+</style>
+
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">AI infrastructure on-prem builds · Senior TPM · Scope</div>
+  <h1>AI Data Center Deployment Sequence</h1>
+  <p class="lede">The end-to-end sequence for bringing an AI data center from design to production, and where the hardware TPM sits in it. Each phase carries a scoping question to confirm with the hiring manager.</p>
+  <p class="note">The hardware TPM's own milestones and gates (P6 and P7) are detailed in the <a href="google-dc-deployment-workflow.html">hardware deployment workflow</a>.</p>
+</header>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Overview</div>
+    <h2>Nine phases, four levels of TPM involvement</h2>
+    <p>The bands above the track show the hardware TPM's assumed role: track design and procurement, coordinate construction and commissioning, own rack install through energization row by row, then hand off to customer engineering.</p>
+  </div>
+  <div class="overview" role="img" aria-label="Deployment sequence: P1 site and design and P2 long-lead procurement, which the TPM tracks. P3 construction and gray space, P4 white space fit-out and P5 commissioning, which the TPM coordinates. P6 rack install and connect and P7 energization and POST, which the TPM owns row by row. P8 burn-in and validation and P9 platform and production, owned by customer engineering after the row handoff.">
+    <svg viewBox="0 0 1012 196" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+      </defs>
+      <g font-size="11.5" font-weight="600" letter-spacing=".06em">
+        <rect x="8" y="14" width="212" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"/><text x="18" y="30.5" fill="var(--muted)">TRACK</text>
+        <rect x="232" y="14" width="324" height="24" rx="3" fill="var(--ehs-soft)"/><text x="242" y="30.5" fill="var(--ehs)">COORDINATE</text>
+        <rect x="568" y="14" width="212" height="24" rx="3" fill="var(--accent-soft)"/><text x="578" y="30.5" fill="var(--accent)">OWN · ROW BY ROW</text>
+        <rect x="792" y="14" width="212" height="24" rx="3" fill="var(--jd-soft)"/><text x="802" y="30.5" fill="var(--jd)">CUSTOMER ENGINEERING</text>
+      </g>
+      <g font-size="10.5" fill="var(--muted)">
+        <line x1="562" y1="44" x2="562" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="556" y="58" text-anchor="end">Rows handed over</text>
+        <line x1="786" y1="44" x2="786" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="792" y="58">Row handoff (G6)</text>
+      </g>
+      <g font-size="11.5" text-anchor="middle">
+        <g><rect x="8" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="58" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P1</text><text x="58" y="104" fill="var(--ink)" font-weight="600">Site &amp;</text><text x="58" y="118" fill="var(--ink)" font-weight="600">design</text><line x1="16" y1="127" x2="100" y2="127" stroke="var(--line)"/><text x="58" y="141" font-size="10" fill="var(--muted)">Client · designers</text></g>
+        <g><rect x="120" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="170" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P2</text><text x="170" y="104" fill="var(--ink)" font-weight="600">Long-lead</text><text x="170" y="118" fill="var(--ink)" font-weight="600">procurement</text><line x1="128" y1="127" x2="212" y2="127" stroke="var(--line)"/><text x="170" y="141" font-size="10" fill="var(--muted)">Supply chain</text></g>
+        <g><rect x="232" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="282" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P3</text><text x="282" y="104" fill="var(--ink)" font-weight="600">Construction &amp;</text><text x="282" y="118" fill="var(--ink)" font-weight="600">gray space</text><line x1="240" y1="127" x2="324" y2="127" stroke="var(--line)"/><text x="282" y="141" font-size="10" fill="var(--muted)">GC · facilities</text></g>
+        <g><rect x="344" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="394" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P4</text><text x="394" y="104" fill="var(--ink)" font-weight="600">White space</text><text x="394" y="118" fill="var(--ink)" font-weight="600">fit-out</text><line x1="352" y1="127" x2="436" y2="127" stroke="var(--line)"/><text x="394" y="141" font-size="10" fill="var(--muted)">GC · contractors</text></g>
+        <g><rect x="456" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="506" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P5</text><text x="506" y="104" fill="var(--ink)" font-weight="600">Commissioning</text><text x="506" y="118" fill="var(--ink)" font-weight="600">L1–L5</text><line x1="464" y1="127" x2="548" y2="127" stroke="var(--line)"/><text x="506" y="141" font-size="10" fill="var(--muted)">CxA · facilities</text></g>
+        <g><rect x="568" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="618" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P6</text><text x="618" y="104" fill="var(--ink)" font-weight="600">Rack install</text><text x="618" y="118" fill="var(--ink)" font-weight="600">&amp; connect</text><line x1="576" y1="127" x2="660" y2="127" stroke="var(--line)"/><text x="618" y="141" font-size="10" fill="var(--accent)" font-weight="600">Hardware TPM</text></g>
+        <g><rect x="680" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="730" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P7</text><text x="730" y="104" fill="var(--ink)" font-weight="600">Energization</text><text x="730" y="118" fill="var(--ink)" font-weight="600">&amp; POST</text><line x1="688" y1="127" x2="772" y2="127" stroke="var(--line)"/><text x="730" y="141" font-size="10" fill="var(--accent)" font-weight="600">Hardware TPM</text></g>
+        <g><rect x="792" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="842" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P8</text><text x="842" y="104" fill="var(--ink)" font-weight="600">Burn-in &amp;</text><text x="842" y="118" fill="var(--ink)" font-weight="600">validation</text><line x1="800" y1="127" x2="884" y2="127" stroke="var(--line)"/><text x="842" y="141" font-size="10" fill="var(--muted)">Customer eng.</text></g>
+        <g><rect x="904" y="70" width="100" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="954" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">P9</text><text x="954" y="104" fill="var(--ink)" font-weight="600">Platform &amp;</text><text x="954" y="118" fill="var(--ink)" font-weight="600">production</text><line x1="912" y1="127" x2="996" y2="127" stroke="var(--line)"/><text x="954" y="141" font-size="10" fill="var(--muted)">Customer · ops</text></g>
+      </g>
+      <g stroke="var(--muted)" stroke-width="1.3" marker-end="url(#af)">
+        <line x1="108" y1="109" x2="118" y2="109"/>
+        <line x1="220" y1="109" x2="230" y2="109"/>
+        <line x1="332" y1="109" x2="342" y2="109"/>
+        <line x1="444" y1="109" x2="454" y2="109"/>
+        <line x1="556" y1="109" x2="566" y2="109"/>
+        <line x1="668" y1="109" x2="678" y2="109"/>
+        <line x1="780" y1="109" x2="790" y2="109"/>
+        <line x1="892" y1="109" x2="902" y2="109"/>
+      </g>
+      <text x="506" y="178" font-size="10.5" fill="var(--muted)" text-anchor="middle">Phases overlap: early rows can be energizing while later rows are still in fit-out or commissioning.</text>
+    </svg>
+  </div>
+
+  <div class="life">
+    <div><span class="k">Assumed scope</span><p>Coordinate construction, gray space and white space fit-out with facilities, the GC and other TPMs, up to the busway and the rack drop.</p></div>
+    <div><span class="k">Owned scope</span><p>Deliver hardware row by row, from facility handover through rack energization and POST.</p></div>
+    <div><span class="k">After handoff</span><p>Customer engineering runs burn-in, validation and platform bring-up on each energized row.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Phase detail</div>
+    <h2>Each phase, its owner, and the question to ask</h2>
+    <p>The TPM role column is the working assumption. The question in each row is the one that confirms or corrects it.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Phase</th><th>What happens</th><th>Owner</th><th>TPM role</th><th>Scoping question</th></tr></thead>
+    <tbody>
+      <tr><td class="sid">P1</td><td><b>Site and design.</b> Site and utility power secured; facility design; rack layout, power plan, cooling interface and network design frozen.</td><td>Client, design firms, customer engineering</td><td><span class="tag trk">TRACK</span></td><td class="q">Do I join at design freeze, and do I review the rack layout, power plan and cooling interface before they're frozen?</td></tr>
+      <tr><td class="sid">P2</td><td><b>Long-lead procurement.</b> Facility equipment (switchgear, transformers, generators, CDUs) and IT items (racks, optics, cables, tap-offs, hoses).</td><td>Facilities, client supply chain</td><td><span class="tag trk">TRACK</span></td><td class="q">Who tracks IT long-lead items against row dates, me or supply chain? Who places the orders?</td></tr>
+      <tr><td class="sid">P3</td><td><b>Construction and gray space.</b> Shell, electrical rooms, mechanical plant, generators, utility connection.</td><td>GC, facility team</td><td><span class="tag crd">COORDINATE</span></td><td class="q">How much of my time goes to construction coordination versus on-site build execution? Who is my facility counterpart?</td></tr>
+      <tr><td class="sid">P4</td><td><b>White space fit-out.</b> Busway, secondary loop piping to rack drops, cable pathways, backbone trunks, leak detection.</td><td>GC, electrical, mechanical and cabling contractors</td><td><span class="tag crd">COORDINATE</span></td><td class="q">Where exactly is the demarcation: busway or tap-off, rack drop or rack manifold, pathways or backbone trunks?</td></tr>
+      <tr><td class="sid">P5</td><td><b>Commissioning.</b> L1 to L5, ending with the integrated systems test under load banks.</td><td>Commissioning agent, facility team</td><td><span class="tag crd">COORDINATE</span></td><td class="q">Do I receive the hall after L5, or row by row through partial handover? Do I attend the integrated systems test?</td></tr>
+      <tr><td class="sid">P6</td><td><b>Rack install and connect.</b> Row handover, materials staged, racks set, power, liquid and network connected.</td><td>Hardware TPM, with rack OEM and contractors</td><td><span class="tag own">OWN</span></td><td class="q">Who does the hands-on work: client technicians, the rack OEM, or contractors I direct? What is the target pace in rows or racks per week?</td></tr>
+      <tr><td class="sid">P7</td><td><b>Energization and POST.</b> Go / no-go, staged power-on, POST, inventory check.</td><td>Hardware TPM, with rack OEM and electrical contractor</td><td><span class="tag own">OWN</span></td><td class="q">Does my scope end at power-on and POST, or also cover network link validation and the firmware baseline?</td></tr>
+      <tr><td class="sid">P8</td><td><b>Burn-in and validation.</b> GPU diagnostics, stress tests, fabric bring-up, performance acceptance.</td><td>Customer engineering</td><td><span class="tag cus">HAND OFF</span></td><td class="q">Is link validation part of my handoff criteria or customer engineering's first step? Who owns RMAs found in burn-in?</td></tr>
+      <tr><td class="sid">P9</td><td><b>Platform and production.</b> OS provisioning, cluster software, capacity released to users; data center operations takes over.</td><td>Customer engineering, data center operations</td><td><span class="tag cus">HAND OFF</span></td><td class="q">After handoff, do I stay engaged on punch items and RMAs until the cluster is accepted for production?</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Across phases</div>
+    <h2>General scoping questions</h2>
+  </div>
+  <div class="rules">
+    <div class="rule"><h3>Scale</h3><ol><li>How many sites and builds would I cover at the same time?</li><li>How many racks or rows per build, and what rack types?</li></ol></div>
+    <div class="rule"><h3>Team and tools</h3><ol><li>Which EMs and TPMs would I work with most?</li><li>Which tracking tools and reporting cadence do they use today?</li></ol></div>
+    <div class="rule"><h3>Success</h3><ol><li>What does success look like in the first 90 days?</li><li>Where have past builds slipped most?</li></ol></div>
+  </div>
+  <p class="note">Built from the Senior TPM job description (Redmond, AI infrastructure deployments in client data centers), interview notes on role scope, and general industry practice. Phase boundaries and owners vary by site and contract.</p>
+</section>
+</div>
+</body>
+</html>

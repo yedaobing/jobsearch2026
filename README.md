@@ -12,3 +12,4 @@ End-to-end workflows built from job descriptions and public company sources, pub
 | Sample repair procedure: DIMM replacement on a GPU node | n/a | [Open](https://yedaobing.github.io/jobsearch2026/microsoft-hardware-readiness/sample-repair-procedure.html) |
 | GB200 readiness walkthrough: one platform through all seven stages | n/a | [Open](https://yedaobing.github.io/jobsearch2026/microsoft-hardware-readiness/gb200-readiness-walkthrough.html) |
 | AI infra on-prem build: hardware TPM deployment workflow (Senior TPM, Redmond) | n/a | [Open](https://yedaobing.github.io/jobsearch2026/google-dc-deployment/google-dc-deployment-workflow.html) |
+| AI data center deployment sequence: scope and scoping questions (Senior TPM, Redmond) | n/a | [Open](https://yedaobing.github.io/jobsearch2026/google-dc-deployment/ai-dc-deployment-sequence.html) |
