@@ -113,6 +113,15 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
 .rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start}
 .rule ol{margin:0;padding-left:20px;display:grid;gap:4px}
 .prio{font-family:var(--f-display);font-stretch:80%;font-weight:700;font-size:17px}
+/* at-a-glance cards */
+.glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;grid-template-rows:auto auto auto 1fr auto;gap:8px}
+.card .c-id{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--accent)}
+.card h3{font-size:17px}
+.card .c-who{font-size:12.5px;color:var(--muted)}
+.card ul{margin:0;padding-left:16px;display:grid;gap:3px;font-size:13.5px;align-content:start}
+.card .c-gate{font-size:12.5px;border-top:1px dashed var(--line);padding-top:8px}
+.card .c-gate b{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--accent)}
 @media (max-width:760px){
   .stage{grid-template-columns:minmax(0,1fr);gap:12px}
   .life{grid-template-columns:minmax(0,1fr)}
@@ -206,6 +215,15 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
       <rect x="566" y="243" width="78" height="20" rx="10" fill="var(--surface)" stroke="var(--accent)"/>
       <text x="605" y="257" font-size="10.5" font-weight="600" text-anchor="middle" font-family="IBM Plex Mono,monospace" fill="var(--accent)">NEXT ROW</text>
     </svg>
+  </div>
+  <div class="glance">
+    <div class="card"><span class="c-id">M0 · once</span><h3>Build plan baselined</h3><span class="c-who">Hardware TPM</span><ul><li>Lock RACI and demarcation</li><li>Baseline schedule, row sequence, upstream tracker</li><li>Agree gates and handoff criteria</li></ul><div class="c-gate"><b>G0</b> Plan approved</div></div>
+    <div class="card"><span class="c-id">M1 · per row</span><h3>Row handover</h3><span class="c-who">Facility team, GC, commissioning agent</span><ul><li>L5 complete for the row</li><li>Busway energized; secondary loop flushed and filled</li><li>Blocking punch items closed</li></ul><div class="c-gate"><b>G1</b> Row accepted from facilities</div></div>
+    <div class="card"><span class="c-id">M2 · per row</span><h3>Materials staged</h3><span class="c-who">Receiving, rack OEM</span><ul><li>Racks received and inspected</li><li>Serials matched to factory tests</li><li>Kit reconciled to BOM; RMAs open</li></ul><div class="c-gate"><b>G2</b> Material kit complete</div></div>
+    <div class="card"><span class="c-id">M3 · per rack</span><h3>Racks set in place</h3><span class="c-who">Riggers, rack OEM techs</span><ul><li>Positioned per layout</li><li>Leveled, anchored, grounded and bonded</li></ul><div class="c-gate"><b>G3</b> Racks positioned</div></div>
+    <div class="card"><span class="c-id">M4 · per rack</span><h3>Connect</h3><span class="c-who">Electrical, mechanical, cabling</span><ul><li>Power: tap-offs, A/B feeds, breakers verified</li><li>Liquid: connect, fill, purge, leak check</li><li>Network: cabled to cutsheet and tested; OOB switches up</li></ul><div class="c-gate"><b>G4</b> Go / no-go (TPM chairs)</div></div>
+    <div class="card"><span class="c-id">M5 · per rack</span><h3>Staged energization</h3><span class="c-who">Rack OEM techs, electrical contractor</span><ul><li>Power on in stagger order</li><li>POST passes; inventory matches config</li><li>Cooling stable, no alarms</li></ul><div class="c-gate"><b>G5</b> Energization verified</div></div>
+    <div class="card"><span class="c-id">M6 · per row</span><h3>Row handoff</h3><span class="c-who">Hardware TPM to customer engineering</span><ul><li>Handoff package complete</li><li>Open items owned and dated</li><li>Lessons into the next row</li></ul><div class="c-gate"><b>G6</b> Row accepted by customer engineering</div></div>
   </div>
   <ol class="loops">
     <li><b>NR</b><span>After G6, the next row starts at M1 and M2. Rows overlap: while one row energizes, the next is being connected and the one after is receiving materials.</span></li>
