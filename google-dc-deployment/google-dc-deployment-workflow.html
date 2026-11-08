@@ -441,8 +441,14 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
      ["Power on racks; confirm power shelves and PSUs are healthy with no breaker trips.","oem elec"],
      ["Confirm CDU flow and temperature hold under load, with no leak alarms.","fops cdu"],
      ["Confirm BMCs get DHCP leases on the OOB network and report to monitoring.","net oem"],
+     ["POST: CPUs start and every memory module (DIMM) trains and is counted.","oem"],
+     ["POST: every GPU, NIC, storage drive and NVSwitch is detected over PCIe, with links at full width and speed. Watch for a missing GPU or a link running at x8 instead of x16.","oem"],
+     ["POST: each GPU's firmware initializes the GPU and its HBM memory, with no GPU in an error state.","oem"],
+     ["POST: BIOS, BMC, GPU and NIC firmware load and match the planned firmware baseline.","oem cust"],
+     ["POST: the BMC passes its self-test and reports temperature, fan or pump, voltage and power sensors with no critical faults.","oem"],
+     ["Confirm the hardware inventory reported by the BMC matches the expected configuration (for example, 8 GPUs per HGX server, or 18 compute trays and 9 NVSwitch trays per NVL72 rack). Log every mismatch for fix or RMA.","tpm oem cust"],
      ["Log alarms and failed parts, open RMAs, and decide hold or de-energize with the leads.","tpm oem"],
-     ["Customer engineering witnesses energization as agreed.","cust"]
+     ["Customer engineering witnesses energization as agreed. POST doesn't test performance under load; diagnostics and burn-in follow with customer engineering after handoff.","cust"]
     ],
     out:"G4 · Go / no-go passed, then G5 · Energization verified: energization log, BMS/DCIM snapshots, BMC inventory, RMA list."},
    {id:"M6",name:"Row handoff to customer engineering",when:"Per row, after the last rack is verified",owner:"Hardware TPM; customer engineering accepts",
