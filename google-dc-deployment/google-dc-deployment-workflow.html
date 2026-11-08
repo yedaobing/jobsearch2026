@@ -251,72 +251,6 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
 
 <section>
   <div class="sec-head">
-    <div class="eyebrow">Upstream readiness</div>
-    <h2>Design and procurement inputs</h2>
-    <p>Design and procurement happen before or during construction, and the hardware TPM doesn't own them. Facilities, customer engineering, network engineering and supply chain do. The TPM tracks each input against row need-by dates, so a late item shows up as a risk weeks ahead instead of a failed gate on the floor.</p>
-  </div>
-  <div class="tbl"><table>
-    <thead><tr><th>Input</th><th>Owner</th><th>Needed by</th><th>Checked at</th><th>What the TPM tracks</th></tr></thead>
-    <tbody>
-      <tr class="grp"><td colspan="5">Design inputs</td></tr>
-      <tr><td class="cat">Rack configuration</td><td>Customer engineering, rack OEM</td><td>Before rack production</td><td class="sid">G0</td><td>The factory build matches the configuration used for the power and cooling design</td></tr>
-      <tr><td class="cat">Floor layout and rack elevations</td><td>Customer engineering</td><td>Before the M0 baseline</td><td class="sid">G0</td><td>Frozen version; rack positions match facility drawings</td></tr>
-      <tr><td class="cat">Power plan</td><td>Customer engineering, facility electrical</td><td>Design freeze, before tap-offs are ordered</td><td class="sid">G0</td><td>Tap-off spec, A/B mapping and rack PDU type match the rack configuration</td></tr>
-      <tr><td class="cat">Cooling interface</td><td>Customer engineering, facility mechanical, rack OEM</td><td>Design freeze</td><td class="sid">G0</td><td>Drop locations, hose and quick-disconnect type and flow per rack match the CDU and secondary loop design</td></tr>
-      <tr><td class="cat">Network design</td><td>Network engineering</td><td>Before M4c of the first row</td><td class="sid">G0</td><td>Topology fixed; cutsheets and trunk and patch plan released per row</td></tr>
-      <tr class="grp"><td colspan="5">Long-lead procurement</td></tr>
-      <tr><td class="cat">Racks</td><td>Supply chain, rack OEM</td><td>Ship date per row</td><td class="sid">G2</td><td>Production slot, factory (L11) test date, ship and delivery dates. Usually the longest lead item.</td></tr>
-      <tr><td class="cat">Optics</td><td>Supply chain, network engineering</td><td>Before M4c per row</td><td class="sid">G2</td><td>Quantity by type per row and delivery date</td></tr>
-      <tr><td class="cat">Trunk and patch cables</td><td>Supply chain, cabling vendor</td><td>Before M4c per row</td><td class="sid">G2</td><td>Lengths from the cutsheets and delivery date</td></tr>
-      <tr><td class="cat">Tap-offs</td><td>Supply chain, electrical contractor</td><td>Before M4a per row</td><td class="sid">G2</td><td>Spec matches the power plan; delivery date</td></tr>
-      <tr><td class="cat">Hoses and quick disconnects</td><td>Supply chain, rack OEM or mechanical contractor</td><td>Before M4b per row</td><td class="sid">G2</td><td>Type matches the cooling interface; delivery date</td></tr>
-      <tr><td class="cat">Spares</td><td>Supply chain, rack OEM</td><td>Before M5 per row</td><td class="sid">G2</td><td>Spares kit per row: PSUs, power shelves, optics, hoses</td></tr>
-    </tbody>
-  </table></div>
-  <div class="rules">
-    <div class="rule"><h3>Track, don't own</h3><p>The TPM doesn't design or buy. The job is visibility: one list of inputs with owners, dates and status, reviewed weekly with partner EMs and TPMs.</p></div>
-    <div class="rule"><h3>Need-by dates</h3><p>Each input gets a need-by date per row, planned back from the milestone that uses it. A projected miss becomes a RAID item with an owner before the row starts.</p></div>
-    <div class="rule"><h3>Design freeze</h3><p>After freeze, every change goes through change control, so its impact on tap-offs, hoses, cutsheets and row dates is visible. Late rack configuration changes are a common cause of a failed G4.</p></div>
-  </div>
-  <p class="note">Worth asking the hiring manager: how early does the role engage, from design freeze or only once racks ship?</p>
-</section>
-
-<section>
-  <div class="sec-head">
-    <div class="eyebrow">Milestone detail</div>
-    <h2>Deployment sequence and major tasks</h2>
-    <p>Pick a team to see where it shows up. The hardware TPM is shaded.</p>
-  </div>
-  <div class="filter" role="group" aria-label="Filter by team">
-    <div class="fg"><span>Show</span><button type="button" data-role="all" aria-pressed="true">All teams</button><button type="button" class="own" data-role="tpm" aria-pressed="false">Hardware TPM</button></div>
-    <div class="fg"><span>Facility side</span>
-      <button type="button" data-role="fac" aria-pressed="false">Facility team / GC</button>
-      <button type="button" data-role="cxa" aria-pressed="false">Commissioning agent</button>
-      <button type="button" data-role="elec" aria-pressed="false">Electrical contractor</button>
-      <button type="button" data-role="mech" aria-pressed="false">Mechanical contractor</button>
-      <button type="button" data-role="cdu" aria-pressed="false">CDU vendor</button>
-      <button type="button" data-role="fops" aria-pressed="false">Facility operations</button>
-      <button type="button" data-role="safe" aria-pressed="false">Site safety</button>
-    </div>
-    <div class="fg"><span>Hardware &amp; network</span>
-      <button type="button" data-role="log" aria-pressed="false">Receiving &amp; logistics</button>
-      <button type="button" data-role="rig" aria-pressed="false">Riggers</button>
-      <button type="button" data-role="oem" aria-pressed="false">Rack OEM / integrator</button>
-      <button type="button" data-role="cab" aria-pressed="false">Cabling vendor</button>
-      <button type="button" data-role="net" aria-pressed="false">Network engineering</button>
-    </div>
-    <div class="fg"><span>Customer &amp; partners</span>
-      <button type="button" data-role="cust" aria-pressed="false">Customer engineering</button>
-      <button type="button" data-role="ems" aria-pressed="false">Partner EMs &amp; TPMs</button>
-      <button type="button" data-role="sc" aria-pressed="false">Supply chain TPM</button>
-      <button type="button" data-role="asset" aria-pressed="false">Asset management</button>
-    </div>
-  </div>
-  <div class="stages" id="stages"></div>
-</section>
-
-<section>
-  <div class="sec-head">
     <div class="eyebrow">Gates</div>
     <h2>Gate checks</h2>
     <p>Each gate has pass criteria, the evidence that proves them, and the people who sign off. G4 is the one the TPM chairs before any rack gets power.</p>
@@ -392,7 +326,74 @@ tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-s
       <tr><td class="sid">M6</td><td>Hardware TPM</td><td>Customer engineering accepts; rack OEM follows up on RMAs; asset management updates records</td></tr>
     </tbody>
   </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Upstream readiness</div>
+    <h2>Design and procurement inputs</h2>
+    <p>Design and procurement happen before or during construction, and the hardware TPM doesn't own them. Facilities, customer engineering, network engineering and supply chain do. The TPM tracks each input against row need-by dates, so a late item shows up as a risk weeks ahead instead of a failed gate on the floor.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Input</th><th>Owner</th><th>Needed by</th><th>Checked at</th><th>What the TPM tracks</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="5">Design inputs</td></tr>
+      <tr><td class="cat">Rack configuration</td><td>Customer engineering, rack OEM</td><td>Before rack production</td><td class="sid">G0</td><td>The factory build matches the configuration used for the power and cooling design</td></tr>
+      <tr><td class="cat">Floor layout and rack elevations</td><td>Customer engineering</td><td>Before the M0 baseline</td><td class="sid">G0</td><td>Frozen version; rack positions match facility drawings</td></tr>
+      <tr><td class="cat">Power plan</td><td>Customer engineering, facility electrical</td><td>Design freeze, before tap-offs are ordered</td><td class="sid">G0</td><td>Tap-off spec, A/B mapping and rack PDU type match the rack configuration</td></tr>
+      <tr><td class="cat">Cooling interface</td><td>Customer engineering, facility mechanical, rack OEM</td><td>Design freeze</td><td class="sid">G0</td><td>Drop locations, hose and quick-disconnect type and flow per rack match the CDU and secondary loop design</td></tr>
+      <tr><td class="cat">Network design</td><td>Network engineering</td><td>Before M4c of the first row</td><td class="sid">G0</td><td>Topology fixed; cutsheets and trunk and patch plan released per row</td></tr>
+      <tr class="grp"><td colspan="5">Long-lead procurement</td></tr>
+      <tr><td class="cat">Racks</td><td>Supply chain, rack OEM</td><td>Ship date per row</td><td class="sid">G2</td><td>Production slot, factory (L11) test date, ship and delivery dates. Usually the longest lead item.</td></tr>
+      <tr><td class="cat">Optics</td><td>Supply chain, network engineering</td><td>Before M4c per row</td><td class="sid">G2</td><td>Quantity by type per row and delivery date</td></tr>
+      <tr><td class="cat">Trunk and patch cables</td><td>Supply chain, cabling vendor</td><td>Before M4c per row</td><td class="sid">G2</td><td>Lengths from the cutsheets and delivery date</td></tr>
+      <tr><td class="cat">Tap-offs</td><td>Supply chain, electrical contractor</td><td>Before M4a per row</td><td class="sid">G2</td><td>Spec matches the power plan; delivery date</td></tr>
+      <tr><td class="cat">Hoses and quick disconnects</td><td>Supply chain, rack OEM or mechanical contractor</td><td>Before M4b per row</td><td class="sid">G2</td><td>Type matches the cooling interface; delivery date</td></tr>
+      <tr><td class="cat">Spares</td><td>Supply chain, rack OEM</td><td>Before M5 per row</td><td class="sid">G2</td><td>Spares kit per row: PSUs, power shelves, optics, hoses</td></tr>
+    </tbody>
+  </table></div>
+  <div class="rules">
+    <div class="rule"><h3>Track, don't own</h3><p>The TPM doesn't design or buy. The job is visibility: one list of inputs with owners, dates and status, reviewed weekly with partner EMs and TPMs.</p></div>
+    <div class="rule"><h3>Need-by dates</h3><p>Each input gets a need-by date per row, planned back from the milestone that uses it. A projected miss becomes a RAID item with an owner before the row starts.</p></div>
+    <div class="rule"><h3>Design freeze</h3><p>After freeze, every change goes through change control, so its impact on tap-offs, hoses, cutsheets and row dates is visible. Late rack configuration changes are a common cause of a failed G4.</p></div>
+  </div>
+  <p class="note">Worth asking the hiring manager: how early does the role engage, from design freeze or only once racks ship?</p>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Milestone detail</div>
+    <h2>Deployment sequence and major tasks</h2>
+    <p>Pick a team to see where it shows up. The hardware TPM is shaded.</p>
+  </div>
+  <div class="filter" role="group" aria-label="Filter by team">
+    <div class="fg"><span>Show</span><button type="button" data-role="all" aria-pressed="true">All teams</button><button type="button" class="own" data-role="tpm" aria-pressed="false">Hardware TPM</button></div>
+    <div class="fg"><span>Facility side</span>
+      <button type="button" data-role="fac" aria-pressed="false">Facility team / GC</button>
+      <button type="button" data-role="cxa" aria-pressed="false">Commissioning agent</button>
+      <button type="button" data-role="elec" aria-pressed="false">Electrical contractor</button>
+      <button type="button" data-role="mech" aria-pressed="false">Mechanical contractor</button>
+      <button type="button" data-role="cdu" aria-pressed="false">CDU vendor</button>
+      <button type="button" data-role="fops" aria-pressed="false">Facility operations</button>
+      <button type="button" data-role="safe" aria-pressed="false">Site safety</button>
+    </div>
+    <div class="fg"><span>Hardware &amp; network</span>
+      <button type="button" data-role="log" aria-pressed="false">Receiving &amp; logistics</button>
+      <button type="button" data-role="rig" aria-pressed="false">Riggers</button>
+      <button type="button" data-role="oem" aria-pressed="false">Rack OEM / integrator</button>
+      <button type="button" data-role="cab" aria-pressed="false">Cabling vendor</button>
+      <button type="button" data-role="net" aria-pressed="false">Network engineering</button>
+    </div>
+    <div class="fg"><span>Customer &amp; partners</span>
+      <button type="button" data-role="cust" aria-pressed="false">Customer engineering</button>
+      <button type="button" data-role="ems" aria-pressed="false">Partner EMs &amp; TPMs</button>
+      <button type="button" data-role="sc" aria-pressed="false">Supply chain TPM</button>
+      <button type="button" data-role="asset" aria-pressed="false">Asset management</button>
+    </div>
+  </div>
+  <div class="stages" id="stages"></div>
   <p class="note">Built from the Senior TPM job description (Redmond, AI infrastructure deployments in client data centers), interview notes on role scope, and general industry practice for liquid-cooled GPU builds. No client documents were used. Demarcation points, contract scopes, tool names, commissioning templates and acceptance criteria vary by site and should be confirmed with the hiring team.</p>
+
 </section>
 </div>
 
