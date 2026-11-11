@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="End-to-end Butlr data center program workflow for the Senior Program Manager, Data Operations role.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Butlr Data Center Program Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: same procedure-sheet format as the Microsoft hardware readiness page — overview track with owners and feedback loops, owner table, growth steps, numbered stages (DC-1..DC-5) with a role filter, product scope, measures, rules, roles. */
+:root{
+  --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --line:#d3dce0;
+  --accent:#0b6c76; --accent-soft:#dbeef0;
+  --jd:#3e4aa8; --jd-soft:#e4e7f8;
+  --ehs:#9a5b00; --ehs-soft:#fbeed6;
+  --dim:.28;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px;display:grid;gap:48px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800;font-stretch:78%;line-height:1.02}
+h2{font-size:24px;font-weight:750;font-stretch:82%}
+h3{font-size:19px;font-weight:700;font-stretch:85%}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}
+.lede{max-width:68ch;color:var(--muted);font-size:16px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;padding:1px 6px;border-radius:3px;vertical-align:1px;white-space:nowrap}
+.tag.hm{background:var(--accent-soft);color:var(--accent)}
+.tag.jd{background:var(--jd-soft);color:var(--jd)}
+.tag.ehs{background:var(--ehs-soft);color:var(--ehs)}
+.note{font-size:13px;color:var(--muted);max-width:80ch}
+section{display:grid;gap:18px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:72ch}
+
+/* overview */
+.overview{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+.overview svg{display:block;min-width:880px;width:100%;height:auto}
+.overview text{font-family:var(--f-body)}
+.loops{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px 24px;font-size:13.5px}
+.loops li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:6px}
+.loops b{font-family:var(--f-mono);font-size:12px;color:var(--accent);padding-top:1px}
+
+/* role chips */
+.who{display:inline-block;font-size:11.5px;border:1px solid var(--line);border-radius:3px;padding:0 6px;color:var(--muted);white-space:nowrap}
+.who.km{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
+
+/* filter */
+.filter{display:grid;gap:10px}
+.fg{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fg>span{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);min-width:110px}
+.filter button{font:500 13px var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.filter button:hover{border-color:var(--accent)}
+.filter button.km{border-color:var(--accent)}
+.filter button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* stages */
+.stages{display:grid;gap:0;border-top:2px solid var(--ink)}
+.stage{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;padding-block:24px;border-bottom:1px solid var(--line);transition:opacity .2s}
+.stage.dim{opacity:var(--dim)}
+.s-meta{display:grid;gap:8px;align-content:start}
+.s-id{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--accent)}
+.s-when{font-size:12.5px;color:var(--muted)}
+.s-owner{font-size:13px;display:grid;gap:1px}
+.s-owner b{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.s-who{display:flex;flex-wrap:wrap;gap:4px}
+.s-body{display:grid;gap:14px;min-width:0}
+.acts{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.acts li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;transition:opacity .2s}
+.acts li::before{content:"";width:6px;height:6px;margin-top:9px;background:var(--muted);border-radius:1px}
+.acts li.dim{opacity:var(--dim)}
+.acts .roles{display:inline-flex;flex-wrap:wrap;gap:3px;margin-left:4px;vertical-align:1px}
+.acts .roles .who{font-size:10.5px;padding:0 5px}
+.out{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;font-size:14px;background:var(--bg);border:1px dashed var(--line);border-radius:4px;padding:10px 12px}
+.out b{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+
+/* lifecycle strip */
+.life{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden}
+.life div{padding:14px 16px;display:grid;gap:4px;border-right:1px solid var(--line)}
+.life div:last-child{border-right:0}
+.life .k{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:600}
+.life p{font-size:13.5px;color:var(--muted)}
+
+/* tables */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.cat{font-family:var(--f-display);font-weight:700;font-stretch:85%;font-size:15px;white-space:nowrap}
+td.sid{font-family:var(--f-mono);font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+td.src{white-space:nowrap}
+tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600;padding-block:8px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start}
+.rule ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.prio{font-family:var(--f-display);font-stretch:80%;font-weight:700;font-size:17px}
+@media (max-width:760px){
+  .stage{grid-template-columns:minmax(0,1fr);gap:12px}
+  .life{grid-template-columns:minmax(0,1fr)}
+  .life div{border-right:0;border-bottom:1px solid var(--line)}
+  .life div:last-child{border-bottom:0}
+  .fg>span{min-width:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){.stage,.acts li{transition:none}}
+.tag.plan{background:var(--bg);color:var(--muted);border:1px solid var(--line);padding:0 5px}
+.acts .src{display:inline-flex;gap:3px;margin-left:6px;vertical-align:1px}
+.gate-id{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Butlr · Data Center vertical · Senior Program Manager, Data Operations</div>
+  <h1>Data Center Program Workflow</h1>
+  <p class="lede">The data center line runs like a seed-stage startup inside Butlr. Customers are smaller sites, such as containerized data centers, that start with a small POC and grow in steps. The thermal sensors replace manual FLIR scans done every 3 to 6 months by watching the power path continuously. This role owns the work end to end, from the first customer conversation to a full site or fleet.</p>
+  <div class="legend">
+    <span>Where each step comes from:</span>
+    <span><span class="tag hm">HM</span> hiring manager call, 5 Nov 2026</span>
+    <span><span class="tag jd">JD</span> job description</span>
+    <span><span class="tag plan">PLAN</span> my proposed approach</span>
+    <span><span class="tag ehs">AT SCALE</span> not needed for today's small orders</span>
+  </div>
+  <p class="note">Revised 11 Nov 2026 after the hiring manager call. See also the <a href="../assets/butlr-data-center-workflow.pdf">one-page slide (PDF)</a>, the <a href="../butlr-data-center-diagram.html">full-screen slide</a>, and <a href="../butlr/">how Butlr runs its business</a>.</p>
+</header>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Overview</div>
+    <h2>Five phases and their owners</h2>
+    <p>Each box shows the accountable owner below the line. The Data Center PM owns every phase today, with Sales at the start and the customer success team taking over operations once the vertical grows. The loops below the track show where work flows back, including the step that repeats for each expansion.</p>
+  </div>
+  <div class="overview" role="img" aria-label="Workflow overview: five phases with owners. DC-1 scope, before the deal, owned by the Data Center PM with Sales. DC-2 plan and prepare, Data Center PM. DC-3 pilot and validate, Data Center PM with hardware and firmware. DC-4 accept and hand over, Data Center PM. DC-5 operate and expand, the Data Center PM now and the customer success team at scale. Four loops return to earlier phases, and a fifth sends product gaps to product and engineering.">
+    <svg viewBox="0 0 1016 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+        <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+        <marker id="aj" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--jd)"/></marker>
+      </defs>
+      <rect x="8" y="14" width="1000" height="24" rx="3" fill="var(--accent-soft)"/>
+      <text x="18" y="30.5" font-size="11.5" font-weight="600" fill="var(--accent)" letter-spacing=".06em">DATA CENTER PM · ONE OWNER FROM DC-1 TO DC-5</text>
+      <g font-size="10.5" fill="var(--muted)" text-anchor="end">
+        <line x1="202" y1="44" x2="202" y2="62" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="197" y="56">Deal signed</text>
+        <line x1="814" y1="44" x2="814" y2="62" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="809" y="56">Go-live</text>
+      </g>
+      <g font-size="12" text-anchor="middle">
+        <g><rect x="8" y="68" width="184" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="100" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">DC-1</text><text x="100" y="102" fill="var(--ink)" font-weight="600">Scope</text><text x="100" y="116" fill="var(--ink)" font-weight="600">before the deal</text><line x1="16" y1="124" x2="184" y2="124" stroke="var(--line)"/><text x="100" y="138" font-size="10.5" fill="var(--muted)">Data Center PM · Sales</text></g>
+        <g><rect x="212" y="68" width="184" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="304" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">DC-2</text><text x="304" y="102" fill="var(--ink)" font-weight="600">Plan and</text><text x="304" y="116" fill="var(--ink)" font-weight="600">prepare</text><line x1="220" y1="124" x2="388" y2="124" stroke="var(--line)"/><text x="304" y="138" font-size="10.5" fill="var(--accent)" font-weight="600">Data Center PM</text></g>
+        <g><rect x="416" y="68" width="184" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="508" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">DC-3</text><text x="508" y="102" fill="var(--ink)" font-weight="600">Pilot and</text><text x="508" y="116" fill="var(--ink)" font-weight="600">validate</text><line x1="424" y1="124" x2="592" y2="124" stroke="var(--line)"/><text x="508" y="138" font-size="10.5" fill="var(--muted)">PM · Hardware · Firmware</text></g>
+        <g><rect x="620" y="68" width="184" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="712" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">DC-4</text><text x="712" y="102" fill="var(--ink)" font-weight="600">Accept and</text><text x="712" y="116" fill="var(--ink)" font-weight="600">hand over</text><line x1="628" y1="124" x2="796" y2="124" stroke="var(--line)"/><text x="712" y="138" font-size="10.5" fill="var(--accent)" font-weight="600">Data Center PM</text></g>
+        <g><rect x="824" y="68" width="184" height="76" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="916" y="86" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">DC-5</text><text x="916" y="102" fill="var(--ink)" font-weight="600">Operate and</text><text x="916" y="116" fill="var(--ink)" font-weight="600">expand</text><line x1="832" y1="124" x2="1000" y2="124" stroke="var(--line)"/><text x="916" y="138" font-size="10.5" fill="var(--muted)">PM now · CS team at scale</text></g>
+      </g>
+      <g stroke="var(--muted)" stroke-width="1.3" marker-end="url(#af)">
+        <line x1="193" y1="106" x2="210" y2="106"/><line x1="397" y1="106" x2="414" y2="106"/><line x1="601" y1="106" x2="618" y2="106"/><line x1="805" y1="106" x2="822" y2="106"/>
+      </g>
+      <g fill="none" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#ah)">
+        <path d="M470,145 C470,180 340,180 340,147"/>
+        <path d="M680,145 C680,180 540,180 540,147"/>
+        <path d="M880,145 C880,222 270,222 270,147"/>
+        <path d="M940,145 C940,258 70,258 70,147"/>
+      </g>
+      <g stroke="var(--jd)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#aj)">
+        <line x1="575" y1="145" x2="575" y2="268"/>
+        <line x1="985" y1="145" x2="985" y2="268"/>
+      </g>
+      <rect x="8" y="270" width="1000" height="24" rx="3" fill="var(--jd-soft)"/>
+      <text x="18" y="286.5" font-size="11.5" font-weight="600" fill="var(--jd)" letter-spacing=".06em">PRODUCT AND ENGINEERING · HARDWARE · FIRMWARE · ALGORITHMS · SOFTWARE</text>
+      <g font-size="10.5" font-weight="600" text-anchor="middle" font-family="IBM Plex Mono,monospace">
+        <circle cx="405" cy="171" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="405" y="175" fill="var(--accent)">L1</text>
+        <circle cx="610" cy="171" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="610" y="175" fill="var(--accent)">L2</text>
+        <circle cx="440" cy="203" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="440" y="207" fill="var(--accent)">L3</text>
+        <circle cx="300" cy="231" r="11" fill="var(--surface)" stroke="var(--accent)"/><text x="300" y="235" fill="var(--accent)">L4</text>
+        <circle cx="985" cy="200" r="11" fill="var(--surface)" stroke="var(--jd)"/><text x="985" y="204" fill="var(--jd)">L5</text>
+      </g>
+    </svg>
+  </div>
+  <ol class="loops">
+    <li><b>L1</b><span>A failed validation sends the kit back for rework: placement, thresholds, firmware or more units.</span></li>
+    <li><b>L2</b><span>Open punch-list items or a customer who won't sign off reopen validation.</span></li>
+    <li><b>L3</b><span>Each growth step (POC, then expansion, then full site or fleet) starts again at plan and prepare, using lessons from the last step.</span></li>
+    <li><b>L4</b><span>A new use case or form factor, such as in-rack sensing, goes back to scoping.</span></li>
+    <li><b>L5</b><span>Product gaps found in the field and in operations go to product and engineering with an owner, and feed the roadmap.</span></li>
+  </ol>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Phase</th><th>Accountable owner</th><th>What the PM does</th><th>Other teams involved</th><th>Exit gate</th></tr></thead>
+    <tbody>
+      <tr><td class="sid">DC-1</td><td>Data Center PM, with Sales</td><td>Works out requirements with the customer, checks them against what Butlr can deliver, and sizes the POC</td><td>Sales and CEO, hardware, firmware, test, software PM, customer</td><td><span class="gate-id">G1</span> POC scoped</td></tr>
+      <tr><td class="sid">DC-2</td><td>Data Center PM</td><td>Owns the plan, kit readiness, shipping and site logistics</td><td>Hardware, test, supply chain and ops, customer facilities</td><td><span class="gate-id">G2</span> Ready to install</td></tr>
+      <tr><td class="sid">DC-3</td><td>Data Center PM; hardware and firmware own fixes</td><td>Runs install and validation; logs each product gap with an owner</td><td>Installers, hardware, firmware, algorithms, customer DC ops</td><td><span class="gate-id">G3</span> Validation passed</td></tr>
+      <tr><td class="sid">DC-4</td><td>Data Center PM</td><td>Drives readiness, closes the punch list, gets sign-off</td><td>Software PM, Product, support, customer</td><td><span class="gate-id">G4</span> Customer accepts</td></tr>
+      <tr><td class="sid">DC-5</td><td>Data Center PM now; customer success team at scale</td><td>Leads technical customer success and scopes the next step</td><td>Sales and CEO, support, engineering</td><td><span class="gate-id">G5</span> Next step ordered</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="life">
+    <div><span class="k">POC</span><p>About 6 racks and PDUs. Prove the sensors catch hotspots on the customer's power path. Kits ship from US stock.</p></div>
+    <div><span class="k">Expansion</span><p>About 5 more sets at the same customer. DC-2 to DC-5 repeat with what the POC taught.</p></div>
+    <div><span class="k">Full site or fleet</span><p>The whole data center or fleet. At-scale steps switch on: shipping from Shenzhen, customs, feeds into customer tools, handoff to customer success.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Stage detail</div>
+    <h2>Who does what, phase by phase</h2>
+    <p>Pick a role to see where it shows up. This role is shaded. Each step is tagged with where it comes from.</p>
+  </div>
+  <div class="filter" role="group" aria-label="Filter by role">
+    <div class="fg"><span>Show</span><button type="button" data-role="all" aria-pressed="true">All roles</button></div>
+    <div class="fg"><span>This role</span>
+      <button type="button" class="km" data-role="pm" aria-pressed="false">Data Center PM</button>
+    </div>
+    <div class="fg"><span>Butlr teams</span>
+      <button type="button" data-role="sales" aria-pressed="false">Sales and CEO</button>
+      <button type="button" data-role="prod" aria-pressed="false">Product (CPO)</button>
+      <button type="button" data-role="hw" aria-pressed="false">Hardware and firmware</button>
+      <button type="button" data-role="test" aria-pressed="false">Test</button>
+      <button type="button" data-role="sw" aria-pressed="false">Software PM and platform</button>
+      <button type="button" data-role="algo" aria-pressed="false">Algorithms</button>
+      <button type="button" data-role="npi" aria-pressed="false">NPI (China)</button>
+      <button type="button" data-role="ops" aria-pressed="false">Supply chain and ops</button>
+      <button type="button" data-role="cs" aria-pressed="false">Support and customer success</button>
+    </div>
+    <div class="fg"><span>Customer &amp; partners</span>
+      <button type="button" data-role="cust" aria-pressed="false">Customer DC ops</button>
+      <button type="button" data-role="fac" aria-pressed="false">Customer facilities and security</button>
+      <button type="button" data-role="inst" aria-pressed="false">Installers</button>
+      <button type="button" data-role="rack" aria-pressed="false">Rack makers</button>
+    </div>
+  </div>
+  <div class="stages" id="stages"></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Product scope</div>
+    <h2>What the product covers today and at scale</h2>
+    <p>The workflow only promises what the product can deliver now. Items on the right are where it can grow.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Area</th><th>Today</th><th>At scale</th></tr></thead>
+    <tbody>
+      <tr><td class="cat">What is watched</td><td>Overhead busbars and power feeds to the racks; PDUs and batteries from a wall mount</td><td>Inside the rack with a smaller sensor (early proof of concept); coolant leaks once a cooling product exists</td></tr>
+      <tr><td class="cat">In-rack sensor</td><td>Early proof of concept only</td><td>Decision with Product: Butlr builds it, or integrates with rack makers</td></tr>
+      <tr><td class="cat">Data path</td><td>Thermal sensors report to the Hive gateway (20 to 40 sensors per Hive); the Hive connects over Wi-Fi, Ethernet or cellular to Butlr's cloud, where detection algorithms run</td><td>The same path, sized for a full site or fleet</td></tr>
+      <tr><td class="cat">Customer view</td><td>Butlr dashboard and API; the customer's existing BMC telemetry stays separate</td><td>Butlr data feeds the customer's BMC and telemetry tools, once customers let Butlr manage it</td></tr>
+      <tr><td class="cat">Fulfillment</td><td>Small orders ship from US stock; no customs</td><td>Ship from Shenzhen; customs and compliance for Taiwan and other Asia sites</td></tr>
+      <tr><td class="cat">Customer success</td><td>The Data Center PM covers technical customer success</td><td>Handoff to Butlr's customer success team</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Measurement</div>
+    <h2>Quantitative measures</h2>
+    <p>Proposed measures for a vertical that is growing from a handful of POCs. Each one should change a decision: what to scope next, what to fix in the product, or where to add people.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Category</th><th>Measure</th><th>What it tells you</th></tr></thead>
+    <tbody>
+      <tr><td class="cat">Pipeline</td><td>POCs scoped, active and waiting; time from first customer call to POC scoped</td><td>Whether the team can keep up with demand, and which deals to take first.</td></tr>
+      <tr><td class="cat">Speed</td><td>Days from deal signed to devices reporting; days from install to validation passed</td><td>How quickly a customer sees value, and which phase holds the work up.</td></tr>
+      <tr><td class="cat">Detection quality</td><td>Known hotspots caught compared with a FLIR scan; false alerts per week</td><td>Whether customers can trust the alerts enough to stop manual scans.</td></tr>
+      <tr><td class="cat">Conversion</td><td>POC-to-expansion rate; expansion-to-fleet rate; time between steps</td><td>Whether the POCs prove enough value to grow.</td></tr>
+      <tr><td class="cat">Product feedback</td><td>Product gaps logged, owned and closed; gaps closed before the next growth step</td><td>How fast field lessons reach the product, and what the roadmap should take next.</td></tr>
+      <tr><td class="cat">Reliability</td><td>Sensor and Hive uptime; battery life against plan; time to resolve customer issues</td><td>Day-to-day health, and the service load the vertical will hand to customer success.</td></tr>
+      <tr><td class="cat">Cost</td><td>Hardware and install cost per rack monitored; site visits per POC</td><td>Whether the delivery model can scale profitably.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Measurement</div>
+    <h2>Qualitative measures and customer feedback</h2>
+    <p>There are two kinds of customer: the customer's data center operations team that lives with the alerts, and Butlr's own product and engineering teams that need field findings.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Channel</th><th>What is collected</th><th>How it is used</th></tr></thead>
+    <tbody>
+      <tr><td class="cat">Customer check-ins</td><td>How the data center team uses the alerts; what they still check by hand</td><td>Fix issues fast; find expansion and upsell openings for Sales.</td></tr>
+      <tr><td class="cat">POC success review</td><td>Results against the success criteria agreed at scoping</td><td>Go or no-go for the next growth step.</td></tr>
+      <tr><td class="cat">Install field notes</td><td>Mounting, access, network and placement problems from each site</td><td>Update the install checklist and reference designs.</td></tr>
+      <tr><td class="cat">Product gap log</td><td>Requirements Butlr couldn't meet, and defects found in the field, each with an owner</td><td>Input to the hardware, firmware, algorithms and platform roadmaps.</td></tr>
+      <tr><td class="cat">Pipeline review</td><td>Deals in progress with Sales and the CEO; requirements coming up</td><td>Prioritize which POCs to run and plan hardware ahead.</td></tr>
+      <tr><td class="cat">Risk and decision log</td><td>Risks, tradeoffs and decisions across Butlr, partners and customers</td><td>A record of who decided what, so nothing is owned piecemeal.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Measures feed a weekly cycle: track the plan, raise risks early, push blockers to resolution, report status inside and outside Butlr, and feed field lessons to Product.</p>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Operating rules</div>
+    <h2>Rules that apply across phases</h2>
+  </div>
+  <div class="rules">
+    <div class="rule"><h3>Risk priority</h3><ol class="prio"><li>Customer's live operations</li><li>Alert accuracy</li><li>Schedule</li></ol><p class="note">Install without disrupting a running site, and don't promise alerts the sensors can't back up.</p></div>
+    <div class="rule"><h3>Grow in steps</h3><p>POC, then expansion, then full site or fleet. Each step must prove value before the next one is scoped.</p></div>
+    <div class="rule"><h3>At-scale steps wait</h3><p>Customs, feeds into customer tools and the customer success handoff start when volume needs them, not before. Keep today's process light.</p></div>
+    <div class="rule"><h3>Every issue has an owner</h3><p>No debugging without a named owner and a date. A named person validates each install rather than taking the installer's word for it.</p></div>
+  </div>
+  <p class="note">Where the role can grow once the vertical is established: a repeatable POC playbook, reference designs by site type, and portfolio planning across many customers.</p>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Roles</div>
+    <h2>Who's who</h2>
+    <p>The hiring manager leads hardware, firmware and program management, and covers this role today alongside that job. The new role is meant to own the data center work end to end instead of piecemeal.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Role</th><th>What they do in this workflow</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="2">This role</td></tr>
+      <tr><td class="cat">Data Center PM</td><td>Senior Program Manager, Data Operations. Owns the program from the first customer call through expansion; covers technical customer success until the vertical grows. Mandarin preferred for the Taiwan and Asia market.</td></tr>
+      <tr class="grp"><td colspan="2">Butlr leadership</td></tr>
+      <tr><td class="cat">CEO</td><td>Leads most of the data center sales and growth work.</td></tr>
+      <tr><td class="cat">Chief product officer</td><td>Co-founder; owns product, closely involved in hardware product. Decides what the product takes on next, such as in-rack sensing.</td></tr>
+      <tr><td class="cat">Head of supply chain and ops</td><td>Fulfillment and supply; owns the move from US stock to shipping from Shenzhen at scale.</td></tr>
+      <tr><td class="cat">Hiring manager</td><td>Leads hardware, firmware and program management; this role reports here.</td></tr>
+      <tr class="grp"><td colspan="2">Butlr teams</td></tr>
+      <tr><td class="cat">Hardware and firmware</td><td>Experienced engineers who build and fix the sensors and the Hive gateway.</td></tr>
+      <tr><td class="cat">Test</td><td>Checks whether the current implementations can meet customer requirements.</td></tr>
+      <tr><td class="cat">Software program manager</td><td>Runs the software side of customer requirements with the platform team (backend, API and frontend).</td></tr>
+      <tr><td class="cat">Algorithms</td><td>Detection software that runs on the edge and in the cloud; manages data labeling.</td></tr>
+      <tr><td class="cat">NPI program manager</td><td>Based in China; runs builds with Taiwanese and Chinese vendors, quality and documentation.</td></tr>
+      <tr><td class="cat">Shenzhen office</td><td>Manufacturing staff, plus some software engineers and data labelers.</td></tr>
+      <tr><td class="cat">Installation project managers</td><td>In-house technicians who plan installs, sometimes install, and manage third-party installers and battery or replacement service.</td></tr>
+      <tr><td class="cat">Customer success</td><td>Serves Butlr's other product lines; takes on data center customers once the vertical matures.</td></tr>
+      <tr class="grp"><td colspan="2">Customer and partners</td></tr>
+      <tr><td class="cat">Customer DC ops</td><td>Run the site; agree success criteria, use the alerts, and sign off.</td></tr>
+      <tr><td class="cat">Customer facilities and security</td><td>Grant site access and install windows; approve how the Hive connects to the network.</td></tr>
+      <tr><td class="cat">Installers</td><td>Butlr technicians or third-party vendors managed by them.</td></tr>
+      <tr><td class="cat">Rack makers</td><td>Possible partners for in-rack sensing, if Butlr integrates rather than builds.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Sources: hiring manager call (5 Nov 2026), the Butlr job description, and Butlr's data center page. Phase grouping, gates, measures and rules are my proposed framing.</p>
+</section>
+</div>
+
+<script>
+(function(){
+  var ROLE_NAMES={pm:"Data Center PM",sales:"Sales & CEO",prod:"Product (CPO)",hw:"Hardware & firmware",test:"Test",sw:"Software PM & platform",algo:"Algorithms",npi:"NPI (China)",ops:"Supply chain & ops",cs:"Support & CS",
+    cust:"Customer DC ops",fac:"Customer facilities",inst:"Installers",rack:"Rack makers"};
+  var KM={pm:1};
+  var ORDER=Object.keys(ROLE_NAMES);
+  var SRC={hm:"HM",jd:"JD",plan:"PLAN"};
+  var S=[
+   {id:"DC-1",name:"Scope",when:"Before the deal; first customer conversations",owner:"Data Center PM, with Sales",
+    acts:[
+     ["Join early customer conversations with Sales to work out what the customer wants watched: busbars and power feeds, PDUs, batteries, hotspots inside the rack.","hm","pm sales cust"],
+     ["Check the requirements against what hardware, firmware and test can deliver today: the overhead form factor, a wall mount, or the early in-rack proof of concept.","hm","pm hw test"],
+     ["Decide what Butlr can meet on the customer's timeline, and send what it can't to Product as a gap.","hm","pm prod"],
+     ["Size the POC: sensors and Hive gateways, racks and PDUs covered, dates, and success criteria the customer agrees to.","hm plan","pm cust"],
+     ["Pass the software needs (dashboard views, alerts, API) to the software program manager, who runs the implementation.","hm","pm sw"],
+     ["Use a standard intake checklist and reference designs so each new POC is scoped faster than the last.","plan","pm"]
+    ],
+    out:"<b class=\"gate-id\">G1</b> POC scoped: success criteria, kit list, form factor and dates agreed with the customer."},
+   {id:"DC-2",name:"Plan and prepare",when:"Deal signed to install day",owner:"Data Center PM",
+    acts:[
+     ["Kick off with Butlr, partner and customer teams; set owners, the timeline and how often everyone gets status.","jd","pm sales cust"],
+     ["Turn the deal into one plan with milestones, dependencies and owners.","jd","pm"],
+     ["Build, test and QA the POC kit with the hardware and test teams.","hm","pm hw test"],
+     ["Ship from US stock; today's small orders don't need customs.","hm","pm ops"],
+     ["Agree how the Hive connects (Wi-Fi, Ethernet or cellular) and get it through the customer's network and security review.","hm plan","pm fac cust"],
+     ["Confirm site access, the install window, and who installs: Butlr technicians or a third-party installer they manage.","hm","pm fac inst"],
+     ["<span class=\"tag ehs\">AT SCALE</span> Ship direct from Shenzhen with customs and compliance for Taiwan and other Asia sites, coordinating builds with the NPI program manager.","hm","pm npi ops"]
+    ],
+    out:"<b class=\"gate-id\">G2</b> Ready to install: kit tested and on site with serials logged; install window confirmed."},
+   {id:"DC-3",name:"Pilot and validate",when:"Install through validation",owner:"Data Center PM; hardware and firmware own the fixes",
+    acts:[
+     ["Install the sensors where they fit the site: overhead over busbars and power feeds, or on the wall facing PDUs and batteries. Go on site for early builds.","hm","pm inst hw"],
+     ["Check readings against a manual FLIR scan, the process the sensors replace, and confirm known hotspots are caught.","hm plan","pm test cust"],
+     ["Work with the testing and hardware teams to tune placement, thresholds and firmware.","hm","pm hw test algo"],
+     ["Log every product gap with an owner: hardware, firmware, algorithms or platform. Unclear debug ownership slows the team today.","hm","pm hw algo sw"],
+     ["A named person validates each install rather than taking the installer's word for it.","plan","pm inst"],
+     ["<span class=\"tag ehs\">AT SCALE</span> In-rack sensing: Product decides whether Butlr builds it or integrates with rack makers.","hm","prod hw rack pm"]
+    ],
+    out:"<b class=\"gate-id\">G3</b> Validation passed: devices reporting, known hotspots caught, alerts accurate, test report written."},
+   {id:"DC-4",name:"Accept and hand over",when:"Validation to customer sign-off",owner:"Data Center PM",
+    acts:[
+     ["The customer sees data and alerts in the Butlr dashboard or through the API.","hm","pm sw cust"],
+     ["Leave the customer's existing BMC telemetry as it is for now.","hm","pm cust"],
+     ["Confirm with Product that features, configurations, documentation and support are ready.","jd","pm prod cs"],
+     ["Close the punch list; anything left open gets an owner and a date.","plan","pm"],
+     ["Get the customer's sign-off.","plan","pm cust"],
+     ["<span class=\"tag ehs\">AT SCALE</span> Feed Butlr data into the customer's BMC and telemetry tools, once customers let Butlr manage it.","hm","pm sw cust"]
+    ],
+    out:"<b class=\"gate-id\">G4</b> Customer accepts: data live in Butlr's tools; open items owned; sign-off received."},
+   {id:"DC-5",name:"Operate and expand",when:"After go-live; repeats at each growth step",owner:"Data Center PM as technical customer success lead; customer success team at scale",
+    acts:[
+     ["Act as the technical customer success lead until the vertical moves to the customer success team.","hm jd","pm cs"],
+     ["Monitor system health and adoption: sensors online, battery life, alert quality.","jd hm","pm cs"],
+     ["Hold regular check-ins and resolve issues fast with support and engineering.","jd","pm cs hw sw"],
+     ["Plan battery swaps and service visits with the installation team, as the contract sets out.","hm","pm inst"],
+     ["Bring expansion and upsell openings to Sales and the CEO, and scope the next step: expansion, then full site or fleet.","jd hm","pm sales"],
+     ["Update the playbook after each step so the next POC runs faster.","plan","pm"],
+     ["<span class=\"tag ehs\">AT SCALE</span> Hand day-to-day support to the customer success team.","hm","cs pm"]
+    ],
+    out:"<b class=\"gate-id\">G5</b> Next step ordered: expansion or fleet order signed; playbook updated. Loops back to DC-2."}
+  ];
+  function chip(r){return '<span class="who'+(KM[r]?' km':'')+'">'+ROLE_NAMES[r].replace(/&/g,"&amp;")+'</span>'}
+  function src(s){return '<span class="src">'+s.split(" ").map(function(k){return '<span class="tag '+k+'">'+SRC[k]+'</span>'}).join("")+'</span>'}
+  var host=document.getElementById("stages"),html="";
+  S.forEach(function(s){
+    var roles={};
+    s.acts.forEach(function(a){a[2].split(" ").forEach(function(r){roles[r]=1})});
+    var list=ORDER.filter(function(r){return roles[r]});
+    html+='<article class="stage" data-roles="'+list.join(" ")+'">'+
+      '<div class="s-meta"><span class="s-id">'+s.id+'</span><h3>'+s.name+'</h3><span class="s-when">'+s.when+'</span>'+
+      '<div class="s-owner"><b>Owner</b><span>'+s.owner+'</span></div>'+
+      '<div class="s-who">'+list.map(chip).join("")+'</div></div>'+
+      '<div class="s-body"><ul class="acts">'+s.acts.map(function(a){
+        var rs=a[2].split(" ");
+        return '<li data-roles="'+a[2]+'"><span>'+a[0]+src(a[1])+'<span class="roles">'+rs.map(chip).join("")+'</span></span></li>'}).join("")+
+      '</ul><div class="out"><b>Exit</b><span>'+s.out+'</span></div></div></article>';
+  });
+  host.innerHTML=html;
+  var btns=[].slice.call(document.querySelectorAll(".filter button"));
+  function apply(role){
+    btns.forEach(function(b){b.setAttribute("aria-pressed",b.dataset.role===role?"true":"false")});
+    [].slice.call(host.querySelectorAll(".stage")).forEach(function(st){
+      var hit=role==="all"||st.dataset.roles.split(" ").indexOf(role)>-1;
+      st.classList.toggle("dim",!hit);
+      [].slice.call(st.querySelectorAll("li")).forEach(function(li){
+        li.classList.toggle("dim",hit&&role!=="all"&&li.dataset.roles.split(" ").indexOf(role)<0);
+      });
+    });
+  }
+  btns.forEach(function(b){b.addEventListener("click",function(){apply(b.dataset.role)})});
+})();
+</script>
+</body>
+</html>
