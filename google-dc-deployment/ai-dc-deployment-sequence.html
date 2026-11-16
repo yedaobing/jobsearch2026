@@ -152,19 +152,19 @@ td.q{font-size:13.5px}
 <section>
   <div class="sec-head">
     <div class="eyebrow">Overview</div>
-    <h2>Nine phases, four levels of TPM involvement</h2>
-    <p>The bands above the track show the hardware TPM's assumed role: track design and procurement, coordinate construction and commissioning, own rack install through energization row by row, then hand off to customer engineering.</p>
+    <h2>Nine phases in four stages</h2>
+    <p>The bands above the track group the phases into four stages: design and planning, construction and commissioning, IT fit-out, and cluster bring-up. The hardware TPM owns IT fit-out row by row; the phase table below gives the TPM role in every phase.</p>
   </div>
-  <div class="overview" role="img" aria-label="Deployment sequence: P1 site and design and P2 long-lead procurement, which the TPM tracks. P3 construction and gray space, P4 white space fit-out and P5 commissioning, which the TPM coordinates. P6 rack install and connect and P7 energization and POST, which the TPM owns row by row. P8 burn-in and validation and P9 platform and production, owned by customer engineering after the row handoff.">
+  <div class="overview" role="img" aria-label="Deployment sequence in four stages. Design and planning: P1 site and design, P2 long-lead procurement. Construction and commissioning: P3 construction and gray space, P4 white space fit-out, P5 commissioning. IT fit-out, owned by the hardware TPM row by row: P6 rack install and connect, P7 energization and POST. Cluster bring-up, owned by customer engineering after the row handoff: P8 burn-in and validation, P9 platform and production.">
     <svg viewBox="0 0 1012 196" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
       </defs>
       <g font-size="11.5" font-weight="600" letter-spacing=".06em">
-        <rect x="8" y="14" width="212" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"/><text x="18" y="30.5" fill="var(--muted)">TRACK</text>
-        <rect x="232" y="14" width="324" height="24" rx="3" fill="var(--ehs-soft)"/><text x="242" y="30.5" fill="var(--ehs)">COORDINATE</text>
-        <rect x="568" y="14" width="212" height="24" rx="3" fill="var(--accent-soft)"/><text x="578" y="30.5" fill="var(--accent)">OWN · ROW BY ROW</text>
-        <rect x="792" y="14" width="212" height="24" rx="3" fill="var(--jd-soft)"/><text x="802" y="30.5" fill="var(--jd)">CUSTOMER ENGINEERING</text>
+        <rect x="8" y="14" width="212" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"/><text x="18" y="30.5" fill="var(--muted)">DESIGN &amp; PLANNING</text>
+        <rect x="232" y="14" width="324" height="24" rx="3" fill="var(--ehs-soft)"/><text x="242" y="30.5" fill="var(--ehs)">CONSTRUCTION &amp; COMMISSIONING</text>
+        <rect x="568" y="14" width="212" height="24" rx="3" fill="var(--accent-soft)"/><text x="578" y="30.5" fill="var(--accent)">IT FIT-OUT</text>
+        <rect x="792" y="14" width="212" height="24" rx="3" fill="var(--jd-soft)"/><text x="802" y="30.5" fill="var(--jd)">CLUSTER BRING-UP</text>
       </g>
       <g font-size="10.5" fill="var(--muted)">
         <line x1="562" y1="44" x2="562" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="556" y="58" text-anchor="end">Rows handed over</text>
@@ -211,13 +211,17 @@ td.q{font-size:13.5px}
   <div class="tbl"><table>
     <thead><tr><th>Phase</th><th>What happens</th><th>Owner</th><th>TPM role</th><th>Scoping question</th></tr></thead>
     <tbody>
+      <tr class="grp"><td colspan="5">Design and planning</td></tr>
       <tr><td class="sid">P1</td><td><b>Site and design.</b> Site and utility power secured; facility design; rack layout, power plan, cooling interface and network design frozen.</td><td>Client, design firms, customer engineering</td><td><span class="tag trk">TRACK</span></td><td class="q">Do I join at design freeze, and do I review the rack layout, power plan and cooling interface before they're frozen?</td></tr>
       <tr><td class="sid">P2</td><td><b>Long-lead procurement.</b> Facility equipment (switchgear, transformers, generators, CDUs) and IT items (racks, optics, cables, tap-offs, hoses).</td><td>Facilities, client supply chain</td><td><span class="tag trk">TRACK</span></td><td class="q">Who tracks IT long-lead items against row dates, me or supply chain? Who places the orders?</td></tr>
+      <tr class="grp"><td colspan="5">Construction and commissioning</td></tr>
       <tr><td class="sid">P3</td><td><b>Construction and gray space.</b> Shell, electrical rooms, mechanical plant, generators, utility connection.</td><td>GC, facility team</td><td><span class="tag crd">COORDINATE</span></td><td class="q">How much of my time goes to construction coordination versus on-site build execution? Who is my facility counterpart?</td></tr>
       <tr><td class="sid">P4</td><td><b>White space fit-out.</b> Busway, secondary loop piping to rack drops, cable pathways, backbone trunks, leak detection.</td><td>GC, electrical, mechanical and cabling contractors</td><td><span class="tag crd">COORDINATE</span></td><td class="q">Where exactly is the demarcation: busway or tap-off, rack drop or rack manifold, pathways or backbone trunks?</td></tr>
       <tr><td class="sid">P5</td><td><b>Commissioning.</b> L1 to L5, ending with the integrated systems test under load banks.</td><td>Commissioning agent, facility team</td><td><span class="tag crd">COORDINATE</span></td><td class="q">Do I receive the hall after L5, or row by row through partial handover? Do I attend the integrated systems test?</td></tr>
+      <tr class="grp"><td colspan="5">IT fit-out</td></tr>
       <tr><td class="sid">P6</td><td><b>Rack install and connect.</b> Row handover, materials staged, racks set, power, liquid and network connected.</td><td>Hardware TPM, with rack OEM and contractors</td><td><span class="tag own">OWN</span></td><td class="q">Who does the hands-on work: client technicians, the rack OEM, or contractors I direct? What is the target pace in rows or racks per week?</td></tr>
       <tr><td class="sid">P7</td><td><b>Energization and POST.</b> Go / no-go, staged power-on, POST, inventory check.</td><td>Hardware TPM, with rack OEM and electrical contractor</td><td><span class="tag own">OWN</span></td><td class="q">Does my scope end at power-on and POST, or also cover network link validation and the firmware baseline?</td></tr>
+      <tr class="grp"><td colspan="5">Cluster bring-up</td></tr>
       <tr><td class="sid">P8</td><td><b>Burn-in and validation.</b> GPU diagnostics, stress tests, fabric bring-up, performance acceptance.</td><td>Customer engineering</td><td><span class="tag cus">HAND OFF</span></td><td class="q">Is link validation part of my handoff criteria or customer engineering's first step? Who owns RMAs found in burn-in?</td></tr>
       <tr><td class="sid">P9</td><td><b>Platform and production.</b> OS provisioning, cluster software, capacity released to users; data center operations takes over.</td><td>Customer engineering, data center operations</td><td><span class="tag cus">HAND OFF</span></td><td class="q">After handoff, do I stay engaged on punch items and RMAs until the cluster is accepted for production?</td></tr>
     </tbody>
