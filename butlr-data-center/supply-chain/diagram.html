@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Butlr Supply Chain Handoff Workflow · Full screen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --line:#d3dce0;
+  --accent:#0b6c76; --accent-soft:#dbeef0;
+  --jd:#3e4aa8; --jd-soft:#e4e7f8;
+  --ehs:#9a5b00; --ehs-soft:#fbeed6;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;padding:14px 24px 10px}
+h1{font-family:var(--f-display);font-weight:800;font-stretch:80%;font-size:clamp(20px,2.4vw,30px);margin:0;letter-spacing:-.01em}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;padding:1px 6px;border-radius:3px;vertical-align:1px;margin-right:4px}
+.tag.dn{background:var(--accent-soft);color:var(--accent)} .tag.up{background:var(--ehs-soft);color:var(--ehs)} .tag.bo{background:var(--jd-soft);color:var(--jd)}
+nav{margin-left:auto;display:flex;gap:6px}
+nav button{font:500 13px var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer}
+nav button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+nav a{font-size:13px;color:var(--muted);align-self:center;margin-left:6px}
+main{min-height:0;padding:4px 24px 16px;display:grid}
+.slide{min-height:0;display:grid;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px}
+.slide svg{width:100%;height:100%;display:block}
+.slide text{font-family:var(--f-body)}
+.only-overview,.only-handoff{display:contents}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1 id="ttl">Supply Chain and TPM handoffs, stage by stage</h1>
+  <div class="legend" id="lg">
+    <span><span class="tag dn">TPM → SC</span>TPM sends</span>
+    <span><span class="tag up">SC → TPM</span>Supply Chain sends</span>
+    <span><span class="tag bo">BOTH</span>Two-way</span>
+    <span>Dashed: expansion loops back to order and build</span>
+  </div>
+  <nav>
+    <button type="button" data-v="handoff" aria-pressed="true">Handoffs</button>
+    <button type="button" data-v="overview" aria-pressed="false">Stages</button>
+    <a href="./">Full page</a>
+  </nav>
+</div>
+<main>
+  <div class="slide" id="handoff" role="img" aria-label="Handoff workflow between the TPM and Supply Chain by stage">
+    <svg viewBox="0 0 1100 784" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="mdn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker><marker id="mup" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ehs)"/></marker><marker id="mbo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--jd)"/></marker></defs>
+      <rect x="240" y="8" width="140" height="768" rx="4" fill="var(--accent-soft)"/>
+      <rect x="820" y="8" width="140" height="768" rx="4" fill="var(--ehs-soft)"/>
+      <g font-size="11" font-weight="600" letter-spacing=".06em" text-anchor="middle"><text x="310.0" y="28" fill="var(--accent)">TPM</text><text x="890.0" y="28" fill="var(--ehs)">SUPPLY CHAIN</text><text x="600.0" y="28" fill="var(--muted)">HANDOFFS</text><text x="16" y="28" text-anchor="start" fill="var(--muted)">STAGE</text></g>
+      <text x="974" y="28" font-size="11" font-weight="600" letter-spacing=".06em" fill="var(--muted)">LEAD</text>
+      <rect x="8" y="47" width="220" height="74" rx="3" fill="var(--bg)" stroke="var(--line)"/>
+      <text x="20" y="81.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--muted)">S0</text>
+      <text x="20" y="97.0" font-size="13" font-weight="600" fill="var(--ink)">Demand planning</text>
+      <line x1="8" y1="124" x2="1092" y2="124" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="88.0" font-size="12" font-weight="600" fill="var(--jd)">Shared</text>
+      <line x1="384" y1="77" x2="814" y2="77" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)"/>
+      <text x="600.0" y="72" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Demand forecast</text>
+      <line x1="816" y1="105" x2="386" y2="105" stroke="var(--ehs)" stroke-width="1.6" marker-end="url(#mup)"/>
+      <text x="600.0" y="100" font-size="12.5" font-weight="600" fill="var(--ehs)" text-anchor="middle">Lead times and stock</text>
+      <rect x="8" y="127" width="220" height="46" rx="3" fill="var(--bg)" stroke="var(--line)"/>
+      <text x="20" y="147.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--muted)">S1</text>
+      <text x="20" y="163.0" font-size="13" font-weight="600" fill="var(--ink)">Scope and define the kit</text>
+      <line x1="8" y1="176" x2="1092" y2="176" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="154.0" font-size="12" font-weight="600" fill="var(--accent)">TPM</text>
+      <line x1="384" y1="157" x2="814" y2="157" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)"/>
+      <text x="600.0" y="152" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Kit BOM</text>
+      <text x="600.0" y="189.0" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--muted)" text-anchor="middle"><tspan font-weight="600" fill="var(--ink)">G1</tspan> · POC scoped</text>
+      <line x1="8" y1="194" x2="1092" y2="194" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <rect x="8" y="197" width="220" height="102" rx="3" fill="var(--ehs-soft)" stroke="var(--line)"/>
+      <text x="20" y="245.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--ehs)">S2</text>
+      <text x="20" y="261.0" font-size="13" font-weight="600" fill="var(--ink)">Order, build and test</text>
+      <line x1="8" y1="302" x2="1092" y2="302" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="252.0" font-size="12" font-weight="600" fill="var(--ehs)">Supply Chain</text>
+      <line x1="384" y1="227" x2="814" y2="227" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)"/>
+      <text x="600.0" y="222" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Order release</text>
+      <line x1="816" y1="255" x2="386" y2="255" stroke="var(--ehs)" stroke-width="1.6" marker-end="url(#mup)"/>
+      <text x="600.0" y="250" font-size="12.5" font-weight="600" fill="var(--ehs)" text-anchor="middle">Committed ship date</text>
+      <line x1="386" y1="283" x2="814" y2="283" stroke="var(--jd)" stroke-width="1.6" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+      <text x="600.0" y="278" font-size="12.5" font-weight="600" fill="var(--jd)" text-anchor="middle">Change after lock</text>
+      <rect x="8" y="305" width="220" height="74" rx="3" fill="var(--ehs-soft)" stroke="var(--line)"/>
+      <text x="20" y="339.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--ehs)">S3</text>
+      <text x="20" y="355.0" font-size="13" font-weight="600" fill="var(--ink)">Ship gate and release</text>
+      <line x1="8" y1="382" x2="1092" y2="382" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="346.0" font-size="12" font-weight="600" fill="var(--jd)">Shared</text>
+      <line x1="816" y1="335" x2="386" y2="335" stroke="var(--ehs)" stroke-width="1.6" marker-end="url(#mup)"/>
+      <text x="600.0" y="330" font-size="12.5" font-weight="600" fill="var(--ehs)" text-anchor="middle">Ship-gate results</text>
+      <line x1="384" y1="363" x2="814" y2="363" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)"/>
+      <text x="600.0" y="358" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Release to ship</text>
+      <rect x="8" y="385" width="220" height="74" rx="3" fill="var(--ehs-soft)" stroke="var(--line)"/>
+      <text x="20" y="419.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--ehs)">S4</text>
+      <text x="20" y="435.0" font-size="13" font-weight="600" fill="var(--ink)">Freight, customs and receive</text>
+      <line x1="8" y1="462" x2="1092" y2="462" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="426.0" font-size="12" font-weight="600" fill="var(--ehs)">Supply Chain</text>
+      <line x1="816" y1="415" x2="386" y2="415" stroke="var(--ehs)" stroke-width="1.6" marker-end="url(#mup)"/>
+      <text x="600.0" y="410" font-size="12.5" font-weight="600" fill="var(--ehs)" text-anchor="middle">Shipment and customs status</text>
+      <line x1="384" y1="443" x2="814" y2="443" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)"/>
+      <text x="600.0" y="438" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Receiving report</text>
+      <text x="600.0" y="475.0" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--muted)" text-anchor="middle"><tspan font-weight="600" fill="var(--ink)">G2</tspan> · Ready to install</text>
+      <line x1="8" y1="480" x2="1092" y2="480" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <rect x="8" y="483" width="220" height="46" rx="3" fill="var(--accent-soft)" stroke="var(--line)"/>
+      <text x="20" y="503.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--accent)">S5</text>
+      <text x="20" y="519.0" font-size="13" font-weight="600" fill="var(--ink)">Install and validate</text>
+      <line x1="8" y1="532" x2="1092" y2="532" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="510.0" font-size="12" font-weight="600" fill="var(--accent)">TPM</text>
+      <line x1="386" y1="513" x2="814" y2="513" stroke="var(--jd)" stroke-width="1.6" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+      <text x="600.0" y="508" font-size="12.5" font-weight="600" fill="var(--jd)" text-anchor="middle">Returns and failure analysis</text>
+      <text x="600.0" y="545.0" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--muted)" text-anchor="middle"><tspan font-weight="600" fill="var(--ink)">G3</tspan> · Validation passed</text>
+      <line x1="8" y1="550" x2="1092" y2="550" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <rect x="8" y="553" width="220" height="46" rx="3" fill="var(--accent-soft)" stroke="var(--line)"/>
+      <text x="20" y="573.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--accent)">S6</text>
+      <text x="20" y="589.0" font-size="13" font-weight="600" fill="var(--ink)">Accept and hand over</text>
+      <line x1="8" y1="602" x2="1092" y2="602" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="580.0" font-size="12" font-weight="600" fill="var(--accent)">TPM</text>
+      <line x1="384" y1="583" x2="814" y2="583" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)"/>
+      <text x="600.0" y="578" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Unused stock return</text>
+      <text x="600.0" y="615.0" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--muted)" text-anchor="middle"><tspan font-weight="600" fill="var(--ink)">G4</tspan> · Customer accepts</text>
+      <line x1="8" y1="620" x2="1092" y2="620" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <rect x="8" y="623" width="220" height="130" rx="3" fill="var(--jd-soft)" stroke="var(--line)"/>
+      <text x="20" y="685.0" font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--jd)">S7</text>
+      <text x="20" y="701.0" font-size="13" font-weight="600" fill="var(--ink)">Operate and expand</text>
+      <line x1="8" y1="756" x2="1092" y2="756" stroke="var(--line)" stroke-dasharray="2 3"/>
+      <text x="974" y="692.0" font-size="12" font-weight="600" fill="var(--jd)">Shared</text>
+      <line x1="386" y1="653" x2="814" y2="653" stroke="var(--jd)" stroke-width="1.6" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+      <text x="600.0" y="648" font-size="12.5" font-weight="600" fill="var(--jd)" text-anchor="middle">Field returns (RMA)</text>
+      <line x1="384" y1="681" x2="814" y2="681" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)"/>
+      <text x="600.0" y="676" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Battery and spares demand</text>
+      <line x1="384" y1="709" x2="814" y2="709" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#mdn)" stroke-dasharray="5 3"/>
+      <text x="600.0" y="704" font-size="12.5" font-weight="600" fill="var(--accent)" text-anchor="middle">Next order release</text>
+      <line x1="386" y1="737" x2="814" y2="737" stroke="var(--jd)" stroke-width="1.6" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+      <text x="600.0" y="732" font-size="12.5" font-weight="600" fill="var(--jd)" text-anchor="middle">Monthly review</text>
+      <text x="600.0" y="769.0" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--muted)" text-anchor="middle"><tspan font-weight="600" fill="var(--ink)">G5</tspan> · Next step ordered</text>
+      <line x1="8" y1="774" x2="1092" y2="774" stroke="var(--line)" stroke-dasharray="2 3"/>
+      </svg>
+  </div>
+  <div class="slide" id="overview" role="img" aria-label="Supply chain workflow in eight stages" hidden>
+    <svg viewBox="0 0 1128 212" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+      </defs>
+      <g font-size="11.5" font-weight="600" letter-spacing=".06em">
+        <rect x="10" y="14" width="268" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"/><text x="20" y="30.5" fill="var(--muted)">PLAN</text>
+        <rect x="290" y="14" width="408" height="24" rx="3" fill="var(--ehs-soft)"/><text x="300" y="30.5" fill="var(--ehs)">BUILD &amp; MOVE · SUPPLY CHAIN LEADS</text>
+        <rect x="710" y="14" width="268" height="24" rx="3" fill="var(--accent-soft)"/><text x="720" y="30.5" fill="var(--accent)">AT THE SITE · TPM LEADS</text>
+        <rect x="990" y="14" width="128" height="24" rx="3" fill="var(--jd-soft)"/><text x="1000" y="30.5" fill="var(--jd)">RUN &amp; EXPAND</text>
+      </g>
+      <g font-size="10.5" fill="var(--muted)">
+        <line x1="284" y1="44" x2="284" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="284" y="58" text-anchor="middle" dx="-40">G1 scoped</text>
+        <line x1="704" y1="44" x2="704" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="698" y="58" text-anchor="end">G2 ready to install</text>
+        <line x1="844" y1="44" x2="844" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="838" y="58" text-anchor="end">G3 validated</text>
+        <line x1="984" y1="44" x2="984" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="978" y="58" text-anchor="end">G4 accepted</text>
+        <line x1="1118" y1="44" x2="1118" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="1112" y="58" text-anchor="end">G5 ordered</text>
+      </g>
+      <g font-size="11" text-anchor="middle">
+        <g><rect x="10" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="74" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S0</text><text x="74" y="104" fill="var(--ink)" font-weight="600">Demand</text><text x="74" y="118" fill="var(--ink)" font-weight="600">planning</text><line x1="18" y1="127" x2="130" y2="127" stroke="var(--line)"/><text x="74" y="141" font-size="9.5" fill="var(--muted)">TPM · Supply Chain</text></g>
+        <g><rect x="150" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="214" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S1</text><text x="214" y="104" fill="var(--ink)" font-weight="600">Scope &amp;</text><text x="214" y="118" fill="var(--ink)" font-weight="600">define the kit</text><line x1="158" y1="127" x2="270" y2="127" stroke="var(--line)"/><text x="214" y="141" font-size="9.5" fill="var(--accent)" font-weight="600">TPM</text></g>
+        <g><rect x="290" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="354" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S2</text><text x="354" y="104" fill="var(--ink)" font-weight="600">Order, build</text><text x="354" y="118" fill="var(--ink)" font-weight="600">&amp; test</text><line x1="298" y1="127" x2="410" y2="127" stroke="var(--line)"/><text x="354" y="141" font-size="9.5" fill="var(--ehs)" font-weight="600">Supply Chain · CM</text></g>
+        <g><rect x="430" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="494" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S3</text><text x="494" y="104" fill="var(--ink)" font-weight="600">Ship gate</text><text x="494" y="118" fill="var(--ink)" font-weight="600">&amp; release</text><line x1="438" y1="127" x2="550" y2="127" stroke="var(--line)"/><text x="494" y="141" font-size="9.5" fill="var(--ehs)" font-weight="600">Supply Chain · TPM</text></g>
+        <g><rect x="570" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="634" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S4</text><text x="634" y="104" fill="var(--ink)" font-weight="600">Freight, customs</text><text x="634" y="118" fill="var(--ink)" font-weight="600">&amp; receive</text><line x1="578" y1="127" x2="690" y2="127" stroke="var(--line)"/><text x="634" y="141" font-size="9.5" fill="var(--ehs)" font-weight="600">Supply Chain · TPM</text></g>
+        <g><rect x="710" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="774" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S5</text><text x="774" y="104" fill="var(--ink)" font-weight="600">Install &amp;</text><text x="774" y="118" fill="var(--ink)" font-weight="600">validate</text><line x1="718" y1="127" x2="830" y2="127" stroke="var(--line)"/><text x="774" y="141" font-size="9.5" fill="var(--accent)" font-weight="600">TPM</text></g>
+        <g><rect x="850" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="914" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S6</text><text x="914" y="104" fill="var(--ink)" font-weight="600">Accept &amp;</text><text x="914" y="118" fill="var(--ink)" font-weight="600">hand over</text><line x1="858" y1="127" x2="970" y2="127" stroke="var(--line)"/><text x="914" y="141" font-size="9.5" fill="var(--accent)" font-weight="600">TPM</text></g>
+        <g><rect x="990" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="1054" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S7</text><text x="1054" y="104" fill="var(--ink)" font-weight="600">Operate &amp;</text><text x="1054" y="118" fill="var(--ink)" font-weight="600">expand</text><line x1="998" y1="127" x2="1110" y2="127" stroke="var(--line)"/><text x="1054" y="141" font-size="9.5" fill="var(--muted)">TPM · Supply Chain</text></g>
+      </g>
+      <g stroke="var(--muted)" stroke-width="1.3" marker-end="url(#af)">
+        <line x1="138" y1="109" x2="148" y2="109"/>
+        <line x1="278" y1="109" x2="288" y2="109"/>
+        <line x1="418" y1="109" x2="428" y2="109"/>
+        <line x1="558" y1="109" x2="568" y2="109"/>
+        <line x1="698" y1="109" x2="708" y2="109"/>
+        <line x1="838" y1="109" x2="848" y2="109"/>
+        <line x1="978" y1="109" x2="988" y2="109"/>
+        <path d="M1054,148 L1054,166 L354,166 L354,151" fill="none" stroke-dasharray="4 3"/>
+      </g>
+      <text x="704" y="182" font-size="10.5" fill="var(--muted)" text-anchor="middle">Expansion order loops back to S2. Today about 6 racks per POC, then about 5 more sets, then the full site or fleet.</text>
+      <text x="564" y="202" font-size="10.5" fill="var(--muted)" text-anchor="middle">Today kits ship from Burlingame stock with no customs. At scale: build at the CM or the Shenzhen team, customs for international sites, and ongoing fleet demand.</text>
+    </svg>
+  </div>
+</main>
+<script>
+const views={handoff:["Supply Chain and TPM handoffs, stage by stage",true],overview:["Butlr data center supply chain: eight stages",false]};
+function show(v){
+  for(const k in views) document.getElementById(k).hidden = k!==v;
+  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===v));
+  document.getElementById('ttl').textContent=views[v][0];
+  document.getElementById('lg').style.visibility=views[v][1]?'visible':'hidden';
+}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='2') show('overview');
+  if(e.key==='ArrowLeft'||e.key==='1') show('handoff');
+  if(e.key==='f') document.documentElement.requestFullscreen?.();
+});
+if(location.hash==='#stages') show('overview');
+</script>
+</body>
+</html>
