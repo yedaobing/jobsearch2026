@@ -2,7 +2,7 @@
 
 ## Purpose and scope
 
-This page maps the data center program workflow owned by Butlr's **Senior Program Manager, Data Operations** role, from the first customer conversation through POC, expansion, and full-fleet rollout. For how the rest of the company operates, see [How Butlr Runs Its Business](butlr-business-workflow.md).
+This page maps the data center program workflow owned by Butlr's **Senior Program Manager, Data Operations** role, from the first customer conversation through POC, expansion, and full-fleet rollout. For how the rest of the company operates, see [How Butlr Runs Its Business](butlr-business-workflow.md). For the supply chain side of each phase, see the [Butlr Data Center Supply Chain Workflow](butlr-supply-chain-workflow.md).
 
 *Revised 11 Nov 2026 after the hiring manager conversation. The workflow now reflects how the data center line runs today (small POCs that grow in steps) and marks which steps only matter at scale.*
 
