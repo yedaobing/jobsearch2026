@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Supply chain workflow for a Butlr data center deployment: stages, major tasks, owners, and the interfaces between Supply Chain and the TPM.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Butlr Data Center Supply Chain Workflow · Owners and Interfaces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: same procedure-sheet style as the AI DC deployment sequence page: overview track with stage bands and gates, ownership strip, interface swimlane, interface table, stage table with questions, rule cards. */
+:root{
+  --bg:#f2f5f6; --surface:#ffffff; --ink:#142228; --muted:#57666d; --line:#d3dce0;
+  --accent:#0b6c76; --accent-soft:#dbeef0;
+  --jd:#3e4aa8; --jd-soft:#e4e7f8;
+  --ehs:#9a5b00; --ehs-soft:#fbeed6;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#152025; --ink:#e2eaed; --muted:#94a4ab; --line:#2a3a40;
+  --accent:#55c3cb; --accent-soft:#12343a; --jd:#a3adf2; --jd-soft:#232948;
+  --ehs:#eaaa45; --ehs-soft:#3a2b10; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px;display:grid;gap:48px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800;font-stretch:78%;line-height:1.02}
+h2{font-size:24px;font-weight:750;font-stretch:82%}
+h3{font-size:19px;font-weight:700;font-stretch:85%}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+header{display:grid;gap:14px}
+.lede{max-width:68ch;color:var(--muted);font-size:16px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;padding:1px 6px;border-radius:3px;vertical-align:1px;white-space:nowrap}
+.note{font-size:13px;color:var(--muted);max-width:80ch}
+section{display:grid;gap:18px}
+.sec-head{display:grid;gap:6px}
+.sec-head p{color:var(--muted);max-width:72ch}
+
+/* diagrams */
+.overview{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+.overview svg{display:block;min-width:1040px;width:100%;height:auto}
+.overview text{font-family:var(--f-body)}
+
+/* role chips */
+.who{display:inline-block;font-size:10.5px;border:1px solid var(--line);border-radius:3px;padding:0 5px;color:var(--muted);white-space:nowrap;vertical-align:1px}
+.who.own{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
+.who.sc{background:var(--ehs-soft);border-color:transparent;color:var(--ehs);font-weight:500}
+
+/* ownership strip */
+.life{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden}
+.life div{padding:14px 16px;display:grid;gap:4px;align-content:start;border-right:1px solid var(--line)}
+.life div:last-child{border-right:0}
+.life .k{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:600}
+.life .k.sc{color:var(--ehs)}
+.life .k.eng{color:var(--jd)}
+.life p{font-size:13.5px;color:var(--muted)}
+
+/* tables */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.sid{font-family:var(--f-mono);font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+td.nw{white-space:nowrap}
+tr.grp td{background:var(--bg);font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600;padding-block:8px}
+td.q{font-size:13.5px}
+ul.tl{margin:6px 0 0;padding-left:16px;display:grid;gap:4px;font-size:13.5px}
+.scale{margin-top:8px;font-size:12.5px;color:var(--muted)}
+.scale b{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted)}
+
+/* tags */
+.tag.trk{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.tag.crd{background:var(--jd-soft);color:var(--jd)}
+.tag.own{background:var(--accent-soft);color:var(--accent)}
+.tag.dn{background:var(--accent-soft);color:var(--accent)}
+.tag.up{background:var(--ehs-soft);color:var(--ehs)}
+.tag.bo{background:var(--jd-soft);color:var(--jd)}
+
+/* rule cards */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:8px;align-content:start}
+.rule ol{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14px}
+@media (max-width:760px){
+  .life{grid-template-columns:minmax(0,1fr)}
+  .life div{border-right:0;border-bottom:1px solid var(--line)}
+  .life div:last-child{border-bottom:0}
+}
+</style>
+
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Butlr · Senior Program Manager, Data Operations · Supply chain</div>
+  <h1>Data Center Supply Chain Workflow</h1>
+  <p class="lede">How hardware moves for a Butlr data center deployment, from the first demand signal to field returns and the expansion order: each stage, its major tasks, who owns them, and where Supply Chain and the TPM hand work to each other.</p>
+  <p class="note">The stages map onto gates G1 to G5 of the <a href="../">data center program workflow</a>. See also <a href="../../butlr/">how Butlr runs its business</a>.</p>
+</header>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Overview</div>
+    <h2>Eight stages in four bands</h2>
+    <p>Supply Chain leads while the kit is built and moved. The TPM leads at both ends: defining what the customer needs, and everything at the customer's site. Dashed markers show the program gates.</p>
+  </div>
+  <div class="overview" role="img" aria-label="Supply chain workflow in eight stages. Plan: S0 demand planning, shared by TPM and Supply Chain; S1 scope and define the kit, led by the TPM, ending at gate G1 POC scoped. Build and move, led by Supply Chain: S2 order, build and test; S3 ship gate and release, with the TPM releasing to ship; S4 freight, customs and receive, with the TPM receiving on site, ending at gate G2 ready to install. At the site, led by the TPM: S5 install and validate, gate G3; S6 accept and hand over, gate G4. Run and expand: S7 operate and expand, gate G5, where the expansion order loops back to S2.">
+    <svg viewBox="0 0 1128 212" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+      </defs>
+      <g font-size="11.5" font-weight="600" letter-spacing=".06em">
+        <rect x="10" y="14" width="268" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"/><text x="20" y="30.5" fill="var(--muted)">PLAN</text>
+        <rect x="290" y="14" width="408" height="24" rx="3" fill="var(--ehs-soft)"/><text x="300" y="30.5" fill="var(--ehs)">BUILD &amp; MOVE · SUPPLY CHAIN LEADS</text>
+        <rect x="710" y="14" width="268" height="24" rx="3" fill="var(--accent-soft)"/><text x="720" y="30.5" fill="var(--accent)">AT THE SITE · TPM LEADS</text>
+        <rect x="990" y="14" width="128" height="24" rx="3" fill="var(--jd-soft)"/><text x="1000" y="30.5" fill="var(--jd)">RUN &amp; EXPAND</text>
+      </g>
+      <g font-size="10.5" fill="var(--muted)">
+        <line x1="284" y1="44" x2="284" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="284" y="58" text-anchor="middle" dx="-40">G1 scoped</text>
+        <line x1="704" y1="44" x2="704" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="698" y="58" text-anchor="end">G2 ready to install</text>
+        <line x1="844" y1="44" x2="844" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="838" y="58" text-anchor="end">G3 validated</text>
+        <line x1="984" y1="44" x2="984" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="978" y="58" text-anchor="end">G4 accepted</text>
+        <line x1="1118" y1="44" x2="1118" y2="64" stroke="var(--muted)" stroke-dasharray="2 2"/><text x="1112" y="58" text-anchor="end">G5 ordered</text>
+      </g>
+      <g font-size="11" text-anchor="middle">
+        <g><rect x="10" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="74" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S0</text><text x="74" y="104" fill="var(--ink)" font-weight="600">Demand</text><text x="74" y="118" fill="var(--ink)" font-weight="600">planning</text><line x1="18" y1="127" x2="130" y2="127" stroke="var(--line)"/><text x="74" y="141" font-size="9.5" fill="var(--muted)">TPM · Supply Chain</text></g>
+        <g><rect x="150" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="214" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S1</text><text x="214" y="104" fill="var(--ink)" font-weight="600">Scope &amp;</text><text x="214" y="118" fill="var(--ink)" font-weight="600">define the kit</text><line x1="158" y1="127" x2="270" y2="127" stroke="var(--line)"/><text x="214" y="141" font-size="9.5" fill="var(--accent)" font-weight="600">TPM</text></g>
+        <g><rect x="290" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="354" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S2</text><text x="354" y="104" fill="var(--ink)" font-weight="600">Order, build</text><text x="354" y="118" fill="var(--ink)" font-weight="600">&amp; test</text><line x1="298" y1="127" x2="410" y2="127" stroke="var(--line)"/><text x="354" y="141" font-size="9.5" fill="var(--ehs)" font-weight="600">Supply Chain · CM</text></g>
+        <g><rect x="430" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="494" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S3</text><text x="494" y="104" fill="var(--ink)" font-weight="600">Ship gate</text><text x="494" y="118" fill="var(--ink)" font-weight="600">&amp; release</text><line x1="438" y1="127" x2="550" y2="127" stroke="var(--line)"/><text x="494" y="141" font-size="9.5" fill="var(--ehs)" font-weight="600">Supply Chain · TPM</text></g>
+        <g><rect x="570" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="634" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S4</text><text x="634" y="104" fill="var(--ink)" font-weight="600">Freight, customs</text><text x="634" y="118" fill="var(--ink)" font-weight="600">&amp; receive</text><line x1="578" y1="127" x2="690" y2="127" stroke="var(--line)"/><text x="634" y="141" font-size="9.5" fill="var(--ehs)" font-weight="600">Supply Chain · TPM</text></g>
+        <g><rect x="710" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="774" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S5</text><text x="774" y="104" fill="var(--ink)" font-weight="600">Install &amp;</text><text x="774" y="118" fill="var(--ink)" font-weight="600">validate</text><line x1="718" y1="127" x2="830" y2="127" stroke="var(--line)"/><text x="774" y="141" font-size="9.5" fill="var(--accent)" font-weight="600">TPM</text></g>
+        <g><rect x="850" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="914" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S6</text><text x="914" y="104" fill="var(--ink)" font-weight="600">Accept &amp;</text><text x="914" y="118" fill="var(--ink)" font-weight="600">hand over</text><line x1="858" y1="127" x2="970" y2="127" stroke="var(--line)"/><text x="914" y="141" font-size="9.5" fill="var(--accent)" font-weight="600">TPM</text></g>
+        <g><rect x="990" y="70" width="128" height="78" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.3"/><text x="1054" y="88" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">S7</text><text x="1054" y="104" fill="var(--ink)" font-weight="600">Operate &amp;</text><text x="1054" y="118" fill="var(--ink)" font-weight="600">expand</text><line x1="998" y1="127" x2="1110" y2="127" stroke="var(--line)"/><text x="1054" y="141" font-size="9.5" fill="var(--muted)">TPM · Supply Chain</text></g>
+      </g>
+      <g stroke="var(--muted)" stroke-width="1.3" marker-end="url(#af)">
+        <line x1="138" y1="109" x2="148" y2="109"/>
+        <line x1="278" y1="109" x2="288" y2="109"/>
+        <line x1="418" y1="109" x2="428" y2="109"/>
+        <line x1="558" y1="109" x2="568" y2="109"/>
+        <line x1="698" y1="109" x2="708" y2="109"/>
+        <line x1="838" y1="109" x2="848" y2="109"/>
+        <line x1="978" y1="109" x2="988" y2="109"/>
+        <path d="M1054,148 L1054,166 L354,166 L354,151" fill="none" stroke-dasharray="4 3"/>
+      </g>
+      <text x="704" y="182" font-size="10.5" fill="var(--muted)" text-anchor="middle">Expansion order (I4) loops back to S2. Today about 6 racks per POC, then about 5 more sets, then the full site or fleet.</text>
+      <text x="564" y="202" font-size="10.5" fill="var(--muted)" text-anchor="middle">Today kits ship from Burlingame stock with no customs. At scale: build at the CM or the Shenzhen team, customs for international sites, and ongoing fleet demand.</text>
+    </svg>
+  </div>
+
+  <div class="life">
+    <div><span class="k">TPM owns: what and when</span><p>Demand, the kit for each site, the date it must be on site, site readiness, release to ship, receiving, install, and the customer conversation about dates.</p></div>
+    <div><span class="k sc">Supply Chain owns: how it is built and moved</span><p>Suppliers, the contract manufacturer, build, test and QC, inventory, freight, export and import paperwork, customs, and failure analysis.</p></div>
+    <div><span class="k eng">Engineering owns: design and certification</span><p>Approves the kit BOM, firmware versions and test specs; holds product certifications by country (FCC, CE, and others).</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Interfaces</div>
+    <h2>Fourteen handoffs between the TPM and Supply Chain</h2>
+    <p>Each arrow is a handoff with one named owner for the document or decision. Down arrows go from the TPM to Supply Chain; up arrows come back.</p>
+  </div>
+  <div class="overview" role="img" aria-label="Swimlane of interfaces by stage. S0: I1 demand forecast down, I2 lead times and stock up. S1: I3 kit BOM down. S2: I4 order release down, I5 committed ship date up, I6 change after lock both ways. S3: I7 ship-gate results up, I8 release to ship down. S4: I9 shipment and customs status up, I10 receiving report down. S5: I11 returns and failure analysis both ways. S6: I13 unused stock return down. S7: I11 field returns both ways, I12 battery and spares demand down, I13 unused stock down, I14 monthly review both ways.">
+    <svg viewBox="0 0 1128 252" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="mdn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+        <marker id="mup" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--ehs)"/></marker>
+        <marker id="mbo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--jd)"/></marker>
+      </defs>
+      <g font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600" fill="var(--accent)" text-anchor="middle">
+        <text x="74" y="18">S0</text><text x="214" y="18">S1</text><text x="354" y="18">S2</text><text x="494" y="18">S3</text><text x="634" y="18">S4</text><text x="774" y="18">S5</text><text x="914" y="18">S6</text><text x="1054" y="18">S7</text>
+      </g>
+      <g stroke="var(--line)" stroke-dasharray="2 3">
+        <line x1="144" y1="26" x2="144" y2="246"/><line x1="284" y1="26" x2="284" y2="246"/><line x1="424" y1="26" x2="424" y2="246"/><line x1="564" y1="26" x2="564" y2="246"/><line x1="704" y1="26" x2="704" y2="246"/><line x1="844" y1="26" x2="844" y2="246"/><line x1="984" y1="26" x2="984" y2="246"/>
+      </g>
+      <rect x="10" y="28" width="1108" height="40" rx="4" fill="var(--accent-soft)"/>
+      <text x="20" y="52" font-size="11.5" font-weight="600" letter-spacing=".06em" fill="var(--accent)">TPM · DATA OPERATIONS</text>
+      <rect x="10" y="200" width="1108" height="40" rx="4" fill="var(--ehs-soft)"/>
+      <text x="20" y="224" font-size="11.5" font-weight="600" letter-spacing=".06em" fill="var(--ehs)">SUPPLY CHAIN · CM · FREIGHT</text>
+      <g stroke-width="1.6">
+        <!-- S0 -->
+        <line x1="59" y1="70" x2="59" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <line x1="89" y1="198" x2="89" y2="72" stroke="var(--ehs)" marker-end="url(#mup)"/>
+        <!-- S1 -->
+        <line x1="214" y1="70" x2="214" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <!-- S2 -->
+        <line x1="324" y1="70" x2="324" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <line x1="354" y1="198" x2="354" y2="72" stroke="var(--ehs)" marker-end="url(#mup)"/>
+        <line x1="384" y1="72" x2="384" y2="196" stroke="var(--jd)" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+        <!-- S3 -->
+        <line x1="479" y1="198" x2="479" y2="72" stroke="var(--ehs)" marker-end="url(#mup)"/>
+        <line x1="509" y1="70" x2="509" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <!-- S4 -->
+        <line x1="619" y1="198" x2="619" y2="72" stroke="var(--ehs)" marker-end="url(#mup)"/>
+        <line x1="649" y1="70" x2="649" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <!-- S5 -->
+        <line x1="774" y1="72" x2="774" y2="196" stroke="var(--jd)" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+        <!-- S6 -->
+        <line x1="914" y1="70" x2="914" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <!-- S7 -->
+        <line x1="1012" y1="72" x2="1012" y2="196" stroke="var(--jd)" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+        <line x1="1040" y1="70" x2="1040" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <line x1="1068" y1="70" x2="1068" y2="196" stroke="var(--accent)" marker-end="url(#mdn)"/>
+        <line x1="1096" y1="72" x2="1096" y2="196" stroke="var(--jd)" marker-start="url(#mbo)" marker-end="url(#mbo)"/>
+      </g>
+      <g font-family="IBM Plex Mono,monospace" font-size="10.5" font-weight="600">
+        <text x="63" y="128" fill="var(--accent)">I1</text>
+        <text x="93" y="150" fill="var(--ehs)">I2</text>
+        <text x="218" y="128" fill="var(--accent)">I3</text>
+        <text x="328" y="128" fill="var(--accent)">I4</text>
+        <text x="358" y="150" fill="var(--ehs)">I5</text>
+        <text x="388" y="128" fill="var(--jd)">I6</text>
+        <text x="483" y="150" fill="var(--ehs)">I7</text>
+        <text x="513" y="128" fill="var(--accent)">I8</text>
+        <text x="623" y="150" fill="var(--ehs)">I9</text>
+        <text x="653" y="128" fill="var(--accent)">I10</text>
+        <text x="778" y="128" fill="var(--jd)">I11</text>
+        <text x="918" y="128" fill="var(--accent)">I13</text>
+        <text x="1016" y="112" fill="var(--jd)">I11</text>
+        <text x="1044" y="138" fill="var(--accent)">I12</text>
+        <text x="1072" y="164" fill="var(--accent)">I13</text>
+        <text x="1100" y="112" fill="var(--jd)">I14</text>
+      </g>
+    </svg>
+  </div>
+  <div class="legend">
+    <span><span class="tag dn">TPM → SC</span> TPM sends to Supply Chain</span>
+    <span><span class="tag up">SC → TPM</span> Supply Chain sends to the TPM</span>
+    <span><span class="tag bo">BOTH</span> Two-way: decision or loop</span>
+  </div>
+
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Interface</th><th>Direction</th><th>What passes</th><th>When</th><th>Document owner</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="6">S0 Demand planning</td></tr>
+      <tr><td class="sid">I1</td><td><b>Demand forecast</b></td><td><span class="tag dn">TPM → SC</span></td><td>Each opportunity by deal stage, the kit it implies, likely ship month. Planning only until signed.</td><td>Weekly</td><td class="nw">TPM</td></tr>
+      <tr><td class="sid">I2</td><td><b>Lead times and stock</b></td><td><span class="tag up">SC → TPM</span></td><td>Lead time and on-hand stock for each critical part; allocation warnings.</td><td>Weekly and on any change</td><td class="nw">Supply Chain</td></tr>
+      <tr class="grp"><td colspan="6">S1 Scope and define the kit</td></tr>
+      <tr><td class="sid">I3</td><td><b>Kit BOM</b></td><td><span class="tag dn">TPM → SC</span></td><td>Sensor types and counts, Hives, PoE parts, mounts, cables, spares for each site.</td><td>At G1</td><td class="nw">TPM (engineering approves)</td></tr>
+      <tr class="grp"><td colspan="6">S2 Order, build and test</td></tr>
+      <tr><td class="sid">I4</td><td><b>Order release</b></td><td><span class="tag dn">TPM → SC</span></td><td>Signed scope, kit BOM, required-on-site date, ship-to site.</td><td>At signature</td><td class="nw">TPM</td></tr>
+      <tr><td class="sid">I5</td><td><b>Committed ship date</b></td><td><span class="tag up">SC → TPM</span></td><td>The date Supply Chain commits to, with any constraint.</td><td>Within days of I4</td><td class="nw">Supply Chain</td></tr>
+      <tr><td class="sid">I6</td><td><b>Change after lock</b></td><td><span class="tag bo">BOTH</span></td><td>Requested change with its cost and date impact; TPM, Supply Chain and the engineering lead decide.</td><td>As needed, decided within 48 hours</td><td class="nw">TPM runs it</td></tr>
+      <tr class="grp"><td colspan="6">S3 Ship gate and release</td></tr>
+      <tr><td class="sid">I7</td><td><b>Ship-gate results</b></td><td><span class="tag up">SC → TPM</span></td><td>Firmware version, Hive pairing, test record per unit, labels by rack or cabinet, spares, battery paperwork.</td><td>Before every shipment</td><td class="nw">Supply Chain</td></tr>
+      <tr><td class="sid">I8</td><td><b>Release to ship</b></td><td><span class="tag dn">TPM → SC</span></td><td>Site ready, delivery window, contact on site, importer of record and local details.</td><td>Before every shipment</td><td class="nw">TPM</td></tr>
+      <tr class="grp"><td colspan="6">S4 Freight, customs and receive</td></tr>
+      <tr><td class="sid">I9</td><td><b>Shipment and customs status</b></td><td><span class="tag up">SC → TPM</span></td><td>Tracking, customs holds, missing documents, revised arrival.</td><td>Until delivered</td><td class="nw">Supply Chain</td></tr>
+      <tr><td class="sid">I10</td><td><b>Receiving report</b></td><td><span class="tag dn">TPM → SC</span></td><td>Count against the BOM, damage, serial number to install location.</td><td>On arrival</td><td class="nw">TPM</td></tr>
+      <tr class="grp"><td colspan="6">S5 to S7 Install, hand over, operate</td></tr>
+      <tr><td class="sid">I11</td><td><b>Returns and failure analysis</b></td><td><span class="tag bo">BOTH</span></td><td>Failed units tagged with lot, firmware and location; root cause and fix come back.</td><td>On each failure</td><td class="nw">TPM sends, SC analyzes</td></tr>
+      <tr><td class="sid">I12</td><td><b>Battery and spares demand</b></td><td><span class="tag dn">TPM → SC</span></td><td>Forecast battery swaps and spares by site and month, from battery data and install dates.</td><td>Monthly</td><td class="nw">TPM</td></tr>
+      <tr><td class="sid">I13</td><td><b>Unused stock return</b></td><td><span class="tag dn">TPM → SC</span></td><td>POC units and spares not installed, returned or redeployed so they don't become excess inventory.</td><td>At G4 and at project close</td><td class="nw">TPM</td></tr>
+      <tr><td class="sid">I14</td><td><b>Monthly review</b></td><td><span class="tag bo">BOTH</span></td><td>Forecast against actual, slips and their causes, process changes.</td><td>Monthly</td><td class="nw">TPM and Supply Chain</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Stage detail</div>
+    <h2>Each stage, its major tasks, and the question to ask</h2>
+    <p>Chips name who does each task: <span class="who own">TPM</span> <span class="who sc">SC</span> for Supply Chain, and grey for others. The TPM role column is the working assumption; the question in each row is the one that confirms or corrects it with Butlr's VP of Supply Chain.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Stage</th><th>Major tasks and who does them</th><th>TPM role</th><th>Question to confirm</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="4">Plan</td></tr>
+      <tr><td class="sid">S0</td><td><b>Demand planning.</b> Runs all the time, not once per deal.
+        <ul class="tl">
+          <li>Turn the pipeline into a forecast by deal stage, kit type and ship month <span class="who own">TPM</span> <span class="who">Sales</span></li>
+          <li>Keep lead times and stock current for the thermal sensor array, radio module and Hives <span class="who sc">SC</span></li>
+          <li>Decide pre-buys for long-lead parts <span class="who sc">SC</span> <span class="who">Finance</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Rolling two-quarter forecast; buffer stock policy for POCs; second sources qualified.</p></td>
+        <td><span class="tag crd">PARTNER</span></td><td class="q">How does demand reach you today, and at what deal stage do you want a firm commitment?</td></tr>
+      <tr><td class="sid">S1</td><td><b>Scope and define the kit.</b> Ends at G1, POC scoped.
+        <ul class="tl">
+          <li>Size the POC and design sensor placement per rack, PDU, busbar and cabinet <span class="who own">TPM</span> <span class="who">Hardware eng.</span></li>
+          <li>Turn the design into a kit BOM, including spares <span class="who own">TPM</span> <span class="who">Hardware eng. approves</span></li>
+          <li>Check the delivery date against lead times before any date reaches the customer <span class="who own">TPM</span> <span class="who sc">SC</span></li>
+          <li>Flag international sites: certification, importer of record, power and LTE variants <span class="who own">TPM</span> <span class="who">Regulatory eng.</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Standard kits per site type (container module, rack row, power cabinet).</p></td>
+        <td><span class="tag own">OWN</span></td><td class="q">Is there a standard kit per site type yet, or is every POC BOM built from scratch? Who approves it?</td></tr>
+      <tr class="grp"><td colspan="4">Build and move</td></tr>
+      <tr><td class="sid">S2</td><td><b>Order, build and test.</b>
+        <ul class="tl">
+          <li>Release the order once the POC or expansion is signed <span class="who own">TPM</span></li>
+          <li>Place POs, build or pick the kit, confirm a ship date <span class="who sc">SC</span> <span class="who">CM</span></li>
+          <li>Track procurement against the required-on-site date; raise exceptions only <span class="who own">TPM</span></li>
+          <li>Decide changes after the kit is locked <span class="who own">TPM</span> <span class="who sc">SC</span> <span class="who">Eng. lead</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Kits built at the CM or by the Shenzhen team; orders flow from the CRM.</p></td>
+        <td><span class="tag trk">TRACK</span></td><td class="q">Which CM and region build the kits, and what are lead times on the critical parts? Do you hold buffer stock for data center POCs?</td></tr>
+      <tr><td class="sid">S3</td><td><b>Ship gate and release.</b>
+        <ul class="tl">
+          <li>Configure and test: firmware version, Hive pairing, burn-in, labels by rack or cabinet <span class="who sc">SC</span> <span class="who">Firmware, test</span></li>
+          <li>Confirm the site is ready: access, delivery window, gateway network and security approvals, storage <span class="who own">TPM</span> <span class="who">Customer</span></li>
+          <li>Release to ship <span class="who own">TPM</span></li>
+          <li>Book freight; dangerous-goods paperwork for lithium batteries <span class="who sc">SC</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Automated test at the CM; a site readiness kit sent at kickoff.</p></td>
+        <td><span class="tag crd">PARTNER</span></td><td class="q">Where does configuration happen today, Burlingame or the CM? Who signs off QC before a kit ships?</td></tr>
+      <tr><td class="sid">S4</td><td><b>Freight, customs and receive.</b> Ends at G2, ready to install.
+        <ul class="tl">
+          <li>Export, import and customs: HS codes, commercial invoice, duties, broker <span class="who sc">SC</span> <span class="who">Broker, Finance</span></li>
+          <li>Get the customer's import and delivery inputs: importer of record, dock rules <span class="who own">TPM</span></li>
+          <li>Track shipment and customs; tell the customer about any delay <span class="who own">TPM</span></li>
+          <li>Receive on site: count against the BOM, check damage, record serial to location <span class="who own">TPM</span> <span class="who">Install crew</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Customs is its own lane in every international plan; scan-based receiving.</p></td>
+        <td><span class="tag trk">TRACK</span></td><td class="q">Does customs and trade compliance sit with your team, Finance, or an outside forwarder? Who acts as importer for an international customer?</td></tr>
+      <tr class="grp"><td colspan="4">At the site</td></tr>
+      <tr><td class="sid">S5</td><td><b>Install and validate.</b> Ends at G3, validation passed.
+        <ul class="tl">
+          <li>Line up install crews with hardware arrival <span class="who own">TPM</span> <span class="who">Butlr techs, partners</span></li>
+          <li>Swap units that fail on arrival from spares; send them back tagged <span class="who own">TPM</span></li>
+          <li>Failure analysis and corrective action with the CM <span class="who sc">SC</span> <span class="who">Quality</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Partner installer network; replacement stock by region.</p></td>
+        <td><span class="tag own">OWN</span></td><td class="q">Who installs today: Butlr techs, partner installers, or the customer's staff? How do early failures get back to you?</td></tr>
+      <tr><td class="sid">S6</td><td><b>Accept and hand over.</b> Ends at G4, customer accepts.
+        <ul class="tl">
+          <li>Hand over the as-built serial list: sensor to breaker, rack or PDU <span class="who own">TPM</span></li>
+          <li>Close the supply chain punch list: missing parts, replacements in transit <span class="who own">TPM</span> <span class="who sc">SC</span></li>
+          <li>Return unused POC units and spares <span class="who own">TPM</span> <span class="who sc">SC</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Installed-base record synced to the customer's DCIM.</p></td>
+        <td><span class="tag own">OWN</span></td><td class="q">Does unused POC stock come back to Burlingame, or stay with the customer as spares?</td></tr>
+      <tr class="grp"><td colspan="4">Run and expand</td></tr>
+      <tr><td class="sid">S7</td><td><b>Operate and expand.</b> Ends at G5, next step ordered.
+        <ul class="tl">
+          <li>Handle field failures and RMAs on the customer side <span class="who own">TPM</span> <span class="who sc">SC</span></li>
+          <li>Forecast battery swaps from battery data and install dates; batch them by site <span class="who own">TPM</span> <span class="who sc">SC</span></li>
+          <li>Turn the expansion into a new order and loop back to S2 <span class="who own">TPM</span> <span class="who">Sales</span></li>
+          <li>Monthly review of forecast accuracy, slips and lessons <span class="who own">TPM</span> <span class="who sc">SC</span></li>
+        </ul>
+        <p class="scale"><b>AT SCALE</b> Fleet battery program; support team takes first-line RMAs; quarterly review with the CM.</p></td>
+        <td><span class="tag crd">PARTNER</span></td><td class="q">How are battery replacements and RMAs planned for the installed base, and who owns them after launch?</td></tr>
+    </tbody>
+  </table></div>
+  <div class="legend">
+    <span><span class="tag own">OWN</span> TPM leads the stage</span>
+    <span><span class="tag crd">PARTNER</span> Shared; each side owns named tasks</span>
+    <span><span class="tag trk">TRACK</span> Supply Chain executes; TPM tracks against the site date</span>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Compliance, customs and import</div>
+    <h2>Supply Chain does the work; the TPM owns getting it done on time</h2>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Area</th><th>Supply Chain does it</th><th>TPM owns</th></tr></thead>
+    <tbody>
+      <tr><td><b>Export and import paperwork</b></td><td>HS codes, commercial invoice, export classification, broker and forwarder</td><td>Flagging an international deal as soon as it's likely</td></tr>
+      <tr><td><b>Importer of record and duties</b></td><td>Arranging it, often with Finance</td><td>Getting the customer's answer: will they import, or is there a local entity or partner?</td></tr>
+      <tr><td><b>Lithium battery shipping</b></td><td>Dangerous-goods paperwork, battery test summary, carrier choice</td><td>Allowing for slower ground or sea freight in the plan</td></tr>
+      <tr><td><b>Certification by country</b></td><td>Usually hardware or regulatory engineering, not Supply Chain</td><td>Confirming the product is certified there before the date is set</td></tr>
+      <tr><td><b>Customs clearance</b></td><td>Broker and forwarder work holds and missing documents</td><td>Tracking, escalation, and telling the customer</td></tr>
+      <tr><td><b>Last mile to site</b></td><td>Freight to the address</td><td>Delivery window, site access, dock rules, storage, someone there to sign</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Across stages</div>
+    <h2>Operating rules to agree with Supply Chain</h2>
+  </div>
+  <div class="rules">
+    <div class="rule"><h3>Dates</h3><ol><li>No delivery date reaches a customer until it is checked against lead times and stock (I2).</li><li>Supply Chain commits only to signed orders; the forecast (I1) is for planning.</li></ol></div>
+    <div class="rule"><h3>Shipping</h3><ol><li>Nothing ships until it passes the ship gate (I7) and the site is ready (I8).</li><li>The customer hears hardware status from one voice: the TPM.</li></ol></div>
+    <div class="rule"><h3>Changes and stock</h3><ol><li>Changes after lock get a cost and date impact and a decision within 48 hours (I6).</li><li>Finish kits only against a firm order, so excess stock stays as parts, not finished kits.</li></ol></div>
+  </div>
+  <p class="note">Built from the Senior Program Manager, Data Operations job description, the hiring manager conversation on 5 Nov 2026 (small POCs shipped from Burlingame, no customs today), Butlr's <a href="https://www.butlr.com/solutions/data-center">data center</a>, <a href="https://butlr.com/platform/sensor">sensor</a> and <a href="https://butlr.com/legal/support-policy">support policy</a> pages, the <a href="https://fcc.report/FCC-ID/2AZPCBHS2P/7396335.pdf">Heatic 2+ FCC test report</a>, and general hardware delivery practice. Butlr does not publish its supply chain organization, contract manufacturer or lead times, so owners and interfaces are a proposed operating model to confirm with the VP of Supply Chain.</p>
+</section>
+</div>
+</body>
+</html>
